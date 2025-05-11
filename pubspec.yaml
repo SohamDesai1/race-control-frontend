@@ -25,3 +25,15 @@ flutter:
   assets:
     - .env.dev
     - .env.prod
+  fonts:
+    - family: Formula1Bold
+      fonts:
+        - asset: assets/fonts/Formula1-Bold.otf
+
+    - family: Formula1Regular
+      fonts:
+        - asset: assets/fonts/Formula1-Regular.otf
+
+    - family: Formula1Wide
+      fonts:
+        - asset: assets/fonts/Formula1-Wide.otf
