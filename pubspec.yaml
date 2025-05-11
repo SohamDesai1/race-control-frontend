@@ -7,8 +7,13 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  bloc: ^9.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
+  go_router: ^15.1.2
+  http: ^1.4.0
+  sizer: ^3.0.5
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +22,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env.dev
+    - .env.prod
