@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/core/router/app_router.dart';
+import 'package:frontend/presentation/login/cubit/auth_cubit.dart';
+import 'package:frontend/utils/injection.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   const isProd = !kDebugMode;
@@ -11,7 +14,11 @@ void main() async {
   await Supabase.initialize(
       url: dotenv.env['SUPABASE_PROJECT_URL']!,
       anonKey: dotenv.env['SUPABASE_ANNON_KEY']!);
-  runApp(const MainApp());
+  configureDependencies();
+  runApp(MultiBlocProvider(
+    providers: [BlocProvider(create: (_) => getIt<AuthCubit>())],
+    child: MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
