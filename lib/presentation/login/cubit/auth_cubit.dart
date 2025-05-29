@@ -27,4 +27,20 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthFailure(e.toString()));
     }
   }
+
+  Future<void> signIn(String email, String password) async {
+    try {
+      emit(AuthLoading());
+
+      final user = await authRepository.signIn(email, password);
+
+      if (user != null) {
+        emit(AuthSuccess(user));
+      } else {
+        emit(AuthFailure("Invalid email or password"));
+      }
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
+  }
 }

@@ -1,9 +1,12 @@
 class UserModel {
   String? id;
+  DateTime? createdAt;
   String? name;
   String? email;
   String? phone;
   String? password;
+  String? gender;
+  String? dob;
   String? imageUrl;
   String? token;
 
@@ -15,6 +18,9 @@ class UserModel {
     this.password,
     this.imageUrl,
     this.token,
+    this.createdAt,
+    this.dob,
+    this.gender,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +32,10 @@ class UserModel {
       password: json['password'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       token: json['token'] ?? '',
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      dob: json['dob'] ?? '',
+      gender: json['gender'] ?? '',
     );
   }
 
@@ -38,6 +48,9 @@ class UserModel {
       'password': password,
       'imageUrl': imageUrl,
       'token': token,
+      'createdAt': createdAt,
+      'dob': dob,
+      'gender': gender,
     };
   }
 }

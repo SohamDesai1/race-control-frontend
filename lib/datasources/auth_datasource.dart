@@ -1,3 +1,4 @@
+import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -10,10 +11,20 @@ class AuthDatasource extends AuthRepository {
   var api = ApiService();
 
   @override
-  Future<void> signIn(String email, String password) async {}
+  Future<UserModel?> signIn(String email, String password) async {
+    var res = await api.post(ApiEndpoints.login, {
+      'email': email,
+      'password': password,
+    });
+    if (res.isSuccess) {
+      var user = UserModel.fromJson(res.body['data']);
+      return user;
+    }
+    return null;
+  }
 
   @override
-  Future<void> signUp(String email, String password) async {}
+  Future<void> register(String email, String password) async {}
 
   @override
   Future<UserModel?> signInWithGoogle() async {
