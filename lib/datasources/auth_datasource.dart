@@ -3,14 +3,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../core/services/api_service.dart';
-import '../repositories/auth_repository.dart';
 import '../models/user.dart';
 
-@LazySingleton(as: AuthRepository)
-class AuthDatasource extends AuthRepository {
+@injectable
+class AuthDatasource {
   var api = ApiService();
 
-  @override
   Future<UserModel?> signIn(String email, String password) async {
     var res = await api.post(ApiEndpoints.login, {
       'email': email,
@@ -23,10 +21,8 @@ class AuthDatasource extends AuthRepository {
     return null;
   }
 
-  @override
   Future<void> register(String email, String password) async {}
 
-  @override
   Future<UserModel?> signInWithGoogle() async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
