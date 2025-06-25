@@ -2,40 +2,47 @@ class UserModel {
   String? id;
   DateTime? createdAt;
   String? name;
+  String? username;
   String? email;
   String? phone;
-  String? password;
+  String? hashedPassword;
   String? gender;
   String? dob;
   String? imageUrl;
   String? token;
+  String? authProvider;
 
   UserModel({
     this.id,
     this.name,
+    this.username,
     this.email,
     this.phone,
-    this.password,
+    this.hashedPassword,
     this.imageUrl,
     this.token,
     this.createdAt,
     this.dob,
     this.gender,
+    this.authProvider
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      password: json['password'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+      id: json['user']['id']?.toString() ?? '',
+      name: json['user']['name'] ?? '',
+      username: json['user']['username'] ?? '',
+      email: json['user']['email'] ?? '',
+      phone: json['user']['phone'] ?? '',
+      hashedPassword: json['user']['hashed_password'] ?? '',
+      imageUrl: json['user']['imageUrl'] ?? '',
       token: json['token'] ?? '',
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      dob: json['dob'] ?? '',
-      gender: json['gender'] ?? '',
+      createdAt: json['user']['created_at'] != null
+          ? DateTime.parse(json['user']['created_at'])
+          : null,
+      dob: json['user']['dob'] ?? '',
+      gender: json['user']['gender'] ?? '',
+      authProvider: json['user']['auth_provider'] ?? ''
     );
   }
 
@@ -43,14 +50,16 @@ class UserModel {
     return {
       'id': id,
       'name': name,
+      'username': username,
       'email': email,
       'phone': phone,
-      'password': password,
+      'hashedPassword': hashedPassword,
       'imageUrl': imageUrl,
       'token': token,
       'createdAt': createdAt,
       'dob': dob,
       'gender': gender,
+      'authProvider':authProvider
     };
   }
 }
