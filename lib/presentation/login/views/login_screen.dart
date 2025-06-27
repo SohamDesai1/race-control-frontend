@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/login/cubit/auth_cubit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:sizer/sizer.dart';
+import 'package:ionicons/ionicons.dart';
+import '../cubit/auth_cubit.dart';
+import '../../../core/constants/route_names.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,38 +14,46 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
-            context.go('/');
-          } else if (state is AuthFailure) {
+          if (state.status == AuthStatus.success) {
+            context.go(RouteNames.home);
+          } else if (state.status == AuthStatus.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.error!),
                 backgroundColor: Colors.red,
               ),
             );
           }
         },
         builder: (context, state) {
-          return Stack(
-            children: [
-              _buildLoginForm(),
-              if (state is AuthLoading)
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.black54,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          return SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  _buildLoginForm(),
+                  if (state.status == AuthStatus.loading)
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Colors.black54,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-            ],
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -73,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Enter Name",
+              "Enter Email",
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(
@@ -82,9 +91,11 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 70.w,
               child: TextField(
+                controller: _emailController,
                 cursorColor: Colors.white,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  labelText: "Name",
+                  labelText: "Email",
                   labelStyle: TextStyle(color: Colors.white),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -111,6 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 70.w,
               child: TextField(
+                controller: _passwordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
                 cursorColor: Colors.white,
                 decoration: InputDecoration(
                   labelText: "Password",
@@ -132,17 +146,22 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 6.h,
         ),
-        Container(
-          height: 6.h,
-          width: 70.w,
-          decoration: BoxDecoration(
-              color: Color(0xFFF50304),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white)),
-          child: Center(
-            child: Text(
-              "Login",
-              style: TextStyle(color: Colors.white),
+        GestureDetector(
+          onTap: () => context
+              .read<AuthCubit>()
+              .signIn(_emailController.text, _passwordController.text),
+          child: Container(
+            height: 6.h,
+            width: 70.w,
+            decoration: BoxDecoration(
+                color: Color(0xFFF50304),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white)),
+            child: Center(
+              child: Text(
+                "Login",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ),
