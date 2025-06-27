@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -36,7 +37,7 @@ class ApiService {
     headers ??= {
       'Content-Type': 'application/json',
     };
-
+    log('API Call: $_baseUrl$endpoint with headers: $headers');
     final response = await http.get(
       Uri.parse('$_baseUrl$endpoint'),
       headers: headers,
@@ -100,7 +101,7 @@ class ApiService {
     final decodedBody = response.body.isNotEmpty
         ? json.decode(response.body)
         : <String, dynamic>{};
-
+    log('Response: $decodedBody with status code: $statusCode');
     if (statusCode >= 200 && statusCode < 300) {
       return ApiResponse(
         body: decodedBody,
