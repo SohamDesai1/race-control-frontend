@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class Routing {
   static final router = GoRouter(
-    initialLocation: RouteNames.home,
+    initialLocation: RouteNames.login,
     routes: [
       GoRoute(
         path: RouteNames.home,

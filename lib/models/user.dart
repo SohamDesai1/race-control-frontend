@@ -1,5 +1,5 @@
 class UserModel {
-  String? id;
+  int? id;
   DateTime? createdAt;
   String? name;
   String? username;
@@ -12,38 +12,38 @@ class UserModel {
   String? token;
   String? authProvider;
 
-  UserModel({
-    this.id,
-    this.name,
-    this.username,
-    this.email,
-    this.phone,
-    this.hashedPassword,
-    this.imageUrl,
-    this.token,
-    this.createdAt,
-    this.dob,
-    this.gender,
-    this.authProvider
-  });
+  UserModel(
+      {this.id,
+      this.name,
+      this.username,
+      this.email,
+      this.phone,
+      this.hashedPassword,
+      this.imageUrl,
+      this.token,
+      this.createdAt,
+      this.dob,
+      this.gender,
+      this.authProvider});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final userJson = (json['user'] as List).isNotEmpty ? json['user'][0] : {};
+
     return UserModel(
-      id: json['user']['id']?.toString() ?? '',
-      name: json['user']['name'] ?? '',
-      username: json['user']['username'] ?? '',
-      email: json['user']['email'] ?? '',
-      phone: json['user']['phone'] ?? '',
-      hashedPassword: json['user']['hashed_password'] ?? '',
-      imageUrl: json['user']['imageUrl'] ?? '',
-      token: json['token'] ?? '',
-      createdAt: json['user']['created_at'] != null
-          ? DateTime.parse(json['user']['created_at'])
-          : null,
-      dob: json['user']['dob'] ?? '',
-      gender: json['user']['gender'] ?? '',
-      authProvider: json['user']['auth_provider'] ?? ''
-    );
+        id: userJson['id'],
+        name: userJson['name'] ?? '',
+        username: userJson['username'] ?? '',
+        email: userJson['email'] ?? '',
+        phone: userJson['phone'] ?? '',
+        hashedPassword: userJson['hashed_password'] ?? '',
+        imageUrl: userJson['imageUrl'] ?? '',
+        token: json['token'] ?? '',
+        createdAt: userJson['created_at'] != null
+            ? DateTime.parse(userJson['created_at'])
+            : null,
+        dob: userJson['dob'] ?? '',
+        gender: userJson['gender'] ?? '',
+        authProvider: userJson['auth_provider'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -59,7 +59,7 @@ class UserModel {
       'createdAt': createdAt,
       'dob': dob,
       'gender': gender,
-      'authProvider':authProvider
+      'authProvider': authProvider
     };
   }
 }
