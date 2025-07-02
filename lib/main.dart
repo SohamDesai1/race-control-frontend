@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/core/router/app_router.dart';
-import 'package:frontend/presentation/login/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/auth/cubit/auth_cubit.dart';
 import 'package:frontend/utils/injection.dart';
 import 'package:sizer/sizer.dart';
 

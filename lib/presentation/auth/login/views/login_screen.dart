@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ionicons/ionicons.dart';
-import '../cubit/auth_cubit.dart';
-import '../../../core/constants/route_names.dart';
+import '../../cubit/auth_cubit.dart';
+import '../../../../core/constants/route_names.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -238,9 +238,12 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 2.w,
             ),
-            Text(
-              'Sign Up',
-              style: TextStyle(color: Color(0xFFF50304)),
+            GestureDetector(
+              onTap: () => context.push(RouteNames.register),
+              child: Text(
+                'Sign Up',
+                style: TextStyle(color: Color(0xFFF50304)),
+              ),
             )
           ],
         ),
