@@ -13,7 +13,7 @@ class AuthDatasource {
       'password': password,
     });
     if (res.isSuccess) {
-      var user = UserModel.fromJson(res.body['data']['user'][0]);
+      var user = UserModel.fromJson(res.body);
       return user;
     }
     return null;
