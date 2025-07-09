@@ -2,13 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../usecases/auth/login.dart';
-import '../../../models/user.dart';
-part 'auth_state.dart';
+import '../../../../usecases/auth/login.dart';
+import '../../../../models/user.dart';
+part 'login_state.dart';
 
 @injectable
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.loginUseCase}) : super(AuthState());
+class LoginCubit extends Cubit<LoginState> {
+  LoginCubit({required this.loginUseCase}) : super(LoginState());
 
   final LoginUseCase loginUseCase;
 
@@ -16,7 +16,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signIn(String email, String password) async {
     try {
-      emit(state.copyWith(status: AuthStatus.loading));
+      emit(state.copyWith(status: LoginStatus.loading));
 
       final user = await loginUseCase.execute(LoginInput(email, password));
 
@@ -24,13 +24,13 @@ class AuthCubit extends Cubit<AuthState> {
         (failure) {
           print("Error occurred: ${failure.message}");
           emit(state.copyWith(
-            status: AuthStatus.failure,
+            status: LoginStatus.failure,
             error: failure.message,
           ));
         },
         (userModel) => emit(
           state.copyWith(
-            status: AuthStatus.success,
+            status: LoginStatus.success,
             user: userModel,
             email: email,
             password: password,
@@ -40,7 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       print("Error occurred: $e");
       emit(state.copyWith(
-        status: AuthStatus.failure,
+        status: LoginStatus.failure,
         error: e.toString(),
       ));
     }
@@ -48,7 +48,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signInWithGoogle() async {
     try {
-      emit(state.copyWith(status: AuthStatus.loading));
+      emit(state.copyWith(status: LoginStatus.loading));
       final GoogleSignIn googleSignIn = GoogleSignIn();
       final googleUser = await googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
@@ -66,7 +66,7 @@ class AuthCubit extends Cubit<AuthState> {
         accessToken: accessToken,
       );
       emit(state.copyWith(
-        status: AuthStatus.success,
+        status: LoginStatus.success,
       ));
       print('Sign in successful: ${response.user}');
     } catch (e) {

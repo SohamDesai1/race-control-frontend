@@ -1,30 +1,30 @@
-part of 'auth_cubit.dart';
+part of 'login_cubit.dart';
 
-enum AuthStatus { initial, loading, success, failure }
+enum LoginStatus { initial, loading, success, failure }
 
-class AuthState {
-  final AuthStatus status;
+class LoginState {
+  final LoginStatus status;
   final String? email;
   final String? password;
   final UserModel? user;
   final String? error;
 
-  AuthState({
-    this.status = AuthStatus.initial,
+  LoginState({
+    this.status = LoginStatus.initial,
     this.email,
     this.password,
     this.user,
     this.error,
   });
 
-  AuthState copyWith({
-    AuthStatus? status,
+  LoginState copyWith({
+    LoginStatus? status,
     String? email,
     String? password,
     UserModel? user,
     String? error,
   }) {
-    return AuthState(
+    return LoginState(
       status: status ?? this.status,
       email: email ?? this.email,
       password: password ?? this.password,
@@ -33,4 +33,3 @@ class AuthState {
     );
   }
 }
-
