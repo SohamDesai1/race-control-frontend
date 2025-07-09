@@ -11,8 +11,15 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthDatasource authDatasource;
 
   @override
-  Future<void> register(String email, String password) async {
-    try {} catch (e) {}
+  Future<Either<Failure, UserModel>> register(String email, String password,
+      String name, String dob, String username) async {
+    try {
+      final res =
+          await authDatasource.register(email, password, name, dob, username);
+      return Right(res!);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
   }
 
   @override
