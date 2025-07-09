@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ionicons/ionicons.dart';
-import '../../cubit/auth_cubit.dart';
+import '../cubit/login_cubit.dart';
 import '../../../../core/constants/route_names.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,11 +19,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthCubit, AuthState>(
+      body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
-          if (state.status == AuthStatus.success) {
+          if (state.status == LoginStatus.success) {
             context.go(RouteNames.home);
-          } else if (state.status == AuthStatus.failure) {
+          } else if (state.status == LoginStatus.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error!),
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Stack(
                 children: [
                   _buildLoginForm(),
-                  if (state.status == AuthStatus.loading)
+                  if (state.status == LoginStatus.loading)
                     Container(
                       width: double.infinity,
                       height: double.infinity,
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         GestureDetector(
           onTap: () => context
-              .read<AuthCubit>()
+              .read<LoginCubit>()
               .signIn(_emailController.text, _passwordController.text),
           child: Container(
             height: 6.h,
@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                context.read<AuthCubit>().signInWithGoogle();
+                context.read<LoginCubit>().signInWithGoogle();
               },
               child: Container(
                 height: 6.h,

@@ -27,7 +27,9 @@ class UserModel {
       this.authProvider});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    final userJson = (json['user'] as List).isNotEmpty ? json['user'][0] : {};
+    final userJson = (json['data']['user'] as List).isNotEmpty
+        ? json['data']['user'][0]
+        : {};
 
     return UserModel(
         id: userJson['id'],

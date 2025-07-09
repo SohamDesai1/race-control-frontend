@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/core/router/app_router.dart';
-import 'package:frontend/presentation/auth/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:frontend/utils/injection.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,7 +17,10 @@ void main() async {
       anonKey: dotenv.env['SUPABASE_ANNON_KEY']!);
   configureDependencies();
   runApp(MultiBlocProvider(
-    providers: [BlocProvider(create: (_) => getIt<AuthCubit>())],
+    providers: [
+      BlocProvider(create: (_) => getIt<LoginCubit>()),
+      BlocProvider(create: (_) => getIt<RegisterCubit>())
+    ],
     child: MainApp(),
   ));
 }
