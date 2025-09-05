@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp.router(
           theme: ThemeData(
-            scaffoldBackgroundColor: const Color(0xFF271F24),
+            scaffoldBackgroundColor: const Color(0x000b0b0b),
             fontFamily: 'Formula1Regular',
             appBarTheme: AppBarTheme(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
