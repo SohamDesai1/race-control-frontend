@@ -56,3 +56,5 @@ app.*.map.json
 .env
 *.json
 /supabase
+*.freezed.dart
+*.g.dart
