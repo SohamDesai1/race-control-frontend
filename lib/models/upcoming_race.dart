@@ -7,7 +7,7 @@ abstract class UpcomingRaceModel with _$UpcomingRaceModel {
   factory UpcomingRaceModel({
     required String circuitId,
     required DateTime createdAt,
-    required DateTime date,
+    required String date,
     required int id,
     required String raceName,
     required String round,

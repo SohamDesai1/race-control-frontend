@@ -8,7 +8,7 @@ class DashboardInitial extends DashboardState {}
 class DashboardLoading extends DashboardState {}
 
 class DashboardSuccess extends DashboardState {
-  final List<dynamic> races;
+  final List<UpcomingRaceModel> races;
 
   DashboardSuccess(this.races);
 }

@@ -10,9 +10,10 @@ class RaceDatasource {
   Future<List<UpcomingRaceModel>?> getUpcomingRaces() async {
     var res = await api.get(ApiRoutes.upcomingRaces);
     if (res.isSuccess) {
-      var races = (res.body as List)
-          .map((e) => UpcomingRaceModel.fromJson(e))
-          .toList();
+      final data = res.body['data'] as List;
+
+      final races = data.map((e) => UpcomingRaceModel.fromJson(e)).toList();
+
       return races;
     }
     return null;

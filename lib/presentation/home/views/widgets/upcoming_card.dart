@@ -1,8 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class UpcomingCard extends StatelessWidget {
-  const UpcomingCard({super.key});
+  final String date;
+  final String raceName;
+  final String location;
+  const UpcomingCard({
+    super.key,
+    required this.date,
+    required this.raceName,
+    required this.location,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +37,39 @@ class UpcomingCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                      child: Text("09\nNov",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 4.w, fontWeight: FontWeight.w600))),
+                    child: Text(
+                      date,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 4.w,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Sao Paulo Grand Prix",
-                        style: TextStyle(
-                            fontSize: 4.w, fontWeight: FontWeight.w600)),
+                    Text(
+                      raceName,
+                      style: TextStyle(
+                        fontSize: 4.w,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     SizedBox(height: 1.h),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined,
-                            size: 4.w, color: Colors.grey),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 4.w,
+                          color: Colors.grey,
+                        ),
                         SizedBox(width: 1.w),
-                        Text("Interlagos, Brazil",
-                            style:
-                                TextStyle(fontSize: 3.5.w, color: Colors.grey)),
+                        Text(
+                          location,
+                          style: TextStyle(fontSize: 3.5.w, color: Colors.grey),
+                        ),
                       ],
                     ),
                   ],
@@ -60,12 +82,16 @@ class UpcomingCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
-                      child: Text("Upcoming",
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 2.7.w,
-                              fontWeight: FontWeight.w600))),
-                )
+                    child: Text(
+                      "Upcoming",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 2.7.w,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -73,9 +99,7 @@ class UpcomingCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SizedBox(
-                width: 15.w,
-              ),
+              SizedBox(width: 15.w),
               Container(
                 height: 5.5.h,
                 width: 34.w,
@@ -84,8 +108,11 @@ class UpcomingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
-                    child: Text("Race Details",
-                        style: TextStyle(fontWeight: FontWeight.w600))),
+                  child: Text(
+                    "Race Details",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
               ),
               Container(
                 height: 5.5.h,
@@ -95,13 +122,17 @@ class UpcomingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
-                    child: Text("Set Reminder",
-                        style: TextStyle(
-                            color: Colors.white60,
-                            fontWeight: FontWeight.w600))),
+                  child: Text(
+                    "Set Reminder",
+                    style: TextStyle(
+                      color: Colors.white60,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
