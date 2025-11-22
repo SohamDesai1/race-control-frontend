@@ -7,15 +7,16 @@ import 'package:injectable/injectable.dart';
 class RaceDatasource {
   var api = ApiService();
 
-  Future<List<UpcomingRaceModel>?> getUpcomingRaces() async {
+  Future<List<UpcomingRaceModel>> getUpcomingRaces() async {
     var res = await api.get(ApiRoutes.upcomingRaces);
+
     if (res.isSuccess) {
       final data = res.body['data'] as List;
-
       final races = data.map((e) => UpcomingRaceModel.fromJson(e)).toList();
 
       return races;
     }
-    return null;
+
+    return [];
   }
 }
