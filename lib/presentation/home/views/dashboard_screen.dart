@@ -39,9 +39,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     return Center(child: CircularProgressIndicator());
                   } else if (state is DashboardSuccess) {
                     return SizedBox(
-                      height: 18.h,
+                      height: 35.h,
                       child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
                           final race = state.races[index];
                           return UpcomingCard(
@@ -52,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         },
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 2.w),
-                        itemCount: state.races.length,
+                        itemCount: state.races.length - 1,
                       ),
                     );
                   } else if (state is DashboardError) {
