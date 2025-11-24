@@ -6,6 +6,11 @@ part 'upcoming_race.g.dart';
 abstract class UpcomingRaceModel with _$UpcomingRaceModel {
   factory UpcomingRaceModel({
     required String circuitId,
+    required String circuitName,
+    required String country,
+    required String lat,
+    required String long,
+    required String locality,
     @JsonKey(name: 'created_at') 
     required String createdAt,
     required String date,
@@ -13,7 +18,6 @@ abstract class UpcomingRaceModel with _$UpcomingRaceModel {
     required String raceName,
     required String round,
     required String season,
-
     required String time,
   }) = _UpcomingRaceModel;
 

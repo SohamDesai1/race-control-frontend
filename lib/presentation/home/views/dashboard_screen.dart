@@ -4,6 +4,7 @@ import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart'
 import 'package:frontend/presentation/home/views/widgets/carousel.dart';
 import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -38,22 +39,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (state is DashboardLoading) {
                     return Center(child: CircularProgressIndicator());
                   } else if (state is DashboardSuccess) {
+                    var length = state.races.length <= 2
+                        ? state.races.length
+                        : state.races.length - 1;
                     return SizedBox(
-                      height: 35.h,
+                      height: length * 17.h,
                       child: ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
                           final race = state.races[index];
+                          DateTime date = DateTime.parse(race.date);
+                          String formattedDate = DateFormat(
+                            'dd MMM',
+                          ).format(date);
                           return UpcomingCard(
-                            date: race.date,
+                            date: formattedDate,
                             raceName: race.raceName,
-                            location: race.circuitId,
+                            location: "${race.locality}, ${race.country}",
                           );
                         },
                         separatorBuilder: (context, index) =>
-                            SizedBox(width: 2.w),
-                        itemCount: state.races.length - 1,
+                            SizedBox(height: 2.h),
+                        itemCount: length,
                       ),
                     );
                   } else if (state is DashboardError) {
