@@ -43,14 +43,16 @@ class ApiService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          log('API Call: ${options.method} ${options.uri} with headers: ${options.headers}');
+          log('API Call: ${options.method} ${options.uri}');
           if (options.data != null) {
             log('Request body: ${options.data}');
           }
           handler.next(options);
         },
         onResponse: (response, handler) {
-          log('Response: ${response.data} with status code: ${response.statusCode}');
+          log(
+            'Response: ${response.data} with status code: ${response.statusCode}',
+          );
           handler.next(response);
         },
         onError: (error, handler) {
@@ -161,11 +163,7 @@ class ApiService {
         ? response.data as Map<String, dynamic>
         : <String, dynamic>{'data': response.data};
 
-    return ApiResponse(
-      body: body,
-      statusCode: statusCode,
-      headers: headers,
-    );
+    return ApiResponse(body: body, statusCode: statusCode, headers: headers);
   }
 
   ApiException _handleDioError(DioException error) {
@@ -185,7 +183,8 @@ class ApiService {
       case DioExceptionType.badResponse:
         final responseData = error.response?.data;
         if (responseData is Map<String, dynamic>) {
-          message = responseData['message'] ??
+          message =
+              responseData['message'] ??
               responseData['error'] ??
               'Bad response';
         } else {
