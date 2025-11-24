@@ -5,16 +5,21 @@ abstract class DashboardState {}
 
 class DashboardInitial extends DashboardState {}
 
-class DashboardLoading extends DashboardState {}
-
-class DashboardSuccess extends DashboardState {
-  final List<UpcomingRaceModel> races;
-
-  DashboardSuccess(this.races);
-}
-
 class DashboardError extends DashboardState {
   final String message;
-
   DashboardError(this.message);
+}
+
+class DashboardUpcomingLoading extends DashboardState {}
+
+class DashboardUpcomingSuccess extends DashboardState {
+  final List<UpcomingRaceModel> upcomingRaces;
+  DashboardUpcomingSuccess(this.upcomingRaces);
+}
+
+class DashboardRecentLoading extends DashboardState {}
+
+class DashboardRecentSuccess extends DashboardState {
+  final RecentResultModel recentResults;
+  DashboardRecentSuccess(this.recentResults);
 }
