@@ -33,7 +33,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Carousel(),
               SizedBox(height: 3.h),
-              Text("Upcoming Races", style: TextStyle(fontSize: 4.w)),
+              Text(
+                "Upcoming Races",
+                style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 2.h),
               BlocBuilder<DashboardCubit, DashboardState>(
                 buildWhen: (prev, curr) =>
@@ -78,7 +81,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
               ),
               SizedBox(height: 2.h),
-              Text("Recent Race Results", style: TextStyle(fontSize: 4.w)),
+              Text(
+                "Recent Race Results",
+                style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 2.h),
               BlocBuilder<DashboardCubit, DashboardState>(
                 buildWhen: (prev, curr) =>
@@ -89,25 +95,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (state is DashboardRecentLoading) {
                     return Center(child: CircularProgressIndicator());
                   } else if (state is DashboardRecentSuccess) {
-                    return SizedBox(
-                      height: 20.h,
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          final recent = state.recentResults.results[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 2.h),
-                            child: DriverCard(
-                              driverName:
-                                  "${recent.driver.givenName} ${recent.driver.familyName}",
-                              teamName: recent.constructor.name,
-                              position: recent.position,
-                              raceResult: true,
-                            ),
-                          );
-                        },
-                      ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          state.recentResults.raceName,
+                          style: TextStyle(
+                            fontSize: 4.w,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        SizedBox(
+                          height: 20.h,
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              final recent = state.recentResults.results[index];
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 2.h),
+                                child: DriverCard(
+                                  driverName:
+                                      "${recent.driver.givenName} ${recent.driver.familyName}",
+                                  teamName: recent.constructor.name,
+                                  position: recent.position,
+                                  raceResult: true,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   } else if (state is DashboardError) {
                     return Text(state.message);
