@@ -6,12 +6,14 @@ class DriverCard extends StatelessWidget {
   final String? driverName;
   final String? teamName;
   final String? position;
+  final String? points;   
   const DriverCard({
     super.key,
     this.raceResult = false,
     this.driverName,
     this.teamName,
     this.position,
+    this.points,
   });
 
   @override
@@ -59,7 +61,7 @@ class DriverCard extends StatelessWidget {
             : Container(
                 margin: EdgeInsets.only(left: 20.w),
                 child: Text(
-                  "256 pts",
+                  "$points pts",
                   style: TextStyle(fontSize: 4.w, fontWeight: FontWeight.bold),
                 ),
               ),

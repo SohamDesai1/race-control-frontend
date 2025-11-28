@@ -20,6 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     context.read<DashboardCubit>().fetchUpcomingRaces();
     context.read<DashboardCubit>().fetchRecentResults();
+    context.read<DashboardCubit>().fetchDriverLeaderboard();
   }
 
   @override
@@ -134,21 +135,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return SizedBox.shrink();
                 },
               ),
-              Text("Top Drivers", style: TextStyle(fontSize: 4.w)),
+              Text(
+                "Top Drivers",
+                style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 2.h),
-              SizedBox(
-                height: 20.h,
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 2.h),
-                      child: const DriverCard(),
+              BlocBuilder<DashboardCubit, DashboardState>(
+                buildWhen: (prev, curr) =>
+                    curr is DashboardDriverLeaderboardLoading ||
+                    curr is DashboardDriverLeaderboardSuccess ||
+                    curr is DashboardError,
+                builder: (context, state) {
+                  if (state is DashboardDriverLeaderboardLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is DashboardDriverLeaderboardSuccess) {
+                    return SizedBox(
+                      height: 20.h,
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          final recent = state.driverLeaderboard[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 2.h),
+                            child: DriverCard(
+                              driverName:
+                                  "${recent.driver.givenName} ${recent.driver.familyName}",
+                                  teamName: recent.constructors.first.name,
+                              points: recent.points,
+                            ),
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  } else if (state is DashboardError) {
+                    return Text(state.message);
+                  }
+                  return SizedBox.shrink();
+                },
               ),
             ],
           ),
