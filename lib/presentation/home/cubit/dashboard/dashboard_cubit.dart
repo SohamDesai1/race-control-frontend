@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../core/services/failure.dart';
+import '../../../../repositories/race_repository.dart';
 import '../../../../models/recent_race.dart';
 import '../../../../models/upcoming_race.dart';
-import '../../../../repositories/race_repository.dart';
+import '../../../../models/driver_leaderboard.dart';
 import 'package:meta/meta.dart';
 part 'dashboard_state.dart';
 
@@ -28,6 +27,15 @@ class DashboardCubit extends Cubit<DashboardState> {
     result.fold(
       (failure) => emit(DashboardError(failure.message)),
       (recent) => emit(DashboardRecentSuccess(recent!)),
+    );
+  }
+
+  Future<void> fetchDriverLeaderboard() async {
+    emit(DashboardDriverLeaderboardLoading());
+    final result = await raceRepository.getDriverLeaderboard();
+    result.fold(
+      (failure) => emit(DashboardError(failure.message)),
+      (leaderboard) => emit(DashboardDriverLeaderboardSuccess(leaderboard)),
     );
   }
 }

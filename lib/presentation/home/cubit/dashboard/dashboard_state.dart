@@ -23,3 +23,9 @@ class DashboardRecentSuccess extends DashboardState {
   final RecentResultModel recentResults;
   DashboardRecentSuccess(this.recentResults);
 }
+
+class DashboardDriverLeaderboardLoading extends DashboardState {}
+class DashboardDriverLeaderboardSuccess extends DashboardState {
+  final List<DriverLeaderBoardModel> driverLeaderboard;
+  DashboardDriverLeaderboardSuccess(this.driverLeaderboard);
+}
