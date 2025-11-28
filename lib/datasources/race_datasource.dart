@@ -1,5 +1,6 @@
 import 'package:frontend/core/constants/api_routes.dart';
 import 'package:frontend/core/services/api_service.dart';
+import 'package:frontend/models/driver_leaderboard.dart';
 import 'package:frontend/models/recent_race.dart';
 import 'package:frontend/models/upcoming_race.dart';
 import 'package:injectable/injectable.dart';
@@ -32,5 +33,19 @@ class RaceDatasource {
     }
 
     return null;
+  }
+
+  Future<List<DriverLeaderBoardModel>> getDriverLeaderboard() async {
+    var res = await api.get(ApiRoutes.driverLeaderboard(DateTime.now().year));
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+
+      return data
+          .map((entry) => DriverLeaderBoardModel.fromJson(entry))
+          .toList();
+    }
+
+    return [];
   }
 }

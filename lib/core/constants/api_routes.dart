@@ -3,4 +3,5 @@ class ApiRoutes {
   static const String register = '/auth/register';
   static const String upcomingRaces = '/race/get_upcoming_race_data';
   static const String recentResults = '/race/get_race_results';
+  static String driverLeaderboard(int year) => '/standings/driver_standings/$year';
 }

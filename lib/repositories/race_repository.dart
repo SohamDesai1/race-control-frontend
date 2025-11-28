@@ -2,8 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:frontend/core/services/failure.dart';
 import '../models/upcoming_race.dart';
 import '../models/recent_race.dart';
+import '../models/driver_leaderboard.dart';
 
 abstract class RaceRepository {
   Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces();
   Future<Either<Failure, RecentResultModel?>> getRecentResult();
+  Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard();
 }
