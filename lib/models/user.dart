@@ -10,6 +10,7 @@ class UserModel {
   String? dob;
   String? imageUrl;
   String? token;
+  String? refreshToken;
   String? authProvider;
 
   UserModel(
@@ -21,6 +22,7 @@ class UserModel {
       this.hashedPassword,
       this.imageUrl,
       this.token,
+      this.refreshToken,
       this.createdAt,
       this.dob,
       this.gender,
@@ -28,24 +30,25 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final userJson = (json['data']['user'] as List).isNotEmpty
-        ? json['data']['user'][0]
+        ? json['data']
         : {};
 
     return UserModel(
-        id: userJson['id'],
-        name: userJson['name'] ?? '',
-        username: userJson['username'] ?? '',
-        email: userJson['email'] ?? '',
-        phone: userJson['phone'] ?? '',
-        hashedPassword: userJson['hashed_password'] ?? '',
-        imageUrl: userJson['imageUrl'] ?? '',
-        token: json['token'] ?? '',
-        createdAt: userJson['created_at'] != null
-            ? DateTime.parse(userJson['created_at'])
+        id: userJson['user'][0]['id'],
+        name: userJson['user'][0]['name'] ?? '',
+        username: userJson['user'][0]['username'] ?? '',
+        email: userJson['user'][0]['email'] ?? '',
+        phone: userJson['user'][0]['phone'] ?? '',
+        hashedPassword: userJson['user'][0]['hashed_password'] ?? '',
+        imageUrl: userJson['user'][0]['imageUrl'] ?? '',
+        token: json['data']['acces_token'] ?? '',
+        refreshToken: json['data']['refresh_token'] ?? '',
+        createdAt: userJson['user'][0]['created_at'] != null
+            ? DateTime.parse(userJson['user'][0]['created_at'])
             : null,
-        dob: userJson['dob'] ?? '',
-        gender: userJson['gender'] ?? '',
-        authProvider: userJson['auth_provider'] ?? '');
+        dob: userJson['user'][0]['dob'] ?? '',
+        gender: userJson['user'][0]['gender'] ?? '',
+        authProvider: userJson['user'][0]['auth_provider'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -58,10 +61,11 @@ class UserModel {
       'hashedPassword': hashedPassword,
       'imageUrl': imageUrl,
       'token': token,
+      'refreshToken': refreshToken,
       'createdAt': createdAt,
       'dob': dob,
       'gender': gender,
-      'authProvider': authProvider
+      'authProvider': authProvider,
     };
   }
 }
