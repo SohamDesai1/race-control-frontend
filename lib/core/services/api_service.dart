@@ -96,7 +96,7 @@ class ApiService {
     );
   }
   void _debugLog(String message) {
-    if (kDebugMode && kProfileMode) log(message);
+    if (kDebugMode || kProfileMode) log(message);
   }
 
   Future<void> _initializeAuthToken() async {

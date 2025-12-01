@@ -1,9 +1,10 @@
-import 'package:frontend/core/services/api_service.dart';
-import 'package:frontend/presentation/auth/register/views/set_password_screen.dart';
 import 'package:go_router/go_router.dart';
+import '../services/api_service.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
 import '../../presentation/auth/register/views/register_screen.dart';
+import '../../presentation/auth/register/views/set_password_screen.dart';
 import '../../presentation/home/views/home_screen.dart';
+import '../../presentation/home/views/race_results_screen.dart';
 import '../constants/route_names.dart';
 
 class Routing {
@@ -41,6 +42,17 @@ class Routing {
       GoRoute(
         path: RouteNames.setPassword,
         builder: (context, state) => const SetPasswordScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.raceResults,
+        path: RouteNames.raceResults,
+        builder: (context, state) {
+          final race = state.extra as Map<String, dynamic>?;
+          return RaceResultsScreen(
+            raceName: race?['raceName'],
+            raceResults: race?['raceResults'],
+          );
+        },
       ),
     ],
   );
