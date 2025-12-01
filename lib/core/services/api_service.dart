@@ -1,8 +1,9 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/core/constants/api_routes.dart';
+import 'dart:developer';
+import 'package:flutter/foundation.dart';
 
 class ApiResponse {
   final Map<String, dynamic> body;
@@ -52,27 +53,29 @@ class ApiService {
           if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          log(
-            'API Call: ${options.method} ${options.uri}'
-            'body: ${options.data}',
+          _debugLog(
+            "⬆️ API Request → ${options.method} ${options.uri}"
+            "\nHeaders: ${options.headers}"
+            "\nBody: ${options.data}",
           );
           handler.next(options);
         },
         onResponse: (response, handler) {
-          log(
-            'Response: ${response.data} with status code: ${response.statusCode}',
+          _debugLog(
+            "⬇️ API Response ← ${response.statusCode}"
+            "\nData: ${response.data}",
           );
           handler.next(response);
         },
         onError: (error, handler) async {
-          log("API Error: ${error.message}");
+          _debugLog("❌ API Error: ${error.message}");
 
           final response = error.response;
 
           if (response?.statusCode == 401 &&
               response?.data["message"] ==
                   "Token validation failed: ExpiredSignature") {
-            log("🔐 Access token expired. Refreshing...");
+            _debugLog("🔄 Token expired → refreshing token...");
 
             final refreshed = await _refreshToken();
 
@@ -92,13 +95,15 @@ class ApiService {
       ),
     );
   }
+  void _debugLog(String message) {
+    if (kDebugMode && kProfileMode) log(message);
+  }
 
   Future<void> _initializeAuthToken() async {
     final token = await _secureStorage.read(key: 'access_token');
-    print(token);
     if (token != null && token.isNotEmpty) {
       setAuthToken(token);
-      log('Loaded token from storage');
+      _debugLog('Loaded token from storage');
     }
   }
 
@@ -263,7 +268,7 @@ class ApiService {
     final email = await _secureStorage.read(key: 'email');
 
     if (refreshToken == null) {
-      log("No refresh token found");
+      _debugLog("No refresh token found");
       return false;
     }
 
@@ -281,11 +286,11 @@ class ApiService {
 
         setAuthToken(newAccess);
 
-        log("🔥 Token refreshed successfully");
+        _debugLog("🔥 Token refreshed successfully");
         return true;
       }
     } catch (e) {
-      log("❌ Token refresh failed: $e");
+      _debugLog("❌ Token refresh failed: $e");
     }
 
     return false;
