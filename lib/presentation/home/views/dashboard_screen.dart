@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart';
-import 'package:frontend/presentation/home/views/widgets/carousel.dart';
-import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
-import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
+import '../cubit/dashboard/dashboard_cubit.dart';
+import '../../../core/constants/route_names.dart';
+import 'widgets/carousel.dart';
+import 'widgets/driver_card.dart';
+import 'widgets/upcoming_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -99,12 +101,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          state.recentResults.raceName,
-                          style: TextStyle(
-                            fontSize: 4.w,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              state.recentResults.raceName,
+                              style: TextStyle(
+                                fontSize: 4.w,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                context.pushNamed(
+                                  RouteNames.raceResults,
+                                  extra: {
+                                    'raceName': state.recentResults.raceName,
+                                    'raceResults': state.recentResults.results,
+                                  },
+                                );
+                              },
+                              child: Text(
+                                "Full Results",
+                                style: TextStyle(
+                                  fontSize: 3.5.w,
+                                  color: Colors.red,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 2.h),
                         SizedBox(
@@ -161,7 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: DriverCard(
                               driverName:
                                   "${recent.driver.givenName} ${recent.driver.familyName}",
-                                  teamName: recent.constructors.first.name,
+                              teamName: recent.constructors.first.name,
                               points: recent.points,
                             ),
                           );
