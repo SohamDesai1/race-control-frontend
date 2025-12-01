@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:frontend/core/constants/api_routes.dart';
 
 class ApiResponse {
   final Map<String, dynamic> body;
@@ -26,27 +28,34 @@ class ApiException implements Exception {
   String toString() => 'ApiException ($statusCode): $message';
 }
 
+final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
 class ApiService {
   late final Dio _dio;
   final String _baseUrl = dotenv.env['API_BASE_URL']!;
 
   ApiService() {
-    _dio = Dio(BaseOptions(
-      baseUrl: _baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    ));
-
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: _baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
+    _initializeAuthToken();
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          log('API Call: ${options.method} ${options.uri}');
-          if (options.data != null) {
-            log('Request body: ${options.data}');
+        onRequest: (options, handler) async {
+          final token = await getToken();
+
+          if (token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
           }
+          log(
+            'API Call: ${options.method} ${options.uri}'
+            'body: ${options.data}',
+          );
           handler.next(options);
         },
         onResponse: (response, handler) {
@@ -55,12 +64,42 @@ class ApiService {
           );
           handler.next(response);
         },
-        onError: (error, handler) {
-          log('API Error: ${error.message}');
+        onError: (error, handler) async {
+          log("API Error: ${error.message}");
+
+          final response = error.response;
+
+          if (response?.statusCode == 401 &&
+              response?.data["message"] ==
+                  "Token validation failed: ExpiredSignature") {
+            log("🔐 Access token expired. Refreshing...");
+
+            final refreshed = await _refreshToken();
+
+            if (refreshed) {
+              final newToken = await _secureStorage.read(key: "access_token");
+              error.requestOptions.headers["Authorization"] =
+                  "Bearer $newToken";
+
+              final cloneReq = await _dio.fetch(error.requestOptions);
+              return handler.resolve(cloneReq);
+            }
+          }
+
+          // Normal flow
           handler.next(error);
         },
       ),
     );
+  }
+
+  Future<void> _initializeAuthToken() async {
+    final token = await _secureStorage.read(key: 'access_token');
+    print(token);
+    if (token != null && token.isNotEmpty) {
+      setAuthToken(token);
+      log('Loaded token from storage');
+    }
   }
 
   Future<ApiResponse> get(
@@ -212,6 +251,44 @@ class ApiService {
 
   void clearAuthToken() {
     _dio.options.headers.remove('Authorization');
+  }
+
+  static Future<String> getToken() async {
+    final token = await _secureStorage.read(key: 'access_token');
+    return token ?? '';
+  }
+
+  Future<bool> _refreshToken() async {
+    final refreshToken = await _secureStorage.read(key: 'refresh_token');
+    final email = await _secureStorage.read(key: 'email');
+
+    if (refreshToken == null) {
+      log("No refresh token found");
+      return false;
+    }
+
+    try {
+      final response = await _dio.post(
+        ApiRoutes.refreshToken,
+        data: {"refresh_token": refreshToken, "email": email},
+      );
+
+      if (response.statusCode == 200) {
+        final newAccess = response.data['data']["access_token"];
+        final newRefresh = response.data['data']["refresh_token"];
+        await _secureStorage.write(key: "access_token", value: newAccess);
+        await _secureStorage.write(key: "refresh_token", value: newRefresh);
+
+        setAuthToken(newAccess);
+
+        log("🔥 Token refreshed successfully");
+        return true;
+      }
+    } catch (e) {
+      log("❌ Token refresh failed: $e");
+    }
+
+    return false;
   }
 
   void updateHeaders(Map<String, String> headers) {

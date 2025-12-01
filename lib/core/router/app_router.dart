@@ -1,3 +1,4 @@
+import 'package:frontend/core/services/api_service.dart';
 import 'package:frontend/presentation/auth/register/views/set_password_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
@@ -8,6 +9,22 @@ import '../constants/route_names.dart';
 class Routing {
   static final router = GoRouter(
     initialLocation: RouteNames.login,
+
+    redirect: (context, state) async {
+      final String loggedIn = await ApiService.getToken();
+
+      final loggingIn =
+          state.matchedLocation == RouteNames.login ||
+          state.matchedLocation == RouteNames.register;
+
+      if (loggedIn.isEmpty) {
+        return loggingIn ? null : RouteNames.login;
+      } else {
+        if (loggingIn) return RouteNames.home;
+      }
+      return null;
+    },
+
     routes: [
       GoRoute(
         path: RouteNames.home,
