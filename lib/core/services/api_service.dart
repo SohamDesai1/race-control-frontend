@@ -55,7 +55,6 @@ class ApiService {
           }
           _debugLog(
             "⬆️ API Request → ${options.method} ${options.uri}"
-            "\nHeaders: ${options.headers}"
             "\nBody: ${options.data}",
           );
           handler.next(options);

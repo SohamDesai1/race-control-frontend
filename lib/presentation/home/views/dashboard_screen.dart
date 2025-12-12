@@ -50,6 +50,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (state is DashboardUpcomingLoading) {
                     return Center(child: CircularProgressIndicator());
                   } else if (state is DashboardUpcomingSuccess) {
+                    
+                    if (state.upcomingRaces.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No Upcoming Races",
+                          style: TextStyle(fontSize: 4.w, color: Colors.white),
+                        ),
+                      );
+                    }
                     var length = state.upcomingRaces.length <= 2
                         ? state.upcomingRaces.length
                         : state.upcomingRaces.length - 1;
