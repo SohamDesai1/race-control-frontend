@@ -28,6 +28,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: const Text(
+          'F1 Hub',
+          style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         child: SingleChildScrollView(
