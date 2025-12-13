@@ -1,31 +1,38 @@
 part of 'dashboard_cubit.dart';
 
-@immutable
-abstract class DashboardState {}
+class DashboardState {
+  final bool isLoading;
+  final bool hasLoaded;
+  final List<UpcomingRaceModel>? upcomingRaces;
+  final RecentResultModel? recentResults;
+  final List<DriverLeaderBoardModel>? driverLeaderboard;
+  final String? error;
 
-class DashboardInitial extends DashboardState {}
+  DashboardState({
+    this.isLoading = false,
+    this.hasLoaded = false,
+    this.upcomingRaces,
+    this.recentResults,
+    this.driverLeaderboard,
+    this.error,
+  });
 
-class DashboardError extends DashboardState {
-  final String message;
-  DashboardError(this.message);
+  DashboardState copyWith({
+    bool? isLoading,
+    bool? hasLoaded,
+    List<UpcomingRaceModel>? upcomingRaces,
+    RecentResultModel? recentResults,
+    List<DriverLeaderBoardModel>? driverLeaderboard,
+    String? error,
+  }) {
+    return DashboardState(
+      isLoading: isLoading ?? this.isLoading,
+      hasLoaded: hasLoaded ?? this.hasLoaded,
+      upcomingRaces: upcomingRaces ?? this.upcomingRaces,
+      recentResults: recentResults ?? this.recentResults,
+      driverLeaderboard: driverLeaderboard ?? this.driverLeaderboard,
+      error: error,
+    );
+  }
 }
 
-class DashboardUpcomingLoading extends DashboardState {}
-
-class DashboardUpcomingSuccess extends DashboardState {
-  final List<UpcomingRaceModel> upcomingRaces;
-  DashboardUpcomingSuccess(this.upcomingRaces);
-}
-
-class DashboardRecentLoading extends DashboardState {}
-
-class DashboardRecentSuccess extends DashboardState {
-  final RecentResultModel recentResults;
-  DashboardRecentSuccess(this.recentResults);
-}
-
-class DashboardDriverLeaderboardLoading extends DashboardState {}
-class DashboardDriverLeaderboardSuccess extends DashboardState {
-  final List<DriverLeaderBoardModel> driverLeaderboard;
-  DashboardDriverLeaderboardSuccess(this.driverLeaderboard);
-}
