@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/core/services/failure.dart';
 import 'package:frontend/datasources/race_datasource.dart';
+import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
 import 'package:frontend/models/recent_race.dart';
 import 'package:frontend/models/upcoming_race.dart';
@@ -37,6 +38,17 @@ class RaceRepositoryImpl implements RaceRepository {
   getDriverLeaderboard() async {
     try {
       final res = await raceDatasource.getDriverLeaderboard();
+      return Right(res);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ConstructorLeaderBoardModel>>>
+  getConstructorLeaderboard() async {
+    try {
+      final res = await raceDatasource.getConstructorLeaderboard();
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));
