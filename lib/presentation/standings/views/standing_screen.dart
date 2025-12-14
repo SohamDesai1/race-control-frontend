@@ -82,6 +82,10 @@ class _StandingScreenState extends State<StandingScreen>
             indicatorColor: Colors.red,
             labelColor: Colors.white,
             controller: _tabController,
+            labelStyle: const TextStyle(
+              fontSize: 18,
+              fontFamily: 'Formula1Regular',
+            ),
             tabs: const [
               Tab(text: 'Drivers'),
               Tab(text: 'Constructors'),
@@ -163,10 +167,74 @@ class _StandingScreenState extends State<StandingScreen>
                     ],
                   ),
                 ),
-                Center(
-                  child: Text(
-                    'Constructors Standings',
-                    style: TextStyle(color: Colors.white),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  color: Color.fromARGB(255, 25, 18, 18),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 2.h),
+                      Row(
+                        children: [
+                          SizedBox(width: 5.w),
+                          Text(
+                            'Pos',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(width: 18.w),
+                          Text(
+                            'Driver',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(width: 40.w),
+                          Text(
+                            'Pts',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 1.h),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.62,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            final constructor = context
+                                .read<DashboardCubit>()
+                                .state
+                                .constructorLeaderboard![index];
+                            final color = getF1TeamColor(
+                              constructor.constructor.name,
+                            );
+                            return DriverStandingCard(
+                              position: int.parse(constructor.position),
+                              driverName: constructor.constructor.name,
+                              points: int.parse(constructor.points),
+                              highlightColor: color,
+                            );
+                          },
+                          itemCount: context
+                              .read<DashboardCubit>()
+                              .state
+                              .constructorLeaderboard
+                              ?.length,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
