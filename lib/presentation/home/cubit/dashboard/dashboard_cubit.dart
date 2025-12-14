@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../repositories/race_repository.dart';
 import '../../../../models/recent_race.dart';
 import '../../../../models/upcoming_race.dart';
 import '../../../../models/driver_leaderboard.dart';
-import 'package:meta/meta.dart';
 part 'dashboard_state.dart';
 
 @injectable
@@ -23,34 +23,41 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     final upcoming = await raceRepository.getUpcomingRaces();
     final recent = await raceRepository.getRecentResult();
-    final leaderboard = await raceRepository.getDriverLeaderboard();
+    final driverLeaderboard = await raceRepository.getDriverLeaderboard();
+    final constructorLeaderboard = await raceRepository
+        .getConstructorLeaderboard();
 
     upcoming.fold(
-      (failure) => emit(state.copyWith(
-        isLoading: false,
-        error: failure.message,
-      )),
+      (failure) =>
+          emit(state.copyWith(isLoading: false, error: failure.message)),
       (upcomingData) {
         recent.fold(
-          (failure) => emit(state.copyWith(
-            isLoading: false,
-            error: failure.message,
-          )),
+          (failure) =>
+              emit(state.copyWith(isLoading: false, error: failure.message)),
           (recentData) {
-            leaderboard.fold(
-              (failure) => emit(state.copyWith(
-                isLoading: false,
-                error: failure.message,
-              )),
-              (leaderboardData) => emit(
-                state.copyWith(
-                  isLoading: false,
-                  hasLoaded: true,
-                  upcomingRaces: upcomingData,
-                  recentResults: recentData,
-                  driverLeaderboard: leaderboardData,
-                ),
+            driverLeaderboard.fold(
+              (failure) => emit(
+                state.copyWith(isLoading: false, error: failure.message),
               ),
+              (driverData) {
+                constructorLeaderboard.fold(
+                  (failure) => emit(
+                    state.copyWith(isLoading: false, error: failure.message),
+                  ),
+                  (constructorData) {
+                    emit(
+                      state.copyWith(
+                        isLoading: false,
+                        hasLoaded: true,
+                        upcomingRaces: upcomingData,
+                        recentResults: recentData,
+                        driverLeaderboard: driverData,
+                        constructorLeaderboard: constructorData,
+                      ),
+                    );
+                  },
+                );
+              },
             );
           },
         );
@@ -58,5 +65,3 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 }
-
-
