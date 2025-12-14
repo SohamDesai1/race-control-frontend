@@ -1,5 +1,6 @@
 import 'package:frontend/core/constants/api_routes.dart';
 import 'package:frontend/core/services/api_service.dart';
+import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
 import 'package:frontend/models/recent_race.dart';
 import 'package:frontend/models/upcoming_race.dart';
@@ -40,6 +41,22 @@ class RaceDatasource {
 
       return data
           .map((entry) => DriverLeaderBoardModel.fromJson(entry))
+          .toList();
+    }
+
+    return [];
+  }
+
+  Future<List<ConstructorLeaderBoardModel>> getConstructorLeaderboard() async {
+    var res = await api.get(
+      ApiRoutes.constructorLeaderboard(DateTime.now().year),
+    );
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+
+      return data
+          .map((entry) => ConstructorLeaderBoardModel.fromJson(entry))
           .toList();
     }
 
