@@ -115,7 +115,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 18.w),
+                          SizedBox(width: 13.w),
                           Text(
                             'Driver',
                             style: TextStyle(
@@ -125,7 +125,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 40.w),
+                          SizedBox(width: 45.w),
                           Text(
                             'Pts',
                             style: TextStyle(
@@ -139,7 +139,7 @@ class _StandingScreenState extends State<StandingScreen>
                       ),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.62,
+                        height: MediaQuery.of(context).size.height * 0.65,
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final driver = context
@@ -155,6 +155,7 @@ class _StandingScreenState extends State<StandingScreen>
                                   "${driver.driver.givenName} ${driver.driver.familyName}",
                               points: int.parse(driver.points),
                               highlightColor: color,
+                              index: index,
                             );
                           },
                           itemCount: context
@@ -186,7 +187,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 18.w),
+                          SizedBox(width: 13.w),
                           Text(
                             'Driver',
                             style: TextStyle(
@@ -196,7 +197,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 40.w),
+                          SizedBox(width: 45.w),
                           Text(
                             'Pts',
                             style: TextStyle(
@@ -210,7 +211,7 @@ class _StandingScreenState extends State<StandingScreen>
                       ),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.62,
+                        height: MediaQuery.of(context).size.height * 0.65,
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final constructor = context
@@ -225,6 +226,7 @@ class _StandingScreenState extends State<StandingScreen>
                               driverName: constructor.constructor.name,
                               points: int.parse(constructor.points),
                               highlightColor: color,
+                              index: index,
                             );
                           },
                           itemCount: context

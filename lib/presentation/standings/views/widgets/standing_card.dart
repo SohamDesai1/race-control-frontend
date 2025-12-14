@@ -6,71 +6,69 @@ class DriverStandingCard extends StatelessWidget {
   final String driverName;
   final int points;
   final Color highlightColor;
-
+  final int index;
   const DriverStandingCard({
     super.key,
     required this.position,
     required this.driverName,
     required this.points,
     this.highlightColor = const Color(0xFFFF8C00),
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.9.h),
       child: Column(
         children: [
-          // ✅ Main Card
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+            padding: EdgeInsets.symmetric(vertical: 1.3.h, horizontal: 4.w),
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(5),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // ✅ Position
+                // Position
                 Text(
                   position.toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16.sp,
                   ),
                 ),
 
-                // ✅ Driver Name
+                SizedBox(width: index < 9 ? 17.w : 14.w),
+
+                // Driver name (START aligned)
                 Expanded(
-                  child: Center(
-                    child: Text(
-                      driverName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  child: Text(
+                    driverName,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.sp,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
 
-                // ✅ Points
+                // Points
                 Text(
                   points.toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
               ],
             ),
           ),
 
-          // ✅ ORANGE LINE BELOW THE CONTAINER (OUTSIDE)
-          // const SizedBox(height: 4),
           Container(
             height: 5,
             width: double.infinity,
