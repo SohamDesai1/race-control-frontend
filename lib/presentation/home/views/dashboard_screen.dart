@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/route_names.dart';
@@ -43,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
 
             if (state.error != null) {
+              log("Error loading dashboard data: ${state.error}");
               return Center(child: Text(state.error!));
             }
 
@@ -54,16 +57,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             final recent = state.recentResults;
             final leaderboard = state.driverLeaderboard;
 
-            final upcomingLength = upcoming!.length <= 2
-                ? upcoming.length
-                : upcoming.length - 1;
+            final upcomingLength = upcoming!.length <= 2 ? upcoming.length : 3;
 
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Carousel(),
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
 
                   Text(
                     "Upcoming Races",
@@ -80,19 +81,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   if (upcoming.isNotEmpty)
                     SizedBox(
-                      height: upcomingLength * 17.h,
+                      height: upcomingLength * 17.5.h,
                       child: ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: upcomingLength,
                         separatorBuilder: (_, __) => SizedBox(height: 2.h),
                         itemBuilder: (context, index) {
                           final race = upcoming[index];
-                          final date = DateTime.parse(race.date);
+                          final date = DateTime.parse(race.date!);
                           final formatted = DateFormat('dd MMM').format(date);
 
                           return UpcomingCard(
                             date: formatted,
-                            raceName: race.raceName,
+                            raceName: race.raceName!,
                             location: "${race.locality}, ${race.country}",
                           );
                         },

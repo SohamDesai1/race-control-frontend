@@ -18,7 +18,7 @@ class Carousel extends StatelessWidget {
       child: CarouselSlider(
         carouselController: CarouselSliderController(),
         options: CarouselOptions(
-          height: 22.h,
+          height: 17.h,
           autoPlay: true,
           viewportFraction: 0.9,
           enlargeCenterPage: true,
@@ -46,7 +46,7 @@ class Carousel extends StatelessWidget {
                         child: CircularProgressIndicator(
                           value: progress.expectedTotalBytes != null
                               ? progress.cumulativeBytesLoaded /
-                                  (progress.expectedTotalBytes ?? 1)
+                                    (progress.expectedTotalBytes ?? 1)
                               : null,
                           color: Colors.redAccent,
                         ),
