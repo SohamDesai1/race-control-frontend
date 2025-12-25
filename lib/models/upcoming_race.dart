@@ -5,20 +5,20 @@ part 'upcoming_race.g.dart';
 @freezed
 abstract class UpcomingRaceModel with _$UpcomingRaceModel {
   factory UpcomingRaceModel({
-    required String circuitId,
-    required String circuitName,
-    required String country,
-    required String lat,
-    required String long,
-    required String locality,
+     String? circuitId,
+     String? circuitName,
+     String? country,
+     String? lat,
+     String? long,
+     String? locality,
     @JsonKey(name: 'created_at') 
-    required String createdAt,
-    required String date,
-    required int id,
-    required String raceName,
-    required String round,
-    required String season,
-    required String time,
+     String? createdAt,
+     String? date,
+     int? id,
+     String? raceName,
+     String? round,
+     String? season,
+     String? time,
   }) = _UpcomingRaceModel;
 
   factory UpcomingRaceModel.fromJson(Map<String, dynamic> json) =>
