@@ -82,10 +82,7 @@ class _StandingScreenState extends State<StandingScreen>
             indicatorColor: Colors.red,
             labelColor: Colors.white,
             controller: _tabController,
-            labelStyle: const TextStyle(
-              fontSize: 18,
-              fontFamily: 'Formula1Regular',
-            ),
+            labelStyle: TextStyle(fontSize: 5.w, fontFamily: 'Formula1Regular'),
             tabs: const [
               Tab(text: 'Drivers'),
               Tab(text: 'Constructors'),
@@ -125,7 +122,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 45.w),
+                          SizedBox(width: 43.w),
                           Text(
                             'Pts',
                             style: TextStyle(
@@ -139,7 +136,7 @@ class _StandingScreenState extends State<StandingScreen>
                       ),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
+                        height: MediaQuery.of(context).size.height * 0.62,
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final driver = context
@@ -189,7 +186,7 @@ class _StandingScreenState extends State<StandingScreen>
                           ),
                           SizedBox(width: 13.w),
                           Text(
-                            'Driver',
+                            'Team',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -197,7 +194,7 @@ class _StandingScreenState extends State<StandingScreen>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(width: 45.w),
+                          SizedBox(width: 43.w),
                           Text(
                             'Pts',
                             style: TextStyle(
@@ -211,7 +208,7 @@ class _StandingScreenState extends State<StandingScreen>
                       ),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
+                        height: MediaQuery.of(context).size.height * 0.62,
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final constructor = context
