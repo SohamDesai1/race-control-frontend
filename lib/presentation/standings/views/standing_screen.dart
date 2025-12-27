@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart';
-import 'package:frontend/presentation/standings/views/widgets/standing_card.dart';
 import 'package:sizer/sizer.dart';
+import '../../home/cubit/dashboard/dashboard_cubit.dart';
+import '../../../utils/race_utils.dart';
+import 'widgets/standing_card.dart';
 
 class StandingScreen extends StatefulWidget {
   const StandingScreen({super.key});
@@ -25,43 +26,6 @@ class _StandingScreenState extends State<StandingScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  Color getF1TeamColor(String constructorName) {
-    switch (constructorName) {
-      case 'Red Bull':
-        return const Color(0xFF1E41FF); // Red Bull Blue
-
-      case 'Ferrari':
-        return const Color(0xFFDC0000);
-
-      case 'Mercedes':
-        return const Color(0xFF00D2BE);
-
-      case 'McLaren':
-        return const Color(0xFFFF8700);
-
-      case 'Aston Martin':
-        return const Color(0xFF006F62);
-
-      case 'Alpine F1 Team':
-        return const Color(0xFF0090FF);
-
-      case 'Williams':
-        return const Color(0xFF005AFF);
-
-      case 'RB F1 Team':
-        return const Color(0xFF2B4562);
-
-      case 'Sauber':
-        return const Color(0xFF900000);
-
-      case 'Haas F1 Team':
-        return const Color(0xFFFFFFFF);
-
-      default:
-        return Colors.grey;
-    }
   }
 
   @override
@@ -143,10 +107,10 @@ class _StandingScreenState extends State<StandingScreen>
                                 .read<DashboardCubit>()
                                 .state
                                 .driverLeaderboard![index];
-                            final color = getF1TeamColor(
+                            final color = RaceUtils.getF1TeamColor(
                               driver.constructors[0].name,
                             );
-                            return DriverStandingCard(
+                            return StandingCard(
                               position: int.parse(driver.position),
                               driverName:
                                   "${driver.driver.givenName} ${driver.driver.familyName}",
@@ -215,10 +179,10 @@ class _StandingScreenState extends State<StandingScreen>
                                 .read<DashboardCubit>()
                                 .state
                                 .constructorLeaderboard![index];
-                            final color = getF1TeamColor(
+                            final color = RaceUtils.getF1TeamColor(
                               constructor.constructor.name,
                             );
-                            return DriverStandingCard(
+                            return StandingCard(
                               position: int.parse(constructor.position),
                               driverName: constructor.constructor.name,
                               points: int.parse(constructor.points),

@@ -44,7 +44,8 @@ flutter:
   assets:
     - .env.dev
     - .env.prod
-    - assets/Melbourne.json
+    - assets/
+    - assets/images/
     - assets/tracks/
   fonts:
     - family: Formula1Bold

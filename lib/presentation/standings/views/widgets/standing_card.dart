@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class DriverStandingCard extends StatelessWidget {
+class StandingCard extends StatelessWidget {
   final int position;
   final String driverName;
   final int points;
   final Color highlightColor;
   final int index;
-  const DriverStandingCard({
+  const StandingCard({
     super.key,
     required this.position,
     required this.driverName,
