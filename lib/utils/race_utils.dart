@@ -61,4 +61,61 @@ class RaceUtils {
       colors: [_lighten(baseColor, 0.25), _darken(baseColor, 0.25)],
     );
   }
+
+  static mapTrackImage(String trackName) {
+    switch (trackName) {
+      case 'albert_park':
+        return 'assets/tracks/Australia.svg';
+      case 'americas':
+        return 'assets/tracks/Americas.svg';
+      case 'bahrain':
+        return 'assets/tracks/Bahrain.svg';
+      case 'baku':
+        return 'assets/tracks/Baku.svg';
+      case 'catalunya':
+        return 'assets/tracks/Spain.svg';
+      case 'hungaroring':
+        return 'assets/tracks/Hungororing.svg';
+      case 'imola':
+        return 'assets/tracks/Imola.png';
+      case 'interlagos':
+        return 'assets/tracks/Brazil.svg';
+      case 'jeddah':
+        return 'assets/tracks/Jeddah.png';
+      case 'losail':
+        return 'assets/tracks/Qatar.png';
+      case 'madring':
+        return 'assets/tracks/Madrid.svg';
+      case 'marina_bay':
+        return 'assets/tracks/Singapore.svg';
+      case 'miami':
+        return 'assets/tracks/Miami.png';
+      case 'monaco':
+        return 'assets/tracks/Monaco.svg';
+      case 'monza':
+        return 'assets/tracks/Monza.svg';
+      case 'red_bull_ring':
+        return 'assets/tracks/Austria.svg';
+      case 'rodriguez':
+        return 'assets/tracks/Mexico.svg';
+      case 'shanghai':
+        return 'assets/tracks/China.svg';
+      case 'silverstone':
+        return 'assets/tracks/British.svg';
+      case 'spa':
+        return 'assets/tracks/Spa.svg';
+      case 'suzuka':
+        return 'assets/tracks/Japan.svg';
+      case 'vegas':
+        return 'assets/tracks/Las Vegas.png';
+      case 'villeneuve':
+        return 'assets/tracks/Canada.svg';
+      case 'yas_marina':
+        return 'assets/tracks/Yas Marina.svg';
+      case 'zandvoort':
+        return 'assets/tracks/Zandvoort.svg';
+      default:
+        return 'assets/tracks/Spa.svg';
+    }
+  }
 }
