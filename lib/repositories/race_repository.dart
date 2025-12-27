@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/core/services/failure.dart';
+import 'package:frontend/models/race_details.dart';
 import '../models/upcoming_race.dart';
 import '../models/recent_race.dart';
 import '../models/driver_leaderboard.dart';
@@ -9,5 +10,10 @@ abstract class RaceRepository {
   Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces();
   Future<Either<Failure, RecentResultModel?>> getRecentResult();
   Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard();
-  Future<Either<Failure, List<ConstructorLeaderBoardModel>>> getConstructorLeaderboard();
+  Future<Either<Failure, List<ConstructorLeaderBoardModel>>>
+  getConstructorLeaderboard();
+  Future<Either<Failure, RaceDetailsModel?>> getRaceDetails(
+    String year,
+    String round,
+  );
 }

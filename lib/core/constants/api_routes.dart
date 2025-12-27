@@ -6,4 +6,5 @@ class ApiRoutes {
   static const String recentResults = '/race/get_race_results';
   static String driverLeaderboard(int year) => '/standings/driver_standings/$year';
   static String constructorLeaderboard(int year) => '/standings/constructor_standings/$year';
+  static String raceDetails(String year, String round) => '/race/get_race_data/$year/$round';
 }

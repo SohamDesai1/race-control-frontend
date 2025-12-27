@@ -2,6 +2,7 @@ import 'package:frontend/core/constants/api_routes.dart';
 import 'package:frontend/core/services/api_service.dart';
 import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
+import 'package:frontend/models/race_details.dart';
 import 'package:frontend/models/recent_race.dart';
 import 'package:frontend/models/upcoming_race.dart';
 import 'package:injectable/injectable.dart';
@@ -61,5 +62,15 @@ class RaceDatasource {
     }
 
     return [];
+  }
+
+  Future<RaceDetailsModel?> getRaceDetails(String year, String round) async {
+    var res = await api.get(ApiRoutes.raceDetails(year, round));
+
+    if (res.isSuccess) {
+      return RaceDetailsModel.fromJson(res.body);
+    }
+
+    return null;
   }
 }
