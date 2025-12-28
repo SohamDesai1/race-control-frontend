@@ -1,3 +1,4 @@
+import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
@@ -51,6 +52,19 @@ class Routing {
           return RaceResultsScreen(
             raceName: race?['raceName'],
             raceResults: race?['raceResults'],
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.raceDetails,
+        path: RouteNames.raceDetails,
+        builder: (context, state) {
+          final race = state.extra as Map<String, dynamic>?;
+          return RaceDetailScreen(
+            trackimage: race?['trackimage'],
+            gpName: race?['gpName'],
+            season: race?['season'],
+            round: race?['round'],
           );
         },
       ),

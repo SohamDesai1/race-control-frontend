@@ -7,6 +7,7 @@ import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart'
 import 'package:frontend/presentation/home/views/widgets/carousel.dart';
 import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
+import 'package:frontend/utils/race_utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -95,6 +96,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             date: formatted,
                             raceName: race.raceName!,
                             location: "${race.locality}, ${race.country}",
+                            onTap: () => context.pushNamed(
+                              RouteNames.raceDetails,
+                              extra: {
+                                'season': race.season,
+                                'round': race.round,
+                                'gpName': race.raceName,
+                                'trackimage': RaceUtils.mapTrackImage(
+                                  race.circuitId!,
+                                ),
+                              },
+                            ),
                           );
                         },
                       ),

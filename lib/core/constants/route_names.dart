@@ -5,4 +5,5 @@ class RouteNames {
   static const String register = '/register';
   static const String setPassword = '/set-password';
   static const String raceResults = '/race-results';
+  static const String raceDetails = '/race-details';
 }
