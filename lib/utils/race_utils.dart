@@ -118,4 +118,25 @@ class RaceUtils {
         return 'assets/tracks/Spa.svg';
     }
   }
+
+  static mapSessionName(String session) {
+    switch (session) {
+      case 'FirstPractice':
+        return 'FP1';
+      case 'SecondPractice':
+        return 'FP2';
+      case 'ThirdPractice':
+        return 'FP3';
+      case 'Qualifying':
+        return 'Quali';
+      case 'SprintQualifying':
+        return 'Sprint Quali';
+      case 'Sprint':
+        return 'Sprint';
+      case 'Race':
+        return 'Race';
+      default:
+        return session;
+    }
+  }
 }
