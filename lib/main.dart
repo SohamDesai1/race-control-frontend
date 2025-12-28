@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:frontend/presentation/home/cubit/bottom_bar_cubit.dart';
 import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart';
+import 'package:frontend/presentation/raceDetails/cubit/race_details_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -24,6 +25,7 @@ void main() async {
       BlocProvider(create: (_) => getIt<RegisterCubit>()),
       BlocProvider(create: (_) => getIt<NavigationCubit>()),
       BlocProvider(create: (_) => getIt<DashboardCubit>()),
+      BlocProvider(create: (_) => getIt<RaceDetailsCubit>()),
     ],
     child: MainApp(),
   ));
