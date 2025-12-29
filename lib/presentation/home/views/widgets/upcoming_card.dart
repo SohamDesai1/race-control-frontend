@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/race_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -18,31 +19,6 @@ class UpcomingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String calcStatus() {
-      final now = DateTime.now();
-      if (date.isAfter(now) && date.difference(now).inDays >= 3) {
-        return "Upcoming";
-      } else if (date.isAfter(now)) {
-        return "Live";
-      } else {
-        return "Completed";
-      }
-    }
-
-    Color calcColor() {
-      final status = calcStatus();
-      switch (status) {
-        case "Upcoming":
-          return Colors.grey;
-        case "Live":
-          return const Color.fromARGB(255, 255, 152, 0);
-        case "Completed":
-          return const Color.fromARGB(255, 76, 175, 80);
-        default:
-          return Colors.grey;
-      }
-    }
-
     return Container(
       height: 16.h,
       decoration: BoxDecoration(
@@ -128,9 +104,9 @@ class UpcomingCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      calcStatus(),
+                      RaceUtils.calcStatus(date),
                       style: TextStyle(
-                        color: calcColor(),
+                        color: RaceUtils.calcColor(date),
                         fontSize: 2.7.w,
                         fontWeight: FontWeight.w600,
                       ),

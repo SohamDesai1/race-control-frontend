@@ -139,4 +139,29 @@ class RaceUtils {
         return session;
     }
   }
+
+  static String calcStatus(DateTime date) {
+    final now = DateTime.now();
+    if (date.isAfter(now) && date.difference(now).inDays >= 3) {
+      return "Upcoming";
+    } else if (date.isAfter(now)) {
+      return "Live";
+    } else {
+      return "Completed";
+    }
+  }
+
+  static Color calcColor(DateTime date) {
+    final status = calcStatus(date);
+    switch (status) {
+      case "Upcoming":
+        return Colors.grey;
+      case "Live":
+        return const Color.fromARGB(255, 255, 152, 0);
+      case "Completed":
+        return const Color.fromARGB(255, 76, 175, 80);
+      default:
+        return Colors.grey;
+    }
+  }
 }

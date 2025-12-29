@@ -85,7 +85,6 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                 if (raceDetails == null) {
                   return const SizedBox.shrink();
                 }
-
                 return Column(
                   children: [
                     SizedBox(
@@ -116,12 +115,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                           ).format(dateTime.toLocal());
                           return Container(
                             color: index % 2 == 0
-                                ? Color.fromARGB(
-                                    255,
-                                    255,
-                                    30,
-                                    0,
-                                  ).withOpacity(0.5)
+                                ? Color.fromARGB(255, 28, 25, 25)
                                 : Colors.black,
                             padding: EdgeInsets.symmetric(
                               vertical: 1.h,
@@ -166,9 +160,23 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                     ],
                                   ),
                                 ),
+                                Expanded(
+                                  child: Text(
+                                    RaceUtils.calcStatus(dateTime.toLocal()),
+                                    style: TextStyle(
+                                      color: RaceUtils.calcColor(
+                                        dateTime.toLocal(),
+                                      ),
+                                      fontSize: 2.7.w,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                                 GestureDetector(
                                   onTap: () {
-                                    if (dateTime.isAfter(DateTime.now())) {
+                                    if (dateTime.toLocal().isAfter(
+                                      DateTime.now(),
+                                    )) {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
