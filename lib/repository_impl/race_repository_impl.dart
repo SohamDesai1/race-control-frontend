@@ -15,9 +15,9 @@ class RaceRepositoryImpl implements RaceRepository {
   final RaceDatasource raceDatasource;
 
   @override
-  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces() async {
+  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(String date) async {
     try {
-      final res = await raceDatasource.getUpcomingRaces();
+      final res = await raceDatasource.getUpcomingRaces(date);
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));
@@ -63,6 +63,16 @@ class RaceRepositoryImpl implements RaceRepository {
   ) async {
     try {
       final res = await raceDatasource.getRaceDetails(year, round);
+      return Right(res);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<RaceModel>>> getCalendar(String year) async {
+    try {
+      final res = await raceDatasource.getCalendar(year);
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));

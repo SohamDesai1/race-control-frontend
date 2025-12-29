@@ -7,7 +7,7 @@ import '../models/driver_leaderboard.dart';
 import '../models/constructor_leaderboard.dart';
 
 abstract class RaceRepository {
-  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces();
+  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(String date);
   Future<Either<Failure, RecentResultModel?>> getRecentResult();
   Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard();
   Future<Either<Failure, List<ConstructorLeaderBoardModel>>>
@@ -16,4 +16,5 @@ abstract class RaceRepository {
     String year,
     String round,
   );
+  Future<Either<Failure, List<RaceModel>>> getCalendar(String year);
 }

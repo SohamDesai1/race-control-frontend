@@ -11,8 +11,8 @@ import 'package:injectable/injectable.dart';
 class RaceDatasource {
   var api = ApiService();
 
-  Future<List<UpcomingRaceModel>> getUpcomingRaces() async {
-    var res = await api.get(ApiRoutes.upcomingRaces);
+  Future<List<UpcomingRaceModel>> getUpcomingRaces(String date) async {
+    var res = await api.get(ApiRoutes.upcomingRaces(date));
     if (res.isSuccess) {
       final data = res.body['data'] as List? ?? [];
       return data.map((e) => UpcomingRaceModel.fromJson(e)).toList();
@@ -72,5 +72,17 @@ class RaceDatasource {
     }
 
     return null;
+  }
+
+  Future<List<RaceModel>> getCalendar(String year) async {
+    var res = await api.get(ApiRoutes.allRacesInSeason(year));
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+
+      return data.map((entry) => RaceModel.fromJson(entry)).toList();
+    }
+
+    return [];
   }
 }
