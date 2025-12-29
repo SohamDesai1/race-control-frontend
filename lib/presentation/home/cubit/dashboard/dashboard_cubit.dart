@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 import '../../../../repositories/race_repository.dart';
 import '../../../../models/recent_race.dart';
 import '../../../../models/upcoming_race.dart';
@@ -21,7 +22,9 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     emit(state.copyWith(isLoading: true));
 
-    final upcoming = await raceRepository.getUpcomingRaces();
+    final upcoming = await raceRepository.getUpcomingRaces(
+      DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    );
     final recent = await raceRepository.getRecentResult();
     final driverLeaderboard = await raceRepository.getDriverLeaderboard();
     final constructorLeaderboard = await raceRepository
