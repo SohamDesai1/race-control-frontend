@@ -9,7 +9,6 @@ import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
 import 'package:frontend/utils/race_utils.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -90,10 +89,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         itemBuilder: (context, index) {
                           final race = upcoming[index];
                           final date = DateTime.parse(race.date!);
-                          final formatted = DateFormat('dd MMM').format(date);
 
                           return UpcomingCard(
-                            date: formatted,
+                            date: date,
                             raceName: race.raceName!,
                             location: "${race.locality}, ${race.country}",
                             onTap: () => context.pushNamed(

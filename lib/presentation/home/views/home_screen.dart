@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/calendar/views/calendar_screen.dart';
 import 'package:frontend/presentation/home/cubit/bottom_bar_cubit.dart';
 import 'package:frontend/presentation/home/views/dashboard_screen.dart';
 import 'package:frontend/presentation/standings/views/standing_screen.dart';
@@ -32,7 +33,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
     List screens = [
       const DashboardScreen(),
       const StandingScreen(),
-      const Center(child: Text('Drivers Screen')),
+      const CalendarScreen(),
       const Center(child: Text('Settings Screen')),
     ];
     return BlocBuilder<NavigationCubit, int>(
