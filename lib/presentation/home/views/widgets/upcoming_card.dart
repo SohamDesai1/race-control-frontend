@@ -145,24 +145,26 @@ class UpcomingCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 2.w),
-                Expanded(
-                  child: Container(
-                    height: 5.5.h,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 35, 35, 35),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Set Reminder",
-                        style: TextStyle(
-                          color: Colors.white60,
-                          fontWeight: FontWeight.w600,
+                RaceUtils.calcStatus(date) != "Completed"
+                    ? Expanded(
+                        child: Container(
+                          height: 5.5.h,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 35, 35, 35),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Set Reminder",
+                              style: TextStyle(
+                                color: Colors.white60,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           ),

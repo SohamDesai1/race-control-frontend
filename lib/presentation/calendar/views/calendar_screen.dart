@@ -131,7 +131,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           RouteNames.raceDetails,
                           extra: {
                             'season': race.season,
-                            'round': race.round,
+                            'raceId': race.id.toString(),
                             'gpName': race.raceName,
                             'trackimage': RaceUtils.mapTrackImage(
                               race.circuitId!,
