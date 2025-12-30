@@ -8,7 +8,7 @@ abstract class RaceDetailsModel with _$RaceDetailsModel {
   const factory RaceDetailsModel({
     required List<Circuit> circuit,
     required List<RaceModel> race,
-    required List<Session> sessions,
+    required List<SessionModel> sessions,
   }) = _RaceDetailsModel;
 
   factory RaceDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -48,8 +48,8 @@ abstract class RaceModel with _$RaceModel {
 }
 
 @freezed
-abstract class Session with _$Session {
-  const factory Session({
+abstract class SessionModel with _$SessionModel {
+  const factory SessionModel({
     String? country,
     DateTime? date,
     int? id,
@@ -58,8 +58,8 @@ abstract class Session with _$Session {
     String? sessionType,
     @JsonKey(name: "session_key") int? sessionKey,
     String? time,
-  }) = _Session;
+  }) = _SessionModel;
 
-  factory Session.fromJson(Map<String, dynamic> json) =>
-      _$SessionFromJson(json);
+  factory SessionModel.fromJson(Map<String, dynamic> json) =>
+      _$SessionModelFromJson(json);
 }

@@ -1,13 +1,12 @@
-import 'package:dartz/dartz.dart';
-import 'package:frontend/core/services/failure.dart';
-import 'package:frontend/datasources/race_datasource.dart';
-import 'package:frontend/models/constructor_leaderboard.dart';
-import 'package:frontend/models/driver_leaderboard.dart';
-import 'package:frontend/models/race_details.dart';
-import 'package:frontend/models/recent_race.dart';
-import 'package:frontend/models/upcoming_race.dart';
-import 'package:frontend/repositories/race_repository.dart';
 import 'package:injectable/injectable.dart';
+import 'package:dartz/dartz.dart';
+import '../datasources/race_datasource.dart';
+import '../core/services/failure.dart';
+import '../repositories/race_repository.dart';
+import '../models/constructor_leaderboard.dart';
+import '../models/driver_leaderboard.dart';
+import '../models/recent_race.dart';
+import '../models/upcoming_race.dart';
 
 @LazySingleton(as: RaceRepository)
 class RaceRepositoryImpl implements RaceRepository {
@@ -50,29 +49,6 @@ class RaceRepositoryImpl implements RaceRepository {
   getConstructorLeaderboard() async {
     try {
       final res = await raceDatasource.getConstructorLeaderboard();
-      return Right(res);
-    } catch (e) {
-      return Left(Failure(400, e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, RaceDetailsModel?>> getRaceDetails(
-    String year,
-    String round,
-  ) async {
-    try {
-      final res = await raceDatasource.getRaceDetails(year, round);
-      return Right(res);
-    } catch (e) {
-      return Left(Failure(400, e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<RaceModel>>> getCalendar(String year) async {
-    try {
-      final res = await raceDatasource.getCalendar(year);
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));

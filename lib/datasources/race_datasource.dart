@@ -1,11 +1,10 @@
-import 'package:frontend/core/constants/api_routes.dart';
-import 'package:frontend/core/services/api_service.dart';
-import 'package:frontend/models/constructor_leaderboard.dart';
-import 'package:frontend/models/driver_leaderboard.dart';
-import 'package:frontend/models/race_details.dart';
-import 'package:frontend/models/recent_race.dart';
-import 'package:frontend/models/upcoming_race.dart';
 import 'package:injectable/injectable.dart';
+import '../core/services/api_service.dart';
+import '../models/constructor_leaderboard.dart';
+import '../models/driver_leaderboard.dart';
+import '../models/recent_race.dart';
+import '../models/upcoming_race.dart';
+import '../core/constants/api_routes.dart';
 
 @injectable
 class RaceDatasource {
@@ -64,25 +63,4 @@ class RaceDatasource {
     return [];
   }
 
-  Future<RaceDetailsModel?> getRaceDetails(String year, String round) async {
-    var res = await api.get(ApiRoutes.raceDetails(year, round));
-
-    if (res.isSuccess) {
-      return RaceDetailsModel.fromJson(res.body);
-    }
-
-    return null;
-  }
-
-  Future<List<RaceModel>> getCalendar(String year) async {
-    var res = await api.get(ApiRoutes.allRacesInSeason(year));
-
-    if (res.isSuccess) {
-      final List<dynamic> data = res.body['data'];
-
-      return data.map((entry) => RaceModel.fromJson(entry)).toList();
-    }
-
-    return [];
-  }
 }
