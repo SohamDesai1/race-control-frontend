@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:frontend/models/race_details.dart';
-import 'package:frontend/repositories/race_repository.dart';
 import 'package:injectable/injectable.dart';
+import '../../../../models/race_details.dart';
+import '../../../../repositories/session_repository.dart';
 part 'calendar_state.dart';
 
 @injectable
 class CalendarCubit extends Cubit<CalendarState> {
-  CalendarCubit(this.raceRepository) : super(CalendarState());
+  CalendarCubit(this.sessionRepository) : super(CalendarState());
 
-  final RaceRepository raceRepository;
+  final SessionRepository sessionRepository;
 
   Future<void> loadCalendarData(String year) async {
     final cacheKey = year;
@@ -25,7 +25,7 @@ class CalendarCubit extends Cubit<CalendarState> {
       return;
     }
     emit(state.copyWith(isLoading: true));
-    final racesResult = await raceRepository.getCalendar(year);
+    final racesResult = await sessionRepository.getCalendar(year);
     racesResult.fold(
       (failure) =>
           emit(state.copyWith(isLoading: false, error: failure.message)),

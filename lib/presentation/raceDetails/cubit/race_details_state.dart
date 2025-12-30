@@ -3,8 +3,8 @@ part of 'race_details_cubit.dart';
 class RaceDetailsState {
   final bool isLoading;
   final String? error;
-  final RaceDetailsModel? raceDetails;
-  final Map<String, RaceDetailsModel> cache;
+  final List<SessionModel>? raceDetails;
+  final Map<String, List<SessionModel>?> cache;
   final String? currentKey;
 
   RaceDetailsState({
@@ -24,8 +24,8 @@ class RaceDetailsState {
   RaceDetailsState copyWith({
     bool? isLoading,
     String? error,
-    RaceDetailsModel? raceDetails,
-    Map<String, RaceDetailsModel>? cache,
+    List<SessionModel>? raceDetails,
+    Map<String, List<SessionModel>?>? cache,
     String? currentKey,
   }) {
     return RaceDetailsState(
