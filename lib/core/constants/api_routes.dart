@@ -15,4 +15,6 @@ class ApiRoutes {
       '/session/get_sessions/$raceId/$year';
   static String allRacesInSeason(String year) =>
       '/race/get_all_races_data/$year';
+  static String sessionDetails(String sessionId) =>
+      '/session/get_session_data/$sessionId';
 }

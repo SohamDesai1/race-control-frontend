@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../datasources/session_datasource.dart';
 import '../repositories/session_repository.dart';
@@ -28,6 +29,20 @@ class SessionRepositoryImpl implements SessionRepository {
     try {
       final calendar = await remoteDataSource.getCalendar(year);
       return Right(calendar);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SessionDetailsModel>?>> getSessionDetails(
+    String sessionId,
+  ) async {
+    try {
+      final sessionDetails = await remoteDataSource.getSessionDetails(
+        sessionId,
+      );
+      return Right(sessionDetails);
     } catch (e) {
       return Left(Failure(400, e.toString()));
     }
