@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../../../repositories/session_repository.dart';
 import '../../../models/race_details.dart';
@@ -11,10 +12,10 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
   final SessionRepository sessionRepository;
 
   Future<void> loadRaceDetails(String raceId, String year) async {
-    final cacheKey = RaceDetailsState.getCacheKey(raceId, year);
+    final cacheKey = RaceDetailsState.getCacheKey1(raceId, year);
 
-    if (state.isCached(raceId, year)) {
-      final cachedData = state.cache[cacheKey]!;
+    if (state.isCached1(raceId, year)) {
+      final cachedData = state.cache1[cacheKey]!;
       emit(
         state.copyWith(
           raceDetails: cachedData,
@@ -28,20 +29,25 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
 
     emit(state.copyWith(isLoading: true, error: null));
 
-    final raceDetailsResult = await sessionRepository.getraceSessions(raceId, year);
+    final raceDetailsResult = await sessionRepository.getraceSessions(
+      raceId,
+      year,
+    );
     raceDetailsResult.fold(
       (failure) {
         emit(state.copyWith(isLoading: false, error: failure.message));
       },
       (raceDetails) {
-        final updatedCache = Map<String, List<SessionModel>?>.from(state.cache);
+        final updatedCache = Map<String, List<SessionModel>?>.from(
+          state.cache1,
+        );
         updatedCache[cacheKey] = raceDetails!;
 
         emit(
           state.copyWith(
             isLoading: false,
             raceDetails: raceDetails,
-            cache: updatedCache,
+            cache1: updatedCache,
             currentKey: cacheKey,
             error: null,
           ),
@@ -51,15 +57,57 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
   }
 
   void clearCache(String year, String round) {
-    final cacheKey = RaceDetailsState.getCacheKey(year, round);
-    final updatedCache = Map<String, List<SessionModel>?>.from(state.cache);
+    final cacheKey = RaceDetailsState.getCacheKey1(year, round);
+    final updatedCache = Map<String, List<SessionModel>?>.from(state.cache1);
     updatedCache.remove(cacheKey);
-    emit(state.copyWith(cache: updatedCache));
+    emit(state.copyWith(cache1: updatedCache));
   }
 
   void clearAllCache() {
-    emit(state.copyWith(cache: {}, raceDetails: null, currentKey: null));
+    emit(state.copyWith(cache1: {}, raceDetails: null, currentKey: null));
   }
 
-  int get cacheSize => state.cache.length;
+  int get cacheSize => state.cache1.length;
+
+  Future<void> loadSessionDetails(String sessionId) async {
+    final cacheKey = RaceDetailsState.getCacheKey2(sessionId);
+
+    if (state.isCached2(sessionId)) {
+      final cachedData = state.cache2[cacheKey]!;
+      emit(
+        state.copyWith(
+          sessionDetails: cachedData,
+          currentKey: cacheKey,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+    emit(state.copyWith(isLoading: true, error: null));
+
+    final sessionDetailsResult = await sessionRepository.getSessionDetails(
+      sessionId,
+    );
+    sessionDetailsResult.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
+      (sessionDetails) {
+        final updatedCache = Map<String, List<SessionDetailsModel>?>.from(
+          state.cache2,
+        );
+        updatedCache[cacheKey] = sessionDetails;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            sessionDetails: sessionDetails,
+            currentKey: cacheKey,
+            cache2: updatedCache,
+            error: null,
+          ),
+        );
+      },
+    );
+  }
 }
