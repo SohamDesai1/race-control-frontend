@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/utils/race_utils.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../cubit/race_details_cubit.dart';
+import '../../../utils/race_utils.dart';
+import '../../../core/constants/route_names.dart';
 
 class RaceDetailScreen extends StatefulWidget {
   final String gpName;
   final String trackimage;
   final String season;
-  final String round;
+  final String raceId;
   const RaceDetailScreen({
     super.key,
     required this.trackimage,
     required this.gpName,
     required this.season,
-    required this.round,
+    required this.raceId,
   });
 
   @override
@@ -28,8 +30,8 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   void initState() {
     super.initState();
     context.read<RaceDetailsCubit>().loadRaceDetails(
+      widget.raceId,
       widget.season,
-      widget.round,
     );
   }
 
@@ -49,8 +51,8 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
           children: [
             Center(
               child: SizedBox(
-                width: 80.w,
-                height: 30.h,
+                width: 90.w,
+                height: 32.h,
                 child: widget.trackimage.contains('png')
                     ? Image.asset(
                         widget.trackimage,
@@ -88,12 +90,12 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                 return Column(
                   children: [
                     SizedBox(
-                      height: raceDetails.sessions.length * 10.h,
+                      height: raceDetails.length * 10.h,
                       child: ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: raceDetails.sessions.length,
+                        itemCount: raceDetails.length,
                         itemBuilder: (context, index) {
-                          final session = raceDetails.sessions[index];
+                          final session = raceDetails[index];
                           final sessionName = RaceUtils.mapSessionName(
                             session.sessionType!,
                           );
@@ -207,6 +209,15 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                             ),
                                           ],
                                         ),
+                                      );
+                                    } else {
+                                      context.pushNamed(
+                                        RouteNames.sessionDetails,
+                                        extra: {
+                                          'sessionKey': session.sessionKey
+                                              .toString(),
+                                          'sessionName': sessionName,
+                                        },
                                       );
                                     }
                                   },

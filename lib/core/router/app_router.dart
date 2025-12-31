@@ -1,4 +1,5 @@
 import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
+import 'package:frontend/presentation/raceDetails/views/session_detail_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
@@ -65,6 +66,17 @@ class Routing {
             gpName: race?['gpName'],
             season: race?['season'],
             raceId: race?['raceId'],
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.sessionDetails,
+        path: RouteNames.sessionDetails,
+        builder: (context, state) {
+          final session = state.extra as Map<String, dynamic>?;
+          return SessionDetailScreen(
+            sessionKey: session?['sessionKey'],
+            sessionName: session?['sessionName'],
           );
         },
       ),
