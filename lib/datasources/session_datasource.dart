@@ -1,3 +1,4 @@
+import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../core/services/api_service.dart';
@@ -40,6 +41,22 @@ class SessionDatasource {
     if (res.isSuccess) {
       final List<dynamic> data = res.body['data'];
       return data.map((entry) => SessionDetailsModel.fromJson(entry)).toList();
+    }
+
+    return null;
+  }
+
+  Future<List<DriverTelemetryModel>?> getDriverTelemetryData(
+    String sessionId,
+    String driverNumber,
+  ) async {
+    var res = await api.get(
+      ApiRoutes.driverTelemetryData(sessionId, driverNumber),
+    );
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+      return data.map((entry) => DriverTelemetryModel.fromJson(entry)).toList();
     }
 
     return null;

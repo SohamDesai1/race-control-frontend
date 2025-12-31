@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../datasources/session_datasource.dart';
@@ -43,6 +44,22 @@ class SessionRepositoryImpl implements SessionRepository {
         sessionId,
       );
       return Right(sessionDetails);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DriverTelemetryModel>?>> getDriverTelemetryData(
+    String sessionId,
+    String driverNumber,
+  ) async {
+    try {
+      final driverTelemetryData = await remoteDataSource.getDriverTelemetryData(
+        sessionId,
+        driverNumber,
+      );
+      return Right(driverTelemetryData);
     } catch (e) {
       return Left(Failure(400, e.toString()));
     }
