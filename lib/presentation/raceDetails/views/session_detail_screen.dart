@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/raceDetails/cubit/race_details_cubit.dart';
-import 'package:frontend/presentation/standings/views/widgets/standing_card.dart';
-import 'package:frontend/utils/race_utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import '../cubit/race_details_cubit.dart';
+import '../../standings/views/widgets/standing_card.dart';
+import '../../../utils/race_utils.dart';
+import '../../../core/constants/route_names.dart';
 
 class SessionDetailScreen extends StatefulWidget {
   final String sessionName;
@@ -110,6 +112,42 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       );
                     },
                     itemCount: sessionDetails.length,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(
+                      RouteNames.telemetryDetails,
+                      extra: {
+                        "sessionKey": widget.sessionKey,
+                        "drivers": {
+                          for (var driver in sessionDetails.take(3))
+                            driver.driverNumber!.toString():
+                                RaceUtils.mapDriverNameFromDriverNumber(
+                                  driver.driverNumber!,
+                                  2025,
+                                ),
+                        },
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 40.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 30, 0),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "View Telemetry",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Formula1Bold",
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
