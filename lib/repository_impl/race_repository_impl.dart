@@ -36,10 +36,12 @@ class RaceRepositoryImpl implements RaceRepository {
   }
 
   @override
-  Future<Either<Failure, List<DriverLeaderBoardModel>>>
-  getDriverLeaderboard() async {
+  Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard(
+    int year,
+    Map<String, dynamic>? queryParams,
+  ) async {
     try {
-      final res = await raceDatasource.getDriverLeaderboard();
+      final res = await raceDatasource.getDriverLeaderboard(year, queryParams);
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));
@@ -48,9 +50,12 @@ class RaceRepositoryImpl implements RaceRepository {
 
   @override
   Future<Either<Failure, List<ConstructorLeaderBoardModel>>>
-  getConstructorLeaderboard() async {
+  getConstructorLeaderboard(int year, Map<String, dynamic>? queryParams) async {
     try {
-      final res = await raceDatasource.getConstructorLeaderboard();
+      final res = await raceDatasource.getConstructorLeaderboard(
+        year,
+        queryParams,
+      );
       return Right(res);
     } catch (e) {
       return Left(Failure(400, e.toString()));

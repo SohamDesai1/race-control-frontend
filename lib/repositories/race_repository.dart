@@ -6,9 +6,14 @@ import '../models/driver_leaderboard.dart';
 import '../models/constructor_leaderboard.dart';
 
 abstract class RaceRepository {
-Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(String date);
+  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(
+    String date,
+  );
   Future<Either<Failure, RecentResultModel?>> getRecentResult();
-  Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard();
+  Future<Either<Failure, List<DriverLeaderBoardModel>>> getDriverLeaderboard(
+    int year,
+    Map<String, dynamic>? queryParams,
+  );
   Future<Either<Failure, List<ConstructorLeaderBoardModel>>>
-  getConstructorLeaderboard();
+  getConstructorLeaderboard(int year, Map<String, dynamic>? queryParams);
 }

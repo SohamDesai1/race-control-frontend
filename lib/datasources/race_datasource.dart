@@ -33,12 +33,24 @@ class RaceDatasource {
     return null;
   }
 
-  Future<List<DriverLeaderBoardModel>> getDriverLeaderboard() async {
-    var res = await api.get(ApiRoutes.driverLeaderboard(DateTime.now().year));
+  Future<List<DriverLeaderBoardModel>> getDriverLeaderboard(
+    int year,
+    Map<String, dynamic>? queryParams,
+  ) async {
+    Map<String, dynamic> q = {};
+    if (queryParams != null) {
+      q = queryParams;
+    }
+    var res = await api.get(
+      ApiRoutes.driverLeaderboard(year),
+      queryParameters: q,
+    );
 
     if (res.isSuccess) {
       final List<dynamic> data = res.body['data'];
-
+      if (data.isEmpty) {
+        return [];
+      }
       return data
           .map((entry) => DriverLeaderBoardModel.fromJson(entry))
           .toList();
@@ -47,14 +59,24 @@ class RaceDatasource {
     return [];
   }
 
-  Future<List<ConstructorLeaderBoardModel>> getConstructorLeaderboard() async {
+  Future<List<ConstructorLeaderBoardModel>> getConstructorLeaderboard(
+    int year,
+    Map<String, dynamic>? queryParams,
+  ) async {
+    Map<String, dynamic> q = {};
+    if (queryParams != null) {
+      q = queryParams;
+    }
     var res = await api.get(
-      ApiRoutes.constructorLeaderboard(DateTime.now().year),
+      ApiRoutes.constructorLeaderboard(year),
+      queryParameters: q,
     );
 
     if (res.isSuccess) {
       final List<dynamic> data = res.body['data'];
-
+      if (data.isEmpty) {
+        return [];
+      }
       return data
           .map((entry) => ConstructorLeaderBoardModel.fromJson(entry))
           .toList();
@@ -62,5 +84,4 @@ class RaceDatasource {
 
     return [];
   }
-
 }
