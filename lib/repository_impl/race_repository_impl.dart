@@ -14,7 +14,9 @@ class RaceRepositoryImpl implements RaceRepository {
   final RaceDatasource raceDatasource;
 
   @override
-  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(String date) async {
+  Future<Either<Failure, List<UpcomingRaceModel>>> getUpcomingRaces(
+    String date,
+  ) async {
     try {
       final res = await raceDatasource.getUpcomingRaces(date);
       return Right(res);
