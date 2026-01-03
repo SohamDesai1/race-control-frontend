@@ -217,6 +217,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                           'sessionKey': session.sessionKey
                                               .toString(),
                                           'sessionName': sessionName,
+                                          'season': widget.season,
                                         },
                                       );
                                     }

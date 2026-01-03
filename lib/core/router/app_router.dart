@@ -78,6 +78,7 @@ class Routing {
           return SessionDetailScreen(
             sessionKey: session?['sessionKey'],
             sessionName: session?['sessionName'],
+            season: session?['season'],
           );
         },
       ),

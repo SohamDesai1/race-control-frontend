@@ -18,17 +18,6 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   String selectedYear = DateTime.now().year.toString();
 
-  List<String> get availableYears {
-    final currentYear = DateTime.now().year;
-    final startYear = 2025;
-    final endYear = currentYear + 1;
-
-    return List.generate(
-      endYear - startYear + 1,
-      (index) => (startYear + index).toString(),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -92,7 +81,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                       ),
-                      items: availableYears.map((String year) {
+                      items: ['2025', '2026'].map((String year) {
                         return DropdownMenuItem<String>(
                           value: year,
                           child: Text(year),

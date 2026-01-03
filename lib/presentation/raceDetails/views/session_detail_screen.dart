@@ -10,10 +10,12 @@ import '../../../core/constants/route_names.dart';
 class SessionDetailScreen extends StatefulWidget {
   final String sessionName;
   final String sessionKey;
+  final String season;
   const SessionDetailScreen({
     super.key,
     required this.sessionName,
     required this.sessionKey,
+    required this.season,
   });
 
   @override
@@ -126,7 +128,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                             driver.driverNumber!.toString():
                                 RaceUtils.mapDriverNameFromDriverNumber(
                                   driver.driverNumber!,
-                                  2025,
+                                  int.parse(widget.season),
                                 ),
                         },
                       },
