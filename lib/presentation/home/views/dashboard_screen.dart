@@ -177,35 +177,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
 
-                  SizedBox(height: 3.h),
-                  Text(
-                    "Top Drivers",
-                    style: TextStyle(
-                      fontSize: 5.w,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
+                  leaderboard!.isEmpty
+                      ? SizedBox.shrink()
+                      : Column(
+                          children: [
+                            SizedBox(height: 3.h),
+                            Text(
+                              "Top Drivers",
+                              style: TextStyle(
+                                fontSize: 5.w,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
 
-                  SizedBox(
-                    height: 20.h,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (_, index) {
-                        final d = leaderboard![index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 2.h),
-                          child: DriverCard(
-                            driverName:
-                                "${d.driver.givenName} ${d.driver.familyName}",
-                            teamName: d.constructors.first.name,
-                            points: d.points,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                            SizedBox(
+                              height: 20.h,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: 3,
+                                itemBuilder: (_, index) {
+                                  final d = leaderboard[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 2.h),
+                                    child: DriverCard(
+                                      driverName:
+                                          "${d.driver.givenName} ${d.driver.familyName}",
+                                      teamName: d.constructors.first.name,
+                                      points: d.points,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             );
