@@ -5,6 +5,7 @@ import 'package:frontend/presentation/calendar/views/cubit/calendar_cubit.dart';
 import 'package:frontend/presentation/home/cubit/bottom_bar_cubit.dart';
 import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart';
 import 'package:frontend/presentation/raceDetails/cubit/race_details_cubit.dart';
+import 'package:frontend/presentation/standings/views/cubit/standings_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -28,6 +29,7 @@ void main() async {
       BlocProvider(create: (_) => getIt<DashboardCubit>()),
       BlocProvider(create: (_) => getIt<RaceDetailsCubit>()),
       BlocProvider(create: (_) => getIt<CalendarCubit>()),
+      BlocProvider(create: (_) => getIt<StandingsCubit>()),
     ],
     child: MainApp(),
   ));
