@@ -10,7 +10,7 @@ abstract class SessionDetailsModel with _$SessionDetailsModel {
     @JsonKey(name: 'driver_number') int? driverNumber,
     bool? dsq,
     double? duration,
-    @JsonKey(name: 'gap_to_leader') int? gapToLeader,
+    @JsonKey(name: 'gap_to_leader') dynamic gapToLeader,
     @JsonKey(name: 'meeting_key') int? meetingKey,
     @JsonKey(name: 'number_of_laps') int? numberOfLaps,
     double? points,
