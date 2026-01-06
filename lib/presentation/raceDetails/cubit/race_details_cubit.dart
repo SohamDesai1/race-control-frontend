@@ -103,7 +103,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
 
   Future<void> loadDriverTelemetryData(
     String sessionId,
-    List<String> driverNumbers, // Should have exactly 3 driver numbers
+    List<String> driverNumbers,
   ) async {
     if (driverNumbers.length != 3) {
       emit(
@@ -117,7 +117,6 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
 
     final cacheKey = RaceDetailsState.getCacheKey3(sessionId);
 
-    // Check if cached
     if (state.isCached3(sessionId)) {
       final cachedData = state.cache3[cacheKey]!;
       emit(
@@ -138,63 +137,49 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
     try {
       print('🔄 Loading telemetry for drivers: ${driverNumbers.join(", ")}');
 
-      // Make parallel API calls for all 3 drivers
-      final results = await Future.wait([
-        sessionRepository.getDriverTelemetryData(sessionId, driverNumbers[0]),
-        sessionRepository.getDriverTelemetryData(sessionId, driverNumbers[1]),
-        sessionRepository.getDriverTelemetryData(sessionId, driverNumbers[2]),
-      ]);
+      final List<List<DriverTelemetryModel>?> driverDataList = [];
 
-      List<DriverTelemetryModel>? driver1Data;
-      List<DriverTelemetryModel>? driver2Data;
-      List<DriverTelemetryModel>? driver3Data;
-      final List<String> errors = [];
+      // Fetch each driver sequentially with delay
+      for (int i = 0; i < driverNumbers.length; i++) {
+        print('📡 [${i + 1}/3] Fetching driver ${driverNumbers[i]}...');
 
-      // Process driver 1
-      results[0].fold(
-        (failure) {
-          print('❌ Driver ${driverNumbers[0]} failed: ${failure.message}');
-          errors.add('Driver ${driverNumbers[0]}: ${failure.message}');
-        },
-        (data) {
-          if (data != null && data.isNotEmpty) {
-            driver1Data = data;
-            print('✅ Driver ${driverNumbers[0]}: ${data.length} points');
-          }
-        },
-      );
+        final result = await sessionRepository.getDriverTelemetryData(
+          sessionId,
+          driverNumbers[i],
+        );
 
-      // Process driver 2
-      results[1].fold(
-        (failure) {
-          print('❌ Driver ${driverNumbers[1]} failed: ${failure.message}');
-          errors.add('Driver ${driverNumbers[1]}: ${failure.message}');
-        },
-        (data) {
-          if (data != null && data.isNotEmpty) {
-            driver2Data = data;
-            print('✅ Driver ${driverNumbers[1]}: ${data.length} points');
-          }
-        },
-      );
+        List<DriverTelemetryModel>? data;
+        result.fold(
+          (failure) =>
+              print('❌ Driver ${driverNumbers[i]}: ${failure.message}'),
+          (d) {
+            if (d != null && d.isNotEmpty) {
+              data = d;
+              print('✅ Driver ${driverNumbers[i]}: ${d.length} points');
+            }
+          },
+        );
 
-      // Process driver 3
-      results[2].fold(
-        (failure) {
-          print('❌ Driver ${driverNumbers[2]} failed: ${failure.message}');
-          errors.add('Driver ${driverNumbers[2]}: ${failure.message}');
-        },
-        (data) {
-          if (data != null && data.isNotEmpty) {
-            driver3Data = data;
-            print('✅ Driver ${driverNumbers[2]}: ${data.length} points');
-          }
-        },
-      );
+        driverDataList.add(data);
 
-      // Check if at least one driver has data
+        // Wait 500ms before next request (but not after the last one)
+        if (i < driverNumbers.length - 1) {
+          print('⏳ Waiting 1000ms before next request...');
+          await Future.delayed(const Duration(milliseconds: 1000));
+        }
+      }
+
+      List<DriverTelemetryModel>? driver1Data = driverDataList[0];
+      List<DriverTelemetryModel>? driver2Data = driverDataList[1];
+      List<DriverTelemetryModel>? driver3Data = driverDataList[2];
+
+      final int driversWithData = driverDataList
+          .where((d) => d != null && d.isNotEmpty)
+          .length;
+
+      print('📊 Successfully loaded telemetry for $driversWithData/3 drivers');
+
       if (driver1Data != null || driver2Data != null || driver3Data != null) {
-        // Update cache
         final updatedCache =
             Map<String, Map<String, List<DriverTelemetryModel>>>.from(
               state.cache3,
@@ -213,17 +198,15 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
             driver3Telemetry: driver3Data,
             currentKey: cacheKey,
             cache3: updatedCache,
-            error: errors.isNotEmpty
-                ? 'Partial load: ${errors.join("; ")}'
-                : null,
+            error: null,
           ),
         );
       } else {
-        // All requests failed
         emit(
           state.copyWith(
             isLoading: false,
-            error: 'All drivers failed: ${errors.join("; ")}',
+            error:
+                'No telemetry data available for any of the selected drivers',
           ),
         );
       }
