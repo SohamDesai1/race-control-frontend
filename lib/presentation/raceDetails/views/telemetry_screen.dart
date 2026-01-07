@@ -89,8 +89,10 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
           final hasDriver3 =
               state.driver3Telemetry != null &&
               state.driver3Telemetry!.isNotEmpty;
+          final hasSectorTimings =
+              state.sectorTimings != null && state.sectorTimings!.isNotEmpty;
 
-          if (!hasDriver1 && !hasDriver2 && !hasDriver3) {
+          if (!hasDriver1 && !hasDriver2 && !hasDriver3 && !hasSectorTimings) {
             return const SizedBox(
               height: 300,
               child: Center(
@@ -447,20 +449,37 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                   ),
                 ),
                 SizedBox(height: 2.h),
-                Text(
-                  "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                ),
+                state.sectorTimings == null
+                    ? SizedBox.shrink()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+
+                          SizedBox(height: 2.h),
+                          Text(
+                            "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
               ],
             ),
           );
