@@ -1,4 +1,5 @@
 import 'package:frontend/models/driver_telemetry.dart';
+import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../core/services/api_service.dart';
@@ -57,6 +58,19 @@ class SessionDatasource {
     if (res.isSuccess) {
       final List<dynamic> data = res.body['data'];
       return data.map((entry) => DriverTelemetryModel.fromJson(entry)).toList();
+    }
+
+    return null;
+  }
+
+  Future<List<SectorTimingsModel>?> getSectorTimingsData(
+    String sessionId,
+  ) async {
+    var res = await api.get(ApiRoutes.sectorTimingsData(sessionId));
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+      return data.map((entry) => SectorTimingsModel.fromJson(entry)).toList();
     }
 
     return null;

@@ -19,4 +19,6 @@ class ApiRoutes {
       '/session/get_session_data/$sessionId';
   static String driverTelemetryData(String sessionId, String driverNumber) =>
       '/session/fetch_driver_telemetry/$sessionId/$driverNumber';
+  static String sectorTimingsData(String sessionId) =>
+      '/session/get_sector_timings/$sessionId';
 }
