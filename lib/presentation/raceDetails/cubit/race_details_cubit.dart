@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:frontend/models/driver_telemetry.dart';
+import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
 import '../../../repositories/session_repository.dart';
@@ -215,6 +216,47 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
       print(stackTrace);
       emit(state.copyWith(isLoading: false, error: 'Unexpected error: $e'));
     }
+  }
+
+  Future<void> loadSectorTimingsData(String sessionId) async {
+    final cacheKey = RaceDetailsState.getCacheKey4(sessionId);
+
+    if (state.isCached4(sessionId)) {
+      final cachedData = state.cache4[cacheKey]!;
+      emit(
+        state.copyWith(
+          sectorTimings: cachedData,
+          currentKey: cacheKey,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+    emit(state.copyWith(isLoading: true, error: null));
+
+    final sectorTimingsResult = await sessionRepository.getSectorTimingsData(
+      sessionId,
+    );
+    sectorTimingsResult.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
+      (sectorTimings) {
+        final updatedCache = Map<String, List<SectorTimingsModel>?>.from(
+          state.cache4,
+        );
+        updatedCache[cacheKey] = sectorTimings;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            cache4: updatedCache,
+            sectorTimings: sectorTimings,
+            error: null,
+          ),
+        );
+      },
+    );
   }
 
   void clearAllCache() {
