@@ -22,10 +22,28 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<RaceDetailsCubit>().loadDriverTelemetryData(
-      widget.sessionKey,
-      widget.drivers.keys.toList(),
-    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await context.read<RaceDetailsCubit>().loadDriverTelemetryData(
+        widget.sessionKey,
+        widget.drivers.keys.toList(),
+      );
+      await Future.delayed(Duration(seconds: 1));
+      await context.read<RaceDetailsCubit>().loadSectorTimingsData(
+        widget.sessionKey,
+      );
+    });
+  }
+
+  String formatToMmSsMs(num seconds) {
+    final int minutes = seconds ~/ 60;
+    final int secs = seconds.toInt() % 60;
+    final int millis = ((seconds - seconds.floor()) * 1000).round();
+
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String threeDigits(int n) => n.toString().padLeft(3, '0');
+
+    return '${twoDigits(minutes)}:${twoDigits(secs)}:${threeDigits(millis)}';
   }
 
   @override
@@ -92,14 +110,7 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
           widget.drivers.forEach((key, value) {
             Color baseColor = RaceUtils.getF1TeamColor(value).withAlpha(200);
             if (usedColors.contains(baseColor)) {
-              int alpha = 200;
-              while (usedColors.any(
-                    (c) => c.value == baseColor.withAlpha(alpha).value,
-                  ) &&
-                  alpha > 70) {
-                alpha -= 70;
-              }
-              baseColor = baseColor.withAlpha(alpha);
+              baseColor = Colors.grey;
             }
 
             usedColors.add(baseColor);
@@ -222,88 +233,284 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
           final minX = allSpots.map((s) => s.x).reduce((a, b) => a < b ? a : b);
           final maxX = allSpots.map((s) => s.x).reduce((a, b) => a > b ? a : b);
 
-          return Column(
-            children: [
-              // Legend
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  spacing: 16,
-                  children: List.generate(lineBars.length, (index) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(width: 20, height: 3, color: colors[index]),
-                        const SizedBox(width: 4),
-                        Text(
-                          driverNames[index],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+          final barChartdata =
+              state.sectorTimings
+                  ?.where(
+                    (st) => widget.drivers.keys.contains(
+                      st.driverNumber.toString(),
+                    ),
+                  )
+                  .map(
+                    (st) => {
+                      'driver_number': st.driverNumber,
+                      'sector_1': st.sector1,
+                      'sector_2': st.sector2,
+                      'sector_3': st.sector3,
+                      'fastest_lap': st.sector1! + st.sector2! + st.sector3!,
+                    },
+                  )
+                  .toList() ??
+              [];
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Legend
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    spacing: 16,
+                    children: List.generate(lineBars.length, (index) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(width: 25, height: 3, color: colors[index]),
+                          const SizedBox(width: 4),
+                          Text(
+                            driverNames[index],
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+
+                // Chart
+                SizedBox(
+                  height: 300,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: LineChart(
+                      LineChartData(
+                        gridData: FlGridData(
+                          show: true,
+                          drawVerticalLine: true,
+                        ),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            axisNameWidget: const Text(
+                              'Distance (m)',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              interval: 1000,
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            axisNameWidget: const Text(
+                              'Speed (km/h)',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 45,
+                            ),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
                           ),
                         ),
-                      ],
-                    );
-                  }),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border.all(color: Colors.grey.shade800),
+                        ),
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY - 10,
+                        maxY: maxY + 10,
+                        lineBarsData: lineBars,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-
-              // Chart
-              SizedBox(
-                height: 300,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(show: true, drawVerticalLine: true),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 300,
+                  child: BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      maxY: _getMaxSectorTime(barChartdata) * 1.15,
+                      minY: 0,
+                      barTouchData: BarTouchData(
+                        enabled: true,
+                        touchTooltipData: BarTouchTooltipData(
+                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                            final driver = barChartdata[rodIndex];
+                            final sectors = [
+                              'Sector 1',
+                              'Sector 2',
+                              'Sector 3',
+                            ];
+                            return BarTooltipItem(
+                              'Driver no ${driver['driver_number']}\n',
+                              const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${sectors[groupIndex]}: ${rod.toY.toStringAsFixed(3)}s',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                       titlesData: FlTitlesData(
+                        show: true,
                         bottomTitles: AxisTitles(
-                          axisNameWidget: const Text(
-                            'Distance (m)',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 30,
-                            interval: 1000,
+                            getTitlesWidget: (value, meta) {
+                              final sectors = [
+                                'Sector 1',
+                                'Sector 2',
+                                'Sector 3',
+                              ];
+                              if (value.toInt() >= 0 &&
+                                  value.toInt() < sectors.length) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    sectors[value.toInt()],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const Text('');
+                            },
                           ),
                         ),
                         leftTitles: AxisTitles(
-                          axisNameWidget: const Text(
-                            'Speed (km/h)',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 45,
+                            reservedSize: 40,
+                            getTitlesWidget: (value, meta) {
+                              return Text(
+                                '${value.toStringAsFixed(0)}s',
+                                style: const TextStyle(fontSize: 10),
+                              );
+                            },
                           ),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
                         ),
                         topTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                      ),
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        horizontalInterval: 5,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                            color: Colors.grey.withOpacity(0.2),
+                            strokeWidth: 1,
+                          );
+                        },
                       ),
                       borderData: FlBorderData(
                         show: true,
-                        border: Border.all(color: Colors.grey.shade800),
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.shade300),
+                          left: BorderSide(color: Colors.grey.shade300),
+                        ),
                       ),
-                      minX: minX,
-                      maxX: maxX,
-                      minY: minY - 10,
-                      maxY: maxY + 10,
-                      lineBarsData: lineBars,
+                      barGroups: _buildBarGroups(barChartdata),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-            ],
+                SizedBox(height: 2.h),
+                Text(
+                  "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ],
+            ),
           );
         },
       ),
     );
+  }
+
+  Color _getDriverColor(int driverNumber) {
+    // You can use your existing RaceUtils to get team colors
+    return RaceUtils.getF1TeamColor(
+      RaceUtils.mapDriverNameFromDriverNumber(driverNumber, 2025),
+    ).withOpacity(0.8);
+  }
+
+  double _getMaxSectorTime(List<Map<String, dynamic>> barChartData) {
+    double max = 0;
+    for (var driver in barChartData) {
+      final s1 = (driver['sector_1'] as num).toDouble();
+      final s2 = (driver['sector_2'] as num).toDouble();
+      final s3 = (driver['sector_3'] as num).toDouble();
+      if (s1 > max) max = s1;
+      if (s2 > max) max = s2;
+      if (s3 > max) max = s3;
+    }
+    return max;
+  }
+
+  List<BarChartGroupData> _buildBarGroups(
+    List<Map<String, dynamic>> barChartData,
+  ) {
+    return List.generate(3, (sectorIndex) {
+      final sectorKeys = ['sector_1', 'sector_2', 'sector_3'];
+      final sectorKey = sectorKeys[sectorIndex];
+
+      return BarChartGroupData(
+        x: sectorIndex,
+        barsSpace: 4,
+        barRods: barChartData.map((driver) {
+          return BarChartRodData(
+            toY: (driver[sectorKey] as num).toDouble(),
+            color: _getDriverColor(driver['driver_number']),
+            width: 20,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(4),
+              topRight: Radius.circular(4),
+            ),
+          );
+        }).toList(),
+      );
+    });
   }
 }
