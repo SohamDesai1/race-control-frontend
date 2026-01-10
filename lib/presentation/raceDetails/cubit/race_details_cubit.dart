@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:frontend/models/driver_telemetry.dart';
+import 'package:frontend/models/quali_details.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
@@ -259,13 +260,91 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
     );
   }
 
+  Future<void> loadQualiSessionData(String year, String round) async {
+    final cacheKey = RaceDetailsState.getCacheKey5(round);
+    if (state.isCached5(round)) {
+      final cachedData = state.cache5[cacheKey]!;
+      emit(
+        state.copyWith(
+          qualiDetails: cachedData,
+          currentKey: cacheKey,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+
+    emit(state.copyWith(isLoading: true, error: null));
+    final qualiSessionDataResult = await sessionRepository.getQualiDetails(
+      year,
+      round,
+    );
+    qualiSessionDataResult.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
+      (qualiSession) {
+        final updatedCache = Map<String, QualiDetailsModel?>.from(state.cache5);
+        updatedCache[cacheKey] = qualiSession;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            cache5: updatedCache,
+            qualiDetails: qualiSession,
+            error: null,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> loadSprintQualiSessionData(String sessionId) async {
+    final cacheKey = RaceDetailsState.getCacheKey5(sessionId);
+
+    if (state.isCached5(sessionId)) {
+      final cachedData = state.cache5[cacheKey]!;
+      emit(
+        state.copyWith(
+          qualiDetails: cachedData,
+          currentKey: cacheKey,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+
+    emit(state.copyWith(isLoading: true, error: null));
+    final sprintQualiSessionDataResult = await sessionRepository
+        .getSprintQualiDetails(sessionId);
+    sprintQualiSessionDataResult.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
+      (sprintQualiSession) {
+        final updatedCache = Map<String, QualiDetailsModel?>.from(state.cache5);
+        updatedCache[cacheKey] = sprintQualiSession;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            cache5: updatedCache,
+            qualiDetails: sprintQualiSession,
+            error: null,
+          ),
+        );
+      },
+    );
+  }
+
   void clearAllCache() {
     emit(
       state.copyWith(
         cache1: {},
         cache2: {},
         cache3: {},
-        raceDetails: null,
+        cache4: {},
+        cache5: {},
         currentKey: null,
       ),
     );

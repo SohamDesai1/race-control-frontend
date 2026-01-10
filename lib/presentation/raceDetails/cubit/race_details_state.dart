@@ -13,6 +13,8 @@ class RaceDetailsState {
   final Map<String, Map<String, List<DriverTelemetryModel>>?> cache3;
   final List<SectorTimingsModel>? sectorTimings;
   final Map<String, List<SectorTimingsModel>?> cache4;
+  final QualiDetailsModel? qualiDetails;
+  final Map<String, QualiDetailsModel?> cache5;
   final String? currentKey;
 
   RaceDetailsState({
@@ -29,6 +31,8 @@ class RaceDetailsState {
     this.cache3 = const {},
     this.sectorTimings,
     this.cache4 = const {},
+    this.qualiDetails,
+    this.cache5 = const {},
   });
 
   bool isCached1(String year, String round) {
@@ -47,10 +51,15 @@ class RaceDetailsState {
     return cache4.containsKey(sessionId);
   }
 
+  bool isCached5(String sessionId) {
+    return cache5.containsKey(sessionId);
+  }
+
   static String getCacheKey1(String year, String round) => '$year-$round';
   static String getCacheKey2(String sessionId) => sessionId;
   static String getCacheKey3(String sessionId) => sessionId;
   static String getCacheKey4(String sessionId) => sessionId;
+  static String getCacheKey5(String sessionId) => sessionId;
 
   RaceDetailsState copyWith({
     bool? isLoading,
@@ -64,7 +73,9 @@ class RaceDetailsState {
     List<DriverTelemetryModel>? driver3Telemetry,
     Map<String, Map<String, List<DriverTelemetryModel>>>? cache3,
     List<SectorTimingsModel>? sectorTimings,
-     Map<String, List<SectorTimingsModel>?>? cache4,
+    Map<String, List<SectorTimingsModel>?>? cache4,
+    QualiDetailsModel? qualiDetails,
+    Map<String, QualiDetailsModel?>? cache5,
     String? currentKey,
   }) {
     return RaceDetailsState(
@@ -80,6 +91,8 @@ class RaceDetailsState {
       cache3: cache3 ?? this.cache3,
       sectorTimings: sectorTimings ?? this.sectorTimings,
       cache4: cache4 ?? this.cache4,
+      qualiDetails: qualiDetails,
+      cache5: cache5 ?? this.cache5,
       currentKey: currentKey ?? this.currentKey,
     );
   }
