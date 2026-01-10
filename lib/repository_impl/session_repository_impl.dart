@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/models/driver_telemetry.dart';
+import 'package:frontend/models/quali_details.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
@@ -75,6 +76,31 @@ class SessionRepositoryImpl implements SessionRepository {
         sessionId,
       );
       return Right(sectorTimingsData);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, QualiDetailsModel?>> getQualiDetails(
+    String year,
+    String round,
+  ) async {
+    try {
+      final qualiData = await remoteDataSource.getQualiDetails(year, round);
+      return Right(qualiData);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, QualiDetailsModel?>> getSprintQualiDetails(
+    String sessionId,
+  ) async {
+    try {
+      final sprintQualiData = await remoteDataSource.getSprintQualiDetails(sessionId);
+      return Right(sprintQualiData);
     } catch (e) {
       return Left(Failure(400, e.toString()));
     }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/core/services/failure.dart';
 import 'package:frontend/models/driver_telemetry.dart';
+import 'package:frontend/models/quali_details.dart';
 import 'package:frontend/models/race_details.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
@@ -19,6 +20,13 @@ abstract class SessionRepository {
     String driverNumber,
   );
   Future<Either<Failure, List<SectorTimingsModel>?>> getSectorTimingsData(
+    String sessionId,
+  );
+  Future<Either<Failure, QualiDetailsModel?>> getQualiDetails(
+    String year,
+    String round,
+  );
+  Future<Either<Failure, QualiDetailsModel?>> getSprintQualiDetails(
     String sessionId,
   );
 }

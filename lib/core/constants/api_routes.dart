@@ -17,6 +17,10 @@ class ApiRoutes {
       '/race/get_all_races_data/$year';
   static String sessionDetails(String sessionId) =>
       '/session/get_session_data/$sessionId';
+  static String qualiDetails(String year, String round) =>
+      '/session/get_quali_session_data/$year/$round';
+  static String sprintQualiDetails(String sessionId) =>
+      '/session/get_sprint_quali_session_data/$sessionId';
   static String driverTelemetryData(String sessionId, String driverNumber) =>
       '/session/fetch_driver_telemetry/$sessionId/$driverNumber';
   static String sectorTimingsData(String sessionId) =>
