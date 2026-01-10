@@ -99,6 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               extra: {
                                 'season': race.season,
                                 'raceId': race.id.toString(),
+                                'round': race.round,
                                 'gpName': race.raceName,
                                 'trackimage': RaceUtils.mapTrackImage(
                                   race.circuitId!,

@@ -1,3 +1,4 @@
+import 'package:frontend/presentation/raceDetails/views/quali_details_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/session_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/telemetry_screen.dart';
@@ -67,6 +68,7 @@ class Routing {
             gpName: race?['gpName'],
             season: race?['season'],
             raceId: race?['raceId'],
+            round: race?['round'],
           );
         },
       ),
@@ -79,6 +81,19 @@ class Routing {
             sessionKey: session?['sessionKey'],
             sessionName: session?['sessionName'],
             season: session?['season'],
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.qualiDetails,
+        path: RouteNames.qualiDetails,
+        builder: (context, state) {
+          final session = state.extra as Map<String, dynamic>?;
+          return QualiDetailsScreen(
+            sessionKey: session?['sessionKey'],
+            sessionName: session?['sessionName'],
+            season: session?['season'],
+            round: session?['round'],
           );
         },
       ),
