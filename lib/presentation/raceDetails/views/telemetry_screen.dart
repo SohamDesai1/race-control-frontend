@@ -8,10 +8,12 @@ import 'package:sizer/sizer.dart';
 class TelemetryScreen extends StatefulWidget {
   final String sessionKey;
   final Map<String, String> drivers;
+  final String season;
   const TelemetryScreen({
     super.key,
     required this.sessionKey,
     required this.drivers,
+    required this.season,
   });
 
   @override
@@ -491,7 +493,10 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
   Color _getDriverColor(int driverNumber) {
     // You can use your existing RaceUtils to get team colors
     return RaceUtils.getF1TeamColor(
-      RaceUtils.mapDriverNameFromDriverNumber(driverNumber, 2025),
+      RaceUtils.mapDriverNameFromDriverNumber(
+        driverNumber,
+        int.parse(widget.season),
+      ),
     ).withOpacity(0.8);
   }
 

@@ -105,6 +105,7 @@ class Routing {
           return TelemetryScreen(
             sessionKey: session?['sessionKey'],
             drivers: session?['drivers'],
+            season: session?['season'],
           );
         },
       ),

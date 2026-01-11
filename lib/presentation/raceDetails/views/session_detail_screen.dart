@@ -102,7 +102,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       final driver = sessionDetails[index];
                       final name = RaceUtils.mapDriverNameFromDriverNumber(
                         driver.driverNumber!,
-                        2025,
+                        int.parse(widget.season),
                       );
                       final color = RaceUtils.getF1TeamColor(name);
                       return StandingCard(
@@ -131,6 +131,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                                   int.parse(widget.season),
                                 ),
                         },
+                        "season": widget.season,
                       },
                     );
                   },
