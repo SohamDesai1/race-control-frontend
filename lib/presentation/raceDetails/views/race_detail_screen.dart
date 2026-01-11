@@ -13,12 +13,14 @@ class RaceDetailScreen extends StatefulWidget {
   final String trackimage;
   final String season;
   final String raceId;
+  final String round;
   const RaceDetailScreen({
     super.key,
     required this.trackimage,
     required this.gpName,
     required this.season,
     required this.raceId,
+    required this.round,
   });
 
   @override
@@ -211,15 +213,29 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                         ),
                                       );
                                     } else {
-                                      context.pushNamed(
-                                        RouteNames.sessionDetails,
-                                        extra: {
-                                          'sessionKey': session.sessionKey
-                                              .toString(),
-                                          'sessionName': sessionName,
-                                          'season': widget.season,
-                                        },
-                                      );
+                                      if (sessionName == "Quali" ||
+                                          sessionName == "Sprint Quali") {
+                                        context.pushNamed(
+                                          RouteNames.qualiDetails,
+                                          extra: {
+                                            'sessionKey': session.sessionKey
+                                                .toString(),
+                                            'sessionName': sessionName,
+                                            'season': widget.season,
+                                            'round': widget.round,
+                                          },
+                                        );
+                                      } else {
+                                        context.pushNamed(
+                                          RouteNames.sessionDetails,
+                                          extra: {
+                                            'sessionKey': session.sessionKey
+                                                .toString(),
+                                            'sessionName': sessionName,
+                                            'season': widget.season,
+                                          },
+                                        );
+                                      }
                                     }
                                   },
                                   child: Text(
