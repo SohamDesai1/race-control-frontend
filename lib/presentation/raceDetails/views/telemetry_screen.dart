@@ -456,30 +456,37 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
+                          driverNames[0].isEmpty
+                              ? SizedBox.shrink()
+                              : Text(
+                                  "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
 
                           SizedBox(height: 2.h),
-                          Text(
-                            "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
+                          driverNames[1].isEmpty
+                              ? SizedBox.shrink()
+                              : Text(
+                                  "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
                           SizedBox(height: 2.h),
-                          Text(
-                            "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
+                          driverNames[2].isEmpty ||
+                                  state.sectorTimings!.length < 3
+                              ? SizedBox.shrink()
+                              : Text(
+                                  "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
                         ],
                       ),
               ],
@@ -490,14 +497,27 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
     );
   }
 
-  Color _getDriverColor(int driverNumber) {
-    // You can use your existing RaceUtils to get team colors
-    return RaceUtils.getF1TeamColor(
-      RaceUtils.mapDriverNameFromDriverNumber(
-        driverNumber,
-        int.parse(widget.season),
-      ),
-    ).withOpacity(0.8);
+  final Map<int, Color> _driverColorCache = {};
+
+  Color _getDriverColorForSector(
+    int driverNumber,
+    Set<Color> usedColorsInSector,
+  ) {
+    final baseColor = _driverColorCache.putIfAbsent(driverNumber, () {
+      return RaceUtils.getF1TeamColor(
+        RaceUtils.mapDriverNameFromDriverNumber(
+          driverNumber,
+          int.parse(widget.season),
+        ),
+      ).withOpacity(0.85);
+    });
+
+    if (usedColorsInSector.contains(baseColor)) {
+      return Colors.white;
+    }
+
+    usedColorsInSector.add(baseColor);
+    return baseColor;
   }
 
   double _getMaxSectorTime(List<Map<String, dynamic>> barChartData) {
@@ -519,14 +539,20 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
     return List.generate(3, (sectorIndex) {
       final sectorKeys = ['sector_1', 'sector_2', 'sector_3'];
       final sectorKey = sectorKeys[sectorIndex];
+      final Set<Color> usedColorsInSector = {};
 
       return BarChartGroupData(
         x: sectorIndex,
         barsSpace: 4,
         barRods: barChartData.map((driver) {
+          final int driverNumber = driver['driver_number'] as int;
+          final color = _getDriverColorForSector(
+            driverNumber,
+            usedColorsInSector,
+          );
           return BarChartRodData(
             toY: (driver[sectorKey] as num).toDouble(),
-            color: _getDriverColor(driver['driver_number']),
+            color: color,
             width: 20,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(4),
