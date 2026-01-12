@@ -453,41 +453,47 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                 SizedBox(height: 2.h),
                 state.sectorTimings == null
                     ? SizedBox.shrink()
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          driverNames[0].isEmpty
-                              ? SizedBox.shrink()
-                              : Text(
-                                  "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                    : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            driverNames[0].isEmpty ||
+                                    state.sectorTimings!.isEmpty
+                                ? SizedBox.shrink()
+                                : Text(
+                                    "The fastest lap for ${driverNames[0]} was ${formatToMmSsMs(state.sectorTimings![0].sector1! + state.sectorTimings![0].sector2! + state.sectorTimings![0].sector3!)}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
 
-                          SizedBox(height: 2.h),
-                          driverNames[1].isEmpty
-                              ? SizedBox.shrink()
-                              : Text(
-                                  "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                            SizedBox(height: 2.h),
+                            driverNames[1].isEmpty ||
+                                    state.sectorTimings!.length < 2
+                                ? SizedBox.shrink()
+                                : Text(
+                                    "The fastest lap for ${driverNames[1]} was ${formatToMmSsMs(state.sectorTimings![1].sector1! + state.sectorTimings![1].sector2! + state.sectorTimings![1].sector3!)}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                          SizedBox(height: 2.h),
-                          driverNames[2].isEmpty ||
-                                  state.sectorTimings!.length < 3
-                              ? SizedBox.shrink()
-                              : Text(
-                                  "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                            SizedBox(height: 2.h),
+                            driverNames[2].isEmpty ||
+                                    state.sectorTimings!.length < 3
+                                ? SizedBox.shrink()
+                                : Text(
+                                    "The fastest lap for ${driverNames[2]} was ${formatToMmSsMs(state.sectorTimings![2].sector1! + state.sectorTimings![2].sector2! + state.sectorTimings![2].sector3!)}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                        ],
+                            SizedBox(height: 2.h),
+                          ],
+                        ),
                       ),
               ],
             ),

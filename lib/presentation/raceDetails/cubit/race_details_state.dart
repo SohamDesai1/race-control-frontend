@@ -91,7 +91,7 @@ class RaceDetailsState {
       cache3: cache3 ?? this.cache3,
       sectorTimings: sectorTimings ?? this.sectorTimings,
       cache4: cache4 ?? this.cache4,
-      qualiDetails: qualiDetails,
+      qualiDetails: qualiDetails ?? this.qualiDetails,
       cache5: cache5 ?? this.cache5,
       currentKey: currentKey ?? this.currentKey,
     );
