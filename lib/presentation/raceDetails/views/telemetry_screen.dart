@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/raceDetails/cubit/race_details_cubit.dart';
+import 'package:frontend/presentation/raceDetails/views/race_pace_widget.dart';
 import 'package:frontend/utils/race_utils.dart';
 import 'package:sizer/sizer.dart';
 
@@ -26,14 +27,20 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<RaceDetailsCubit>().loadDriverTelemetryData(
-        widget.sessionKey,
-        widget.drivers.keys.toList(),
-      );
-      await Future.delayed(Duration(seconds: 1));
-      await context.read<RaceDetailsCubit>().loadSectorTimingsData(
-        widget.sessionKey,
-      );
+      await Future.wait([
+        context.read<RaceDetailsCubit>().loadDriverTelemetryData(
+          widget.sessionKey,
+          widget.drivers.keys.toList(),
+        ),
+        context.read<RaceDetailsCubit>().loadSectorTimingsData(
+          widget.sessionKey,
+        ),
+        context.read<RaceDetailsCubit>().loadRacePaceComparisonData(
+          widget.sessionKey,
+          widget.drivers.keys.elementAt(0),
+          widget.drivers.keys.elementAt(1),
+        ),
+      ]);
     });
   }
 
@@ -254,6 +261,17 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                     },
                   )
                   .toList() ??
+              [];
+
+          List<PacePoint> dataPoints =
+              state.racePaceComparison?.map((e) {
+                return PacePoint(
+                  x: e.x!.toDouble(),
+                  y: e.y!.toDouble(),
+                  minisector: e.minisector,
+                  fastestDriver: e.fastestDriver,
+                );
+              }).toList() ??
               [];
           return SingleChildScrollView(
             child: Column(
@@ -491,6 +509,20 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                                       fontSize: 14,
                                     ),
                                   ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              "Race Pace Comparison",
+                              style: TextStyle(fontSize: 20),
+                            ),
+
+                            SizedBox(height: 2.h),
+                            SizedBox(
+                              height: 30.h,
+                              child: RacePaceScreen(
+                                dataPoints: dataPoints,
+                                colors: colors,
+                              ),
+                            ),
                             SizedBox(height: 2.h),
                           ],
                         ),
