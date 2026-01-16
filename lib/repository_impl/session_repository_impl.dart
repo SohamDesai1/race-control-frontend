@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/quali_details.dart';
+import 'package:frontend/models/race_pace_comparison.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
@@ -99,8 +100,22 @@ class SessionRepositoryImpl implements SessionRepository {
     String sessionId,
   ) async {
     try {
-      final sprintQualiData = await remoteDataSource.getSprintQualiDetails(sessionId);
+      final sprintQualiData = await remoteDataSource.getSprintQualiDetails(
+        sessionId,
+      );
       return Right(sprintQualiData);
+    } catch (e) {
+      return Left(Failure(400, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<RacePaceComparisonModel>?>>
+  getRacePaceComparisonData(String sessionId, int driver1, int driver2) async {
+    try {
+      final racePaceComparisonData = await remoteDataSource
+          .getRacePaceComparisonData(sessionId, driver1, driver2);
+      return Right(racePaceComparisonData);
     } catch (e) {
       return Left(Failure(400, e.toString()));
     }

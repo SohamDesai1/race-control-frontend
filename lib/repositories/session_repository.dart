@@ -3,6 +3,7 @@ import 'package:frontend/core/services/failure.dart';
 import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/quali_details.dart';
 import 'package:frontend/models/race_details.dart';
+import 'package:frontend/models/race_pace_comparison.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 
@@ -29,4 +30,6 @@ abstract class SessionRepository {
   Future<Either<Failure, QualiDetailsModel?>> getSprintQualiDetails(
     String sessionId,
   );
+  Future<Either<Failure, List<RacePaceComparisonModel>?>>
+  getRacePaceComparisonData(String sessionId, int driver1, int driver2);
 }

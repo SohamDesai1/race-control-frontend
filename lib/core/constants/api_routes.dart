@@ -25,4 +25,6 @@ class ApiRoutes {
       '/session/fetch_driver_telemetry/$sessionId/$driverNumber';
   static String sectorTimingsData(String sessionId) =>
       '/session/get_sector_timings/$sessionId';
+  static String racePaceComparison(String sessionId) =>
+      '/session/compare_race_pace/$sessionId';
 }

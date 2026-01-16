@@ -1,5 +1,6 @@
 import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/quali_details.dart';
+import 'package:frontend/models/race_pace_comparison.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
@@ -92,6 +93,30 @@ class SessionDatasource {
     if (res.isSuccess) {
       final List<dynamic> data = res.body['data'];
       return data.map((entry) => SectorTimingsModel.fromJson(entry)).toList();
+    }
+
+    return null;
+  }
+
+  Future<List<RacePaceComparisonModel>?> getRacePaceComparisonData(
+    String sessionId,
+    int driver1,
+    int driver2,
+  ) async {
+    var queryParameters = {
+      'driver_1': driver1.toString(),
+      'driver_2': driver2.toString(),
+    };
+    var res = await api.get(
+      ApiRoutes.racePaceComparison(sessionId),
+      queryParameters: queryParameters,
+    );
+
+    if (res.isSuccess) {
+      final List<dynamic> data = res.body['data'];
+      return data
+          .map((entry) => RacePaceComparisonModel.fromJson(entry))
+          .toList();
     }
 
     return null;
