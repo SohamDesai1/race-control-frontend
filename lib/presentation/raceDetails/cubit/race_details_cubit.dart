@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:frontend/models/driver_telemetry.dart';
 import 'package:frontend/models/quali_details.dart';
+import 'package:frontend/models/race_pace_comparison.dart';
 import 'package:frontend/models/sector_timings.dart';
 import 'package:frontend/models/session_details.dart';
 import 'package:injectable/injectable.dart';
@@ -330,6 +331,50 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
             isLoading: false,
             cache5: updatedCache,
             qualiDetails: sprintQualiSession,
+            error: null,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> loadRacePaceComparisonData(
+    String sessionId,
+    String driver1,
+    String driver2,
+  ) async {
+    final cacheKey = RaceDetailsState.getCacheKey6(sessionId);
+
+    if (state.isCached6(sessionId)) {
+      final cachedData = state.cache6[cacheKey]!;
+      emit(
+        state.copyWith(
+          racePaceComparison: cachedData,
+          currentKey: cacheKey,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+    emit(state.copyWith(isLoading: true, error: null));
+
+    final sectorTimingsResult = await sessionRepository
+        .getRacePaceComparisonData(sessionId, int.parse(driver1), int.parse(driver2));
+    sectorTimingsResult.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
+      (racePaceComparison) {
+        final updatedCache = Map<String, List<RacePaceComparisonModel>?>.from(
+          state.cache6,
+        );
+        updatedCache[cacheKey] = racePaceComparison;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            cache6: updatedCache,
+            racePaceComparison: racePaceComparison,
             error: null,
           ),
         );
