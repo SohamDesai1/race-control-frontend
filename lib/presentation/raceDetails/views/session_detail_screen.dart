@@ -42,7 +42,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
       ),
       body: BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
         builder: (context, state) {
-          if (state.isLoading) {
+          if (state.isLoadingSessionDetails) {
             return const Center(child: CircularProgressIndicator());
           }
 

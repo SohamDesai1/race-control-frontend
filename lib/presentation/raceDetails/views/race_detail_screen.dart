@@ -77,7 +77,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
             ),
             BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
               builder: (context, state) {
-                if (state.isLoading) {
+                if (state.isLoadingRaceDetails) {
                   return const Center(child: CircularProgressIndicator());
                 }
 

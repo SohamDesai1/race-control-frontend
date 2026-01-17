@@ -27,6 +27,7 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Load all data in parallel for better performance
       await Future.wait([
         context.read<RaceDetailsCubit>().loadDriverTelemetryData(
           widget.sessionKey,
@@ -68,7 +69,10 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
       ),
       body: BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
         builder: (context, state) {
-          if (state.isLoading) {
+          // Show loading indicator if any of the required data is loading
+          if (state.isLoadingDriverTelemetry ||
+              state.isLoadingSectorTimings ||
+              state.isLoadingRacePaceComparison) {
             return const SizedBox(
               height: 300,
               child: Center(child: CircularProgressIndicator()),

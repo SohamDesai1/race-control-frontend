@@ -57,7 +57,7 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
       ),
       body: BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
         builder: (context, state) {
-          if (state.isLoading) {
+          if (state.isLoadingQualiDetails) {
             return const Center(child: CircularProgressIndicator());
           }
 
