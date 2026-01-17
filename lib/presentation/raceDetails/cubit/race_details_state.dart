@@ -1,7 +1,12 @@
 part of 'race_details_cubit.dart';
 
 class RaceDetailsState {
-  final bool isLoading;
+  final bool isLoadingRaceDetails;
+  final bool isLoadingSessionDetails;
+  final bool isLoadingDriverTelemetry;
+  final bool isLoadingSectorTimings;
+  final bool isLoadingQualiDetails;
+  final bool isLoadingRacePaceComparison;
   final String? error;
   final List<SessionModel>? raceDetails;
   final Map<String, List<SessionModel>?> cache1;
@@ -10,7 +15,7 @@ class RaceDetailsState {
   final List<DriverTelemetryModel>? driver1Telemetry;
   final List<DriverTelemetryModel>? driver2Telemetry;
   final List<DriverTelemetryModel>? driver3Telemetry;
-  final Map<String, Map<String, List<DriverTelemetryModel>>?> cache3;
+  final Map<String, Map<String, List<DriverTelemetryModel>>> cache3;
   final List<SectorTimingsModel>? sectorTimings;
   final Map<String, List<SectorTimingsModel>?> cache4;
   final QualiDetailsModel? qualiDetails;
@@ -20,7 +25,12 @@ class RaceDetailsState {
   final String? currentKey;
 
   RaceDetailsState({
-    this.isLoading = false,
+    this.isLoadingRaceDetails = false,
+    this.isLoadingSessionDetails = false,
+    this.isLoadingDriverTelemetry = false,
+    this.isLoadingSectorTimings = false,
+    this.isLoadingQualiDetails = false,
+    this.isLoadingRacePaceComparison = false,
     this.error,
     this.raceDetails,
     this.cache1 = const {},
@@ -63,6 +73,14 @@ class RaceDetailsState {
     return cache6.containsKey(sessionId);
   }
 
+  bool get isLoading =>
+      isLoadingRaceDetails ||
+      isLoadingSessionDetails ||
+      isLoadingDriverTelemetry ||
+      isLoadingSectorTimings ||
+      isLoadingQualiDetails ||
+      isLoadingRacePaceComparison;
+
   static String getCacheKey1(String year, String round) => '$year-$round';
   static String getCacheKey2(String sessionId) => sessionId;
   static String getCacheKey3(String sessionId) => sessionId;
@@ -71,7 +89,12 @@ class RaceDetailsState {
   static String getCacheKey6(String sessionId) => sessionId;
 
   RaceDetailsState copyWith({
-    bool? isLoading,
+    bool? isLoadingRaceDetails,
+    bool? isLoadingSessionDetails,
+    bool? isLoadingDriverTelemetry,
+    bool? isLoadingSectorTimings,
+    bool? isLoadingQualiDetails,
+    bool? isLoadingRacePaceComparison,
     String? error,
     List<SessionModel>? raceDetails,
     Map<String, List<SessionModel>?>? cache1,
@@ -90,7 +113,17 @@ class RaceDetailsState {
     String? currentKey,
   }) {
     return RaceDetailsState(
-      isLoading: isLoading ?? this.isLoading,
+      isLoadingRaceDetails: isLoadingRaceDetails ?? this.isLoadingRaceDetails,
+      isLoadingSessionDetails:
+          isLoadingSessionDetails ?? this.isLoadingSessionDetails,
+      isLoadingDriverTelemetry:
+          isLoadingDriverTelemetry ?? this.isLoadingDriverTelemetry,
+      isLoadingSectorTimings:
+          isLoadingSectorTimings ?? this.isLoadingSectorTimings,
+      isLoadingQualiDetails:
+          isLoadingQualiDetails ?? this.isLoadingQualiDetails,
+      isLoadingRacePaceComparison:
+          isLoadingRacePaceComparison ?? this.isLoadingRacePaceComparison,
       error: error,
       raceDetails: raceDetails ?? this.raceDetails,
       cache1: cache1 ?? this.cache1,

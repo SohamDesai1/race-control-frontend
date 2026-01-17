@@ -24,14 +24,14 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           raceDetails: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingRaceDetails: false,
           error: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingRaceDetails: true, error: null));
 
     final raceDetailsResult = await sessionRepository.getraceSessions(
       raceId,
@@ -39,7 +39,41 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
     );
     raceDetailsResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(isLoadingRaceDetails: false, error: failure.message),
+        );
+      },
+      (raceDetails) {
+        try {
+          final updatedCache = Map<String, List<SessionModel>?>.from(
+            state.cache1,
+          );
+          updatedCache[cacheKey] = raceDetails!;
+
+          emit(
+            state.copyWith(
+              isLoadingRaceDetails: false,
+              raceDetails: raceDetails,
+              cache1: updatedCache,
+              currentKey: cacheKey,
+              error: null,
+            ),
+          );
+        } catch (e) {
+          emit(
+            state.copyWith(
+              isLoadingRaceDetails: false,
+              error: 'Error processing race details: $e',
+            ),
+          );
+        }
+      },
+    );
+    raceDetailsResult.fold(
+      (failure) {
+        emit(
+          state.copyWith(isLoadingRaceDetails: false, error: failure.message),
+        );
       },
       (raceDetails) {
         final updatedCache = Map<String, List<SessionModel>?>.from(
@@ -49,7 +83,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
 
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingRaceDetails: false,
             raceDetails: raceDetails,
             cache1: updatedCache,
             currentKey: cacheKey,
@@ -71,20 +105,25 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           sessionDetails: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingSessionDetails: false,
           error: null,
         ),
       );
       return;
     }
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingSessionDetails: true, error: null));
 
     final sessionDetailsResult = await sessionRepository.getSessionDetails(
       sessionId,
     );
     sessionDetailsResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(
+            isLoadingSessionDetails: false,
+            error: failure.message,
+          ),
+        );
       },
       (sessionDetails) {
         final updatedCache = Map<String, List<SessionDetailsModel>?>.from(
@@ -93,7 +132,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         updatedCache[cacheKey] = sessionDetails;
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingSessionDetails: false,
             sessionDetails: sessionDetails,
             currentKey: cacheKey,
             cache2: updatedCache,
@@ -111,7 +150,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
     if (driverNumbers.length != 3) {
       emit(
         state.copyWith(
-          isLoading: false,
+          isLoadingDriverTelemetry: false,
           error: 'Expected 3 driver numbers, got ${driverNumbers.length}',
         ),
       );
@@ -128,21 +167,21 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
           driver2Telemetry: cachedData['driver2'],
           driver3Telemetry: cachedData['driver3'],
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingDriverTelemetry: false,
           error: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingDriverTelemetry: true, error: null));
 
     try {
       print('🔄 Loading telemetry for drivers: ${driverNumbers.join(", ")}');
 
       final List<List<DriverTelemetryModel>?> driverDataList = [];
 
-      // Fetch each driver sequentially with delay
+      // Fetch each driver sequentially with smart delay to avoid rate limiting
       for (int i = 0; i < driverNumbers.length; i++) {
         print('📡 [${i + 1}/3] Fetching driver ${driverNumbers[i]}...');
 
@@ -156,19 +195,32 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
           (failure) =>
               print('❌ Driver ${driverNumbers[i]}: ${failure.message}'),
           (d) {
-            if (d != null && d.isNotEmpty) {
-              data = d;
-              print('✅ Driver ${driverNumbers[i]}: ${d.length} points');
+            try {
+              // Additional validation to prevent backend format issues
+              if (d != null && d.isNotEmpty) {
+                data = d;
+                print('✅ Driver ${driverNumbers[i]}: ${d.length} points');
+              } else {
+                print(
+                  '⚠️  Driver ${driverNumbers[i]}: Invalid data format received',
+                );
+              }
+            } catch (e) {
+              print(
+                '⚠️  Driver ${driverNumbers[i]}: Error processing data: $e',
+              );
             }
           },
         );
 
         driverDataList.add(data);
 
-        // Wait 500ms before next request (but not after the last one)
+        // Smart delay: shorter delay for first request, longer for subsequent ones
+        // This helps balance between performance and avoiding rate limits
         if (i < driverNumbers.length - 1) {
-          print('⏳ Waiting 1000ms before next request...');
-          await Future.delayed(const Duration(milliseconds: 1000));
+          final delayMs = i == 0 ? 500 : 1000; // 500ms then 1000ms
+          print('⏳ Waiting ${delayMs}ms before next request...');
+          await Future.delayed(Duration(milliseconds: delayMs));
         }
       }
 
@@ -195,7 +247,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
 
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingDriverTelemetry: false,
             driver1Telemetry: driver1Data,
             driver2Telemetry: driver2Data,
             driver3Telemetry: driver3Data,
@@ -207,7 +259,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
       } else {
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingDriverTelemetry: false,
             error:
                 'No telemetry data available for any of the selected drivers',
           ),
@@ -216,7 +268,12 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
     } catch (e, stackTrace) {
       print('❌ Unexpected error: $e');
       print(stackTrace);
-      emit(state.copyWith(isLoading: false, error: 'Unexpected error: $e'));
+      emit(
+        state.copyWith(
+          isLoadingDriverTelemetry: false,
+          error: 'Unexpected error: $e',
+        ),
+      );
     }
   }
 
@@ -229,20 +286,22 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           sectorTimings: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingSectorTimings: false,
           error: null,
         ),
       );
       return;
     }
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingSectorTimings: true, error: null));
 
     final sectorTimingsResult = await sessionRepository.getSectorTimingsData(
       sessionId,
     );
     sectorTimingsResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(isLoadingSectorTimings: false, error: failure.message),
+        );
       },
       (sectorTimings) {
         final updatedCache = Map<String, List<SectorTimingsModel>?>.from(
@@ -251,7 +310,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         updatedCache[cacheKey] = sectorTimings;
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingSectorTimings: false,
             cache4: updatedCache,
             sectorTimings: sectorTimings,
             error: null,
@@ -269,28 +328,30 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           qualiDetails: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingQualiDetails: false,
           error: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingQualiDetails: true, error: null));
     final qualiSessionDataResult = await sessionRepository.getQualiDetails(
       year,
       round,
     );
     qualiSessionDataResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(isLoadingQualiDetails: false, error: failure.message),
+        );
       },
       (qualiSession) {
         final updatedCache = Map<String, QualiDetailsModel?>.from(state.cache5);
         updatedCache[cacheKey] = qualiSession;
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingQualiDetails: false,
             cache5: updatedCache,
             qualiDetails: qualiSession,
             error: null,
@@ -309,26 +370,28 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           qualiDetails: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingQualiDetails: false,
           error: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingQualiDetails: true, error: null));
     final sprintQualiSessionDataResult = await sessionRepository
         .getSprintQualiDetails(sessionId);
     sprintQualiSessionDataResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(isLoadingQualiDetails: false, error: failure.message),
+        );
       },
       (sprintQualiSession) {
         final updatedCache = Map<String, QualiDetailsModel?>.from(state.cache5);
         updatedCache[cacheKey] = sprintQualiSession;
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingQualiDetails: false,
             cache5: updatedCache,
             qualiDetails: sprintQualiSession,
             error: null,
@@ -351,19 +414,28 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         state.copyWith(
           racePaceComparison: cachedData,
           currentKey: cacheKey,
-          isLoading: false,
+          isLoadingRacePaceComparison: false,
           error: null,
         ),
       );
       return;
     }
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoadingRacePaceComparison: true, error: null));
 
     final sectorTimingsResult = await sessionRepository
-        .getRacePaceComparisonData(sessionId, int.parse(driver1), int.parse(driver2));
+        .getRacePaceComparisonData(
+          sessionId,
+          int.parse(driver1),
+          int.parse(driver2),
+        );
     sectorTimingsResult.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
+        emit(
+          state.copyWith(
+            isLoadingRacePaceComparison: false,
+            error: failure.message,
+          ),
+        );
       },
       (racePaceComparison) {
         final updatedCache = Map<String, List<RacePaceComparisonModel>?>.from(
@@ -372,7 +444,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         updatedCache[cacheKey] = racePaceComparison;
         emit(
           state.copyWith(
-            isLoading: false,
+            isLoadingRacePaceComparison: false,
             cache6: updatedCache,
             racePaceComparison: racePaceComparison,
             error: null,
@@ -390,6 +462,7 @@ class RaceDetailsCubit extends Cubit<RaceDetailsState> {
         cache3: {},
         cache4: {},
         cache5: {},
+        cache6: {},
         currentKey: null,
       ),
     );
