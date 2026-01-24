@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'race_details.freezed.dart';
 part 'race_details.g.dart';
@@ -18,8 +17,8 @@ abstract class RaceDetailsModel with _$RaceDetailsModel {
 @freezed
 abstract class Circuit with _$Circuit {
   const factory Circuit({
-    String? circuitId,
-    String? circuitName,
+    @JsonKey(name: "circuit_id") String? circuitId,
+    @JsonKey(name: "circuit_name") String? circuitName,
     String? country,
     @JsonKey(name: "created_at") DateTime? createdAt,
     String? lat,
@@ -34,17 +33,18 @@ abstract class Circuit with _$Circuit {
 @freezed
 abstract class RaceModel with _$RaceModel {
   const factory RaceModel({
-    String? circuitId,
+    @JsonKey(name: "circuit_id") String? circuitId,
     @JsonKey(name: "created_at") DateTime? createdAt,
     DateTime? date,
     int? id,
-    String? raceName,
+    @JsonKey(name: "race_name") String? raceName,
     String? round,
     String? season,
     String? time,
   }) = _RaceModel;
 
-  factory RaceModel.fromJson(Map<String, dynamic> json) => _$RaceModelFromJson(json);
+  factory RaceModel.fromJson(Map<String, dynamic> json) =>
+      _$RaceModelFromJson(json);
 }
 
 @freezed
