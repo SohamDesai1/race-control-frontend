@@ -132,6 +132,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                                 ),
                         },
                         "season": widget.season,
+                        "sessionType": widget.sessionName,
                       },
                     );
                   },

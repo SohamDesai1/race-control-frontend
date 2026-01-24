@@ -305,6 +305,7 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                               ),
                       },
                       "season": widget.season,
+                      "sessionType": widget.sessionName,
                     },
                   );
                 },

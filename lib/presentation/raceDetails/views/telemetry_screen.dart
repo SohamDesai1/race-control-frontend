@@ -10,11 +10,13 @@ class TelemetryScreen extends StatefulWidget {
   final String sessionKey;
   final Map<String, String> drivers;
   final String season;
+  final String sessionType;
   const TelemetryScreen({
     super.key,
     required this.sessionKey,
     required this.drivers,
     required this.season,
+    required this.sessionType,
   });
 
   @override
@@ -514,20 +516,25 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
                                     ),
                                   ),
                             SizedBox(height: 2.h),
-                            Text(
-                              "Race Pace Comparison",
-                              style: TextStyle(fontSize: 20),
-                            ),
-
-                            SizedBox(height: 2.h),
-                            SizedBox(
-                              height: 30.h,
-                              child: RacePaceScreen(
-                                dataPoints: dataPoints,
-                                colors: colors,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
+                            widget.sessionType == "Race"
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        "Race Pace Comparison",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      SizedBox(
+                                        height: 30.h,
+                                        child: RacePaceScreen(
+                                          dataPoints: dataPoints,
+                                          colors: colors,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       ),

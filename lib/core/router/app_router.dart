@@ -141,6 +141,7 @@ class Routing {
               sessionKey: session?['sessionKey'],
               drivers: session?['drivers'],
               season: session?['season'],
+              sessionType: session?['sessionType'],
             ),
           );
         },
