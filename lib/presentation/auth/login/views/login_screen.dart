@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
-import 'package:ionicons/ionicons.dart';
 import '../cubit/login_cubit.dart';
 import '../../../../core/constants/route_names.dart';
 
@@ -46,8 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.black54,
                       child: const Center(
                         child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -69,25 +69,19 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               "Login",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10.w,
-                  fontFamily: 'Formula1Wide'),
+                color: Colors.white,
+                fontSize: 10.w,
+                fontFamily: 'Formula1Wide',
+              ),
             ),
           ),
         ),
-        SizedBox(
-          height: 7.h,
-        ),
+        SizedBox(height: 7.h),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Enter Email",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
+            Text("Enter Email", style: TextStyle(color: Colors.white)),
+            SizedBox(height: 2.h),
             SizedBox(
               width: 70.w,
               child: TextField(
@@ -109,16 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            SizedBox(
-              height: 5.h,
-            ),
-            Text(
-              "Enter Password",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 5.h),
+            Text("Enter Password", style: TextStyle(color: Colors.white)),
+            SizedBox(height: 2.h),
             SizedBox(
               width: 70.w,
               child: TextField(
@@ -140,111 +127,52 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 style: TextStyle(color: Colors.white),
               ),
-            )
+            ),
           ],
         ),
-        SizedBox(
-          height: 6.h,
-        ),
+        SizedBox(height: 6.h),
         GestureDetector(
-          onTap: () => context
-              .read<LoginCubit>()
-              .signIn(_emailController.text, _passwordController.text),
+          onTap: () => context.read<LoginCubit>().signIn(
+            _emailController.text,
+            _passwordController.text,
+          ),
           child: Container(
             height: 6.h,
             width: 70.w,
             decoration: BoxDecoration(
-                color: Color(0xFFF50304),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white)),
+              color: Color(0xFFF50304),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white),
+            ),
             child: Center(
-              child: Text(
-                "Login",
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text("Login", style: TextStyle(color: Colors.white)),
             ),
           ),
         ),
-        SizedBox(
-          height: 5.h,
-        ),
+        SizedBox(height: 5.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 25.w,
-              child: Divider(),
-            ),
-            SizedBox(
-              width: 3.w,
-            ),
-            Text(
-              "OR",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 3.w,
-            ),
-            SizedBox(
-              width: 25.w,
-              child: Divider(),
-            ),
+            SizedBox(width: 25.w, child: Divider()),
+            SizedBox(width: 3.w),
+            Text("OR", style: TextStyle(color: Colors.white)),
+            SizedBox(width: 3.w),
+            SizedBox(width: 25.w, child: Divider()),
           ],
         ),
-        SizedBox(
-          height: 3.h,
-        ),
+        SizedBox(height: 3.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                context.read<LoginCubit>().signInWithGoogle();
-              },
-              child: Container(
-                height: 6.h,
-                width: 20.w,
-                decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white)),
-                child: Center(child: Icon(Ionicons.logo_google)),
-              ),
-            ),
-            SizedBox(
-              width: 5.w,
-            ),
-            Container(
-              height: 6.h,
-              width: 20.w,
-              decoration: BoxDecoration(
-                  color: Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white)),
-              child: Center(child: Icon(Ionicons.logo_facebook)),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 3.h,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'No Account Yet?',
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 2.w,
-            ),
+            Text('No Account Yet?', style: TextStyle(color: Colors.white)),
+            SizedBox(width: 2.w),
             GestureDetector(
               onTap: () => context.push(RouteNames.register),
               child: Text(
                 'Sign Up',
                 style: TextStyle(color: Color(0xFFF50304)),
               ),
-            )
+            ),
           ],
         ),
       ],
