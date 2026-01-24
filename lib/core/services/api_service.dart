@@ -73,7 +73,7 @@ class ApiService {
 
           if (response?.statusCode == 401 &&
               response?.data["message"] ==
-                  "Token validation failed: ExpiredSignature") {
+                  "Invalid token: ExpiredSignature") {
             _debugLog("🔄 Token expired → refreshing token...");
 
             final refreshed = await _refreshToken();

@@ -3,7 +3,7 @@ class ApiRoutes {
   static const String register = '/auth/register';
   static const String refreshToken = '/auth/refresh';
   static String upcomingRaces(String date) =>
-      '/race/get_upcoming_race_data/$date';
+      '/race/get_upcoming_race_data';
   static const String recentResults = '/race/get_race_results';
   static String driverLeaderboard(int year) =>
       '/standings/driver_standings/$year';
