@@ -7,8 +7,8 @@ import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart'
 import 'package:frontend/presentation/home/views/widgets/carousel.dart';
 import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
+import 'package:frontend/utils/race_utils.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -89,12 +89,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         itemBuilder: (context, index) {
                           final race = upcoming[index];
                           final date = DateTime.parse(race.date!);
-                          final formatted = DateFormat('dd MMM').format(date);
 
                           return UpcomingCard(
-                            date: formatted,
+                            date: date,
                             raceName: race.raceName!,
                             location: "${race.locality}, ${race.country}",
+                            onTap: () => context.pushNamed(
+                              RouteNames.raceDetails,
+                              extra: {
+                                'season': race.season,
+                                'raceId': race.id.toString(),
+                                'round': race.round,
+                                'gpName': race.raceName,
+                                'trackimage': RaceUtils.mapTrackImage(
+                                  race.circuitId!,
+                                ),
+                              },
+                            ),
                           );
                         },
                       ),
@@ -167,35 +178,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
 
-                  SizedBox(height: 3.h),
-                  Text(
-                    "Top Drivers",
-                    style: TextStyle(
-                      fontSize: 5.w,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
+                  leaderboard!.isEmpty
+                      ? SizedBox.shrink()
+                      : Column(
+                          children: [
+                            SizedBox(height: 3.h),
+                            Text(
+                              "Top Drivers",
+                              style: TextStyle(
+                                fontSize: 5.w,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
 
-                  SizedBox(
-                    height: 20.h,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (_, index) {
-                        final d = leaderboard![index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 2.h),
-                          child: DriverCard(
-                            driverName:
-                                "${d.driver.givenName} ${d.driver.familyName}",
-                            teamName: d.constructors.first.name,
-                            points: d.points,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                            SizedBox(
+                              height: 20.h,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: 3,
+                                itemBuilder: (_, index) {
+                                  final d = leaderboard[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 2.h),
+                                    child: DriverCard(
+                                      driverName:
+                                          "${d.driver.givenName} ${d.driver.familyName}",
+                                      teamName: d.constructors.first.name,
+                                      points: d.points,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             );

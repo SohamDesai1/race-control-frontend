@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class DriverStandingCard extends StatelessWidget {
+class StandingCard extends StatelessWidget {
   final int position;
   final String driverName;
-  final int points;
+  final num? points;
   final Color highlightColor;
   final int index;
-  const DriverStandingCard({
+  const StandingCard({
     super.key,
     required this.position,
     required this.driverName,
-    required this.points,
+    this.points,
     this.highlightColor = const Color(0xFFFF8C00),
     required this.index,
   });
@@ -58,7 +58,7 @@ class DriverStandingCard extends StatelessWidget {
 
                 // Points
                 Text(
-                  points.toString(),
+                  points?.toInt().toString() ?? "NA",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

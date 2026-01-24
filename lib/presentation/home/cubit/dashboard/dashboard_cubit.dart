@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 import '../../../../repositories/race_repository.dart';
 import '../../../../models/recent_race.dart';
 import '../../../../models/upcoming_race.dart';
@@ -14,54 +14,53 @@ class DashboardCubit extends Cubit<DashboardState> {
   final RaceRepository raceRepository;
 
   Future<void> loadDashboardData() async {
-    // If already loaded, don’t call APIs again
+    // If already loaded, don't call APIs again
     if (state.hasLoaded) {
       return;
     }
 
     emit(state.copyWith(isLoading: true));
 
-    final upcoming = await raceRepository.getUpcomingRaces();
-    final recent = await raceRepository.getRecentResult();
-    final driverLeaderboard = await raceRepository.getDriverLeaderboard();
-    final constructorLeaderboard = await raceRepository
-        .getConstructorLeaderboard();
+    var year = DateTime.now().year;
 
-    upcoming.fold(
-      (failure) =>
-          emit(state.copyWith(isLoading: false, error: failure.message)),
-      (upcomingData) {
-        recent.fold(
-          (failure) =>
-              emit(state.copyWith(isLoading: false, error: failure.message)),
-          (recentData) {
-            driverLeaderboard.fold(
-              (failure) => emit(
-                state.copyWith(isLoading: false, error: failure.message),
-              ),
-              (driverData) {
-                constructorLeaderboard.fold(
-                  (failure) => emit(
-                    state.copyWith(isLoading: false, error: failure.message),
-                  ),
-                  (constructorData) {
-                    emit(
-                      state.copyWith(
-                        isLoading: false,
-                        hasLoaded: true,
-                        upcomingRaces: upcomingData,
-                        recentResults: recentData,
-                        driverLeaderboard: driverData,
-                        constructorLeaderboard: constructorData,
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          },
-        );
-      },
+    var results = await Future.wait([
+      raceRepository.getUpcomingRaces(
+        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      ),
+      raceRepository.getRecentResult(),
+      raceRepository.getDriverLeaderboard(year, {"limit": 3}),
+    ]);
+
+    final upcomingData = results[0].fold((failure) {
+      emit(state.copyWith(isLoading: false, error: failure.message));
+      return null;
+    }, (data) => data as List<UpcomingRaceModel>);
+
+    if (upcomingData == null) return;
+
+    final recentData = results[1].fold((failure) {
+      emit(state.copyWith(isLoading: false, error: failure.message));
+      return null;
+    }, (data) => data as RecentResultModel);
+
+    if (recentData == null) return;
+
+    final driverData = results[2].fold((failure) {
+      emit(state.copyWith(isLoading: false, error: failure.message));
+      return null;
+    }, (data) => data as List<DriverLeaderBoardModel>);
+
+    if (driverData == null) return;
+
+    // Emit success state
+    emit(
+      state.copyWith(
+        isLoading: false,
+        hasLoaded: true,
+        upcomingRaces: upcomingData,
+        recentResults: recentData,
+        driverLeaderboard: driverData,
+      ),
     );
   }
 }

@@ -12,43 +12,46 @@ class UserModel {
   String? token;
   String? refreshToken;
   String? authProvider;
-
-  UserModel(
-      {this.id,
-      this.name,
-      this.username,
-      this.email,
-      this.phone,
-      this.hashedPassword,
-      this.imageUrl,
-      this.token,
-      this.refreshToken,
-      this.createdAt,
-      this.dob,
-      this.gender,
-      this.authProvider});
+  bool? isProfileComplete;
+  UserModel({
+    this.id,
+    this.name,
+    this.username,
+    this.email,
+    this.phone,
+    this.hashedPassword,
+    this.imageUrl,
+    this.token,
+    this.refreshToken,
+    this.createdAt,
+    this.dob,
+    this.gender,
+    this.authProvider,
+    this.isProfileComplete,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    final userJson = (json['data']['user'] as List).isNotEmpty
-        ? json['data']
-        : {};
+    final userJson = json['data']?['user'] as Map<String, dynamic>? ?? {};
+    final dataJson = json['data'] as Map<String, dynamic>? ?? {};
 
     return UserModel(
-        id: userJson['user'][0]['id'],
-        name: userJson['user'][0]['name'] ?? '',
-        username: userJson['user'][0]['username'] ?? '',
-        email: userJson['user'][0]['email'] ?? '',
-        phone: userJson['user'][0]['phone'] ?? '',
-        hashedPassword: userJson['user'][0]['hashed_password'] ?? '',
-        imageUrl: userJson['user'][0]['imageUrl'] ?? '',
-        token: json['data']['acces_token'] ?? '',
-        refreshToken: json['data']['refresh_token'] ?? '',
-        createdAt: userJson['user'][0]['created_at'] != null
-            ? DateTime.parse(userJson['user'][0]['created_at'])
-            : null,
-        dob: userJson['user'][0]['dob'] ?? '',
-        gender: userJson['user'][0]['gender'] ?? '',
-        authProvider: userJson['user'][0]['auth_provider'] ?? '');
+      id: userJson['id'],
+      name: userJson['name'] ?? '',
+      username: userJson['username'] ?? '',
+      email: userJson['email'] ?? '',
+      phone: userJson['phone'] ?? '',
+      hashedPassword: userJson['hashed_password'] ?? '',
+      imageUrl: userJson['imageUrl'] ?? '',
+      token: dataJson['access_token'] ?? '',
+      refreshToken: dataJson['refresh_token'] ?? '',
+      createdAt: userJson['created_at'] != null
+          ? DateTime.parse(userJson['created_at'])
+          : null,
+      dob: userJson['dob'] ?? '',
+      gender: userJson['gender'] ?? '',
+      authProvider: userJson['auth_provider'] ?? '',
+      isProfileComplete: userJson['is_profile_complete'] ?? false,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -66,6 +69,7 @@ class UserModel {
       'dob': dob,
       'gender': gender,
       'authProvider': authProvider,
+      'isProfileComplete': isProfileComplete,
     };
   }
 }

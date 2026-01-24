@@ -6,7 +6,6 @@ class DashboardState {
   final List<UpcomingRaceModel>? upcomingRaces;
   final RecentResultModel? recentResults;
   final List<DriverLeaderBoardModel>? driverLeaderboard;
-  final List<ConstructorLeaderBoardModel>? constructorLeaderboard;
   final String? error;
 
   DashboardState({
@@ -15,7 +14,6 @@ class DashboardState {
     this.upcomingRaces,
     this.recentResults,
     this.driverLeaderboard,
-    this.constructorLeaderboard,
     this.error,
   });
 
@@ -25,7 +23,6 @@ class DashboardState {
     List<UpcomingRaceModel>? upcomingRaces,
     RecentResultModel? recentResults,
     List<DriverLeaderBoardModel>? driverLeaderboard,
-    List<ConstructorLeaderBoardModel>? constructorLeaderboard,
     String? error,
   }) {
     return DashboardState(
@@ -34,9 +31,7 @@ class DashboardState {
       upcomingRaces: upcomingRaces ?? this.upcomingRaces,
       recentResults: recentResults ?? this.recentResults,
       driverLeaderboard: driverLeaderboard ?? this.driverLeaderboard,
-      constructorLeaderboard: constructorLeaderboard ?? this.constructorLeaderboard,
       error: error,
     );
   }
 }
-
