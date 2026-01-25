@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../cubit/race_details_cubit.dart';
 import '../../../utils/race_utils.dart';
 import '../../../core/constants/route_names.dart';
+import '../../../core/theme/f1_theme.dart';
+import '../../../core/widgets/f1_loading_indicator.dart';
 
 class RaceDetailScreen extends StatefulWidget {
   final String gpName;
@@ -41,48 +43,72 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: F1Theme.f1Black,
         title: Text(
           widget.gpName,
-          style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
+          style: F1Theme.themeData.textTheme.displaySmall,
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Center(
-              child: SizedBox(
-                width: 90.w,
-                height: 32.h,
-                child: widget.trackimage.contains('png')
-                    ? Image.asset(
-                        widget.trackimage,
-                        fit: BoxFit.contain,
-                        color:
-                            widget.trackimage.contains('Miami') ||
-                                widget.trackimage.contains('Imola')
-                            ? Colors.white
-                            : null,
-                      )
-                    : SvgPicture.asset(
-                        widget.trackimage,
-                        colorFilter: ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
+            // Enhanced Track Header
+            Container(
+              padding: EdgeInsets.all(F1Theme.mediumSpacing),
+              decoration: BoxDecoration(
+                gradient: F1Theme.redGradient,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(F1Theme.xLargeSpacing),
+                  bottomRight: Radius.circular(F1Theme.xLargeSpacing),
+                ),
+                boxShadow: F1Theme.cardShadow,
+              ),
+              child: Center(
+                child: SizedBox(
+                  width: 90.w,
+                  height: 32.h,
+                  child: widget.trackimage.contains('png')
+                      ? Image.asset(
+                          widget.trackimage,
+                          fit: BoxFit.contain,
+                          color:
+                              widget.trackimage.contains('Miami') ||
+                                  widget.trackimage.contains('Imola')
+                              ? F1Theme.f1White
+                              : null,
+                        )
+                      : SvgPicture.asset(
+                          widget.trackimage,
+                          colorFilter: ColorFilter.mode(
+                            F1Theme.f1White,
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
                         ),
-                        fit: BoxFit.contain,
-                      ),
+                ),
               ),
             ),
+            SizedBox(height: F1Theme.mediumSpacing),
             BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
               builder: (context, state) {
                 if (state.isLoadingRaceDetails) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: F1LoadingIndicator(
+                      message: 'Loading race details...',
+                    ),
+                  );
                 }
 
                 if (state.error != null) {
-                  return Center(child: Text(state.error!));
+                  return Center(
+                    child: Text(
+                      state.error!,
+                      style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                        color: F1Theme.themeData.colorScheme.error,
+                      ),
+                    ),
+                  );
                 }
 
                 final raceDetails = state.raceDetails;
@@ -118,9 +144,20 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                             'HH:mm',
                           ).format(dateTime.toLocal());
                           return Container(
-                            color: index % 2 == 0
-                                ? Color.fromARGB(255, 28, 25, 25)
-                                : Colors.black,
+                            decoration: BoxDecoration(
+                              gradient: index % 2 == 0
+                                  ? F1Theme.cardGradient
+                                  : LinearGradient(
+                                      colors: [
+                                        F1Theme.f1MediumGray,
+                                        F1Theme.f1MediumGray,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                              borderRadius: F1Theme.mediumBorderRadius,
+                              boxShadow: F1Theme.cardShadow,
+                            ),
                             padding: EdgeInsets.symmetric(
                               vertical: 1.h,
                               horizontal: 2.w,
@@ -128,54 +165,129 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                             margin: EdgeInsets.only(bottom: 1.h),
                             child: Row(
                               children: [
+                                // Date Column
                                 SizedBox(
                                   width: 10.w,
-                                  child: Text(
-                                    formattedDate,
-                                    style: TextStyle(color: Colors.white),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        formattedDate.split(' ')[0], // Day
+                                        style: F1Theme
+                                            .themeData
+                                            .textTheme
+                                            .displaySmall
+                                            ?.copyWith(
+                                              fontSize: 6.w,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                      Text(
+                                        formattedDate.split(' ')[1], // Month
+                                        style: F1Theme
+                                            .themeData
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: F1Theme.f1TextGray,
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                // Divider
                                 Container(
                                   width: .5.w,
                                   height: 5.h,
-                                  color: Colors.white,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [F1Theme.f1Red, F1Theme.f1White],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    borderRadius: BorderRadius.circular(1),
+                                  ),
                                   margin: EdgeInsets.symmetric(horizontal: 2.w),
                                 ),
                                 SizedBox(width: 2.w),
+                                // Session Info
                                 Expanded(
+                                  flex: 2,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         sessionName,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 5.w,
-                                        ),
+                                        style: F1Theme
+                                            .themeData
+                                            .textTheme
+                                            .headlineMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                       ),
-                                      Text(
-                                        formattedTime,
-                                        style: TextStyle(
-                                          color: Colors.grey[400],
-                                        ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.access_time,
+                                            size: 3.w,
+                                            color: F1Theme.f1TextGray,
+                                          ),
+                                          SizedBox(width: 1.w),
+                                          Text(
+                                            formattedTime,
+                                            style: F1Theme
+                                                .themeData
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: F1Theme.f1TextGray,
+                                                ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Text(
-                                    RaceUtils.calcStatus(dateTime.toLocal()),
-                                    style: TextStyle(
+                                // Status
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 1.w,
+                                    vertical: 0.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: RaceUtils.calcColor(
+                                      dateTime.toLocal(),
+                                    ).withOpacity(0.1),
+                                    borderRadius: F1Theme.smallBorderRadius,
+                                    border: Border.all(
                                       color: RaceUtils.calcColor(
                                         dateTime.toLocal(),
                                       ),
-                                      fontSize: 2.7.w,
-                                      fontWeight: FontWeight.w600,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      RaceUtils.calcStatus(dateTime.toLocal()),
+                                      style: F1Theme
+                                          .themeData
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: RaceUtils.calcColor(
+                                              dateTime.toLocal(),
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
+                                SizedBox(width: 7 .w),
+                                // View Details Button
                                 GestureDetector(
                                   onTap: () {
                                     if (dateTime.toLocal().isAfter(
@@ -184,18 +296,30 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          backgroundColor: Colors.grey[900],
+                                          backgroundColor: F1Theme.f1DarkGray,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                F1Theme.mediumBorderRadius,
+                                          ),
                                           title: Text(
                                             '$sessionName Details',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
+                                            style: F1Theme
+                                                .themeData
+                                                .textTheme
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                  color: F1Theme.f1Red,
+                                                ),
                                           ),
                                           content: Text(
                                             'The session has not started yet.',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
+                                            style: F1Theme
+                                                .themeData
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: F1Theme.f1TextGray,
+                                                ),
                                           ),
                                           actions: [
                                             TextButton(
@@ -204,9 +328,13 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                               },
                                               child: Text(
                                                 'OK',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
+                                                style: F1Theme
+                                                    .themeData
+                                                    .textTheme
+                                                    .labelLarge
+                                                    ?.copyWith(
+                                                      color: F1Theme.f1Red,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -238,9 +366,24 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                       }
                                     }
                                   },
-                                  child: Text(
-                                    'View Details',
-                                    style: TextStyle(color: Colors.white),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 2.w,
+                                      vertical: 0.8.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      gradient: F1Theme.redGradient,
+                                      borderRadius: F1Theme.smallBorderRadius,
+                                      boxShadow: F1Theme.buttonShadow,
+                                    ),
+                                    child: Text(
+                                      'View Details',
+                                      style: F1Theme
+                                          .themeData
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(color: F1Theme.f1White),
+                                    ),
                                   ),
                                 ),
                               ],
