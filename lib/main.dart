@@ -12,23 +12,26 @@ import 'package:frontend/core/router/app_router.dart';
 import 'package:frontend/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:frontend/utils/injection.dart';
 import 'package:sizer/sizer.dart';
+import 'package:frontend/core/theme/f1_theme.dart';
 
 void main() async {
   const isProd = !kDebugMode;
   await dotenv.load(fileName: isProd ? ".env.prod" : ".env.dev");
   configureDependencies();
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(create: (_) => getIt<LoginCubit>()),
-      BlocProvider(create: (_) => getIt<RegisterCubit>()),
-      BlocProvider(create: (_) => getIt<NavigationCubit>()),
-      BlocProvider(create: (_) => getIt<DashboardCubit>()),
-      BlocProvider(create: (_) => getIt<RaceDetailsCubit>()),
-      BlocProvider(create: (_) => getIt<CalendarCubit>()),
-      BlocProvider(create: (_) => getIt<StandingsCubit>()),
-    ],
-    child: MainApp(),
-  ));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<LoginCubit>()),
+        BlocProvider(create: (_) => getIt<RegisterCubit>()),
+        BlocProvider(create: (_) => getIt<NavigationCubit>()),
+        BlocProvider(create: (_) => getIt<DashboardCubit>()),
+        BlocProvider(create: (_) => getIt<RaceDetailsCubit>()),
+        BlocProvider(create: (_) => getIt<CalendarCubit>()),
+        BlocProvider(create: (_) => getIt<StandingsCubit>()),
+      ],
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -39,27 +42,7 @@ class MainApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp.router(
-          theme: ThemeData(
-            scaffoldBackgroundColor: const Color.fromARGB(0, 21, 21, 30),
-            fontFamily: 'Formula1Regular',
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(color: Colors.white),
-              bodyMedium: TextStyle(color: Colors.white),
-              bodySmall: TextStyle(color: Colors.white),
-              titleLarge: TextStyle(color: Colors.white),
-              titleMedium: TextStyle(color: Colors.white),
-              titleSmall: TextStyle(color: Colors.white),
-            ),
-            appBarTheme: AppBarTheme(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                toolbarHeight: 80,
-                elevation: 0,
-                titleTextStyle: const TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700),
-                iconTheme: const IconThemeData(color: Colors.white)),
-          ),
+          theme: F1Theme.themeData,
           debugShowCheckedModeBanner: false,
           routerConfig: Routing.router,
         );
