@@ -6,6 +6,8 @@ import '../cubit/race_details_cubit.dart';
 import '../../standings/views/widgets/standing_card.dart';
 import '../../../utils/race_utils.dart';
 import '../../../core/constants/route_names.dart';
+import '../../../core/theme/f1_theme.dart';
+import '../../../core/widgets/f1_loading_indicator.dart';
 
 class SessionDetailScreen extends StatefulWidget {
   final String sessionName;
@@ -23,31 +25,77 @@ class SessionDetailScreen extends StatefulWidget {
 }
 
 class _SessionDetailScreenState extends State<SessionDetailScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showFab = true;
+  double _lastScrollPosition = 0;
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     context.read<RaceDetailsCubit>().loadSessionDetails(widget.sessionKey);
+  }
+
+  void _onScroll() {
+    final currentPosition = _scrollController.position.pixels;
+    if (currentPosition > _lastScrollPosition && currentPosition > 100) {
+      // Scrolling down
+      if (_showFab) {
+        setState(() => _showFab = false);
+      }
+    } else if (currentPosition < _lastScrollPosition) {
+      // Scrolling up
+      if (!_showFab) {
+        setState(() => _showFab = true);
+      }
+    }
+    _lastScrollPosition = currentPosition;
+  }
+
+  Widget _buildHeaderCell(String text, IconData icon) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: F1Theme.f1White, size: 4.w),
+        SizedBox(width: F1Theme.smallSpacing),
+        Text(
+          text,
+          style: F1Theme.themeData.textTheme.headlineSmall?.copyWith(
+            color: F1Theme.f1White,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: F1Theme.f1Black,
         title: Text(
           "${widget.sessionName} Details",
-          style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
+          style: F1Theme.themeData.textTheme.displaySmall,
         ),
         centerTitle: true,
       ),
       body: BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
         builder: (context, state) {
           if (state.isLoadingSessionDetails) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: F1LoadingIndicator(message: 'Loading session details...'),
+            );
           }
 
           if (state.error != null) {
-            return Center(child: Text(state.error!));
+            return Center(
+              child: Text(
+                state.error!,
+                style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                  color: F1Theme.themeData.colorScheme.error,
+                ),
+              ),
+            );
           }
           final sessionDetails = state.sessionDetails;
           if (sessionDetails == null) {
@@ -55,70 +103,85 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
           }
           return Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.8,
-            color: Color.fromARGB(255, 25, 18, 18),
+            padding: EdgeInsets.all(F1Theme.mediumSpacing),
+            decoration: BoxDecoration(
+              gradient: F1Theme.cardGradient,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(F1Theme.xLargeSpacing),
+                topRight: Radius.circular(F1Theme.xLargeSpacing),
+              ),
+              boxShadow: F1Theme.cardShadow,
+            ),
             child: Column(
               children: [
-                SizedBox(height: 2.h),
-                Row(
-                  children: [
-                    SizedBox(width: 5.w),
-                    Text(
-                      'Pos',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(width: 13.w),
-                    Text(
-                      'Driver',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(width: 43.w),
-                    Text(
-                      'Pts',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.66,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final driver = sessionDetails[index];
-                      final name = RaceUtils.mapDriverNameFromDriverNumber(
-                        driver.driverNumber!,
-                        int.parse(widget.season),
-                      );
-                      final color = RaceUtils.getF1TeamColor(name);
-                      return StandingCard(
-                        position: index + 1,
-                        driverName: name,
-                        points: driver.points,
-                        highlightColor: color,
-                        index: index,
-                      );
-                    },
-                    itemCount: sessionDetails.length,
+                // Header with session info
+                Container(
+                  padding: EdgeInsets.all(F1Theme.mediumSpacing),
+                  decoration: BoxDecoration(
+                    gradient: F1Theme.redGradient,
+                    borderRadius: F1Theme.mediumBorderRadius,
+                    boxShadow: F1Theme.buttonShadow,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildHeaderCell('Pos', Icons.flag),
+                      _buildHeaderCell('Driver', Icons.person),
+                      _buildHeaderCell('Pts', Icons.star),
+                    ],
                   ),
                 ),
-                SizedBox(height: 2.h),
-                GestureDetector(
-                  onTap: () {
+                SizedBox(height: F1Theme.mediumSpacing),
+                // Results list
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: F1Theme.f1DarkGray,
+                      borderRadius: F1Theme.mediumBorderRadius,
+                      boxShadow: [
+                        BoxShadow(
+                          color: F1Theme.f1Black.withOpacity(0.5),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      controller: _scrollController,
+                      itemBuilder: (context, index) {
+                        final driver = sessionDetails[index];
+                        final name = RaceUtils.mapDriverNameFromDriverNumber(
+                          driver.driverNumber!,
+                          int.parse(widget.season),
+                        );
+                        final color = RaceUtils.getF1TeamColor(name);
+                        return StandingCard(
+                          position: index + 1,
+                          driverName: name,
+                          points: driver.points,
+                          highlightColor: color,
+                          index: index,
+                        );
+                      },
+                      itemCount: sessionDetails.length,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      floatingActionButton: _showFab
+          ? BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
+              builder: (context, state) {
+                final sessionDetails = state.sessionDetails;
+                if (sessionDetails == null || state.isLoadingSessionDetails) {
+                  return Container(); // Hide button when loading or no data
+                }
+                return FloatingActionButton.extended(
+                  onPressed: () {
                     context.pushNamed(
                       RouteNames.telemetryDetails,
                       extra: {
@@ -136,29 +199,35 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       },
                     );
                   },
-                  child: Container(
-                    width: 40.w,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 30, 0),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
+                  label: Row(
+                    children: [
+                      Icon(Icons.analytics, color: F1Theme.f1White, size: 4.w),
+                      SizedBox(width: F1Theme.smallSpacing),
+                      Text(
                         "View Telemetry",
-                        style: TextStyle(
-                          color: Colors.white,
+                        style: F1Theme.themeData.textTheme.bodyMedium?.copyWith(
+                          color: F1Theme.f1White,
                           fontFamily: "Formula1Bold",
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+                  backgroundColor: F1Theme.f1Red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 4,
+                );
+              },
+            )
+          : null,
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
   }
 }
