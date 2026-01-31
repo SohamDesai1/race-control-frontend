@@ -8,7 +8,7 @@ import '../cubit/race_details_cubit.dart';
 import '../../../utils/race_utils.dart';
 import '../../../core/constants/route_names.dart';
 import '../../../core/theme/f1_theme.dart';
-import '../../../core/widgets/f1_loading_indicator.dart';
+import '../../../widgets/f1_loading_indicator.dart';
 
 class RaceDetailScreen extends StatefulWidget {
   final String gpName;
@@ -179,7 +179,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                             .textTheme
                                             .displaySmall
                                             ?.copyWith(
-                                              fontSize: 6.w,
+                                              fontSize: 5.w,
                                               fontWeight: FontWeight.w700,
                                             ),
                                       ),
@@ -286,7 +286,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 7 .w),
+                                SizedBox(width: 7.w),
                                 // View Details Button
                                 GestureDetector(
                                   onTap: () {

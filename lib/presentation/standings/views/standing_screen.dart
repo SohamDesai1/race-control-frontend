@@ -5,7 +5,7 @@ import 'cubit/standings_cubit.dart';
 import '../../../utils/race_utils.dart';
 import 'widgets/standing_card.dart';
 import '../../../core/theme/f1_theme.dart';
-import '../../../core/widgets/f1_loading_indicator.dart';
+import '../../../widgets/f1_loading_indicator.dart';
 
 class StandingScreen extends StatefulWidget {
   const StandingScreen({super.key});
@@ -140,7 +140,7 @@ class _StandingScreenState extends State<StandingScreen>
               Container(
                 margin: EdgeInsets.symmetric(horizontal: F1Theme.mediumSpacing),
                 decoration: BoxDecoration(
-                  gradient: F1Theme.redGradient,
+                  color: F1Theme.f1Red,
                   borderRadius: F1Theme.mediumBorderRadius,
                   boxShadow: F1Theme.buttonShadow,
                 ),
@@ -156,7 +156,10 @@ class _StandingScreenState extends State<StandingScreen>
                         fontFamily: 'Formula1Bold',
                         fontWeight: FontWeight.w700,
                       ),
-                  unselectedLabelStyle: F1Theme.themeData.textTheme.bodyLarge
+                  unselectedLabelStyle: F1Theme
+                      .themeData
+                      .textTheme
+                      .headlineSmall
                       ?.copyWith(fontFamily: 'Formula1Regular'),
                   tabs: const [
                     Tab(text: 'Drivers'),
@@ -182,11 +185,7 @@ class _StandingScreenState extends State<StandingScreen>
                           )
                         : Container(
                             padding: EdgeInsets.all(F1Theme.mediumSpacing),
-                            decoration: BoxDecoration(
-                              gradient: F1Theme.cardGradient,
-                              borderRadius: F1Theme.mediumBorderRadius,
-                              boxShadow: F1Theme.cardShadow,
-                            ),
+
                             child: Column(
                               children: [
                                 // Drivers Header
@@ -194,10 +193,7 @@ class _StandingScreenState extends State<StandingScreen>
                                   padding: EdgeInsets.symmetric(
                                     vertical: F1Theme.smallSpacing,
                                   ),
-                                  decoration: BoxDecoration(
-                                    gradient: F1Theme.redGradient,
-                                    borderRadius: F1Theme.smallBorderRadius,
-                                  ),
+
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -220,45 +216,30 @@ class _StandingScreenState extends State<StandingScreen>
                                 SizedBox(height: F1Theme.mediumSpacing),
                                 // Drivers List
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: F1Theme.f1DarkGray,
-                                      borderRadius: F1Theme.mediumBorderRadius,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: F1Theme.f1Black.withOpacity(
-                                            0.3,
-                                          ),
-                                          blurRadius: 4,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemBuilder: (context, index) {
-                                        final driver = context
-                                            .read<StandingsCubit>()
-                                            .state
-                                            .driverLeaderboard![index];
-                                        final color = RaceUtils.getF1TeamColor(
-                                          driver.constructors[0].name,
-                                        );
-                                        return StandingCard(
-                                          position: int.parse(driver.position),
-                                          driverName:
-                                              "${driver.driver.givenName} ${driver.driver.familyName}",
-                                          points: int.parse(driver.points),
-                                          highlightColor: color,
-                                          index: index,
-                                        );
-                                      },
-                                      itemCount: context
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context, index) {
+                                      final driver = context
                                           .read<StandingsCubit>()
                                           .state
-                                          .driverLeaderboard
-                                          ?.length,
-                                    ),
+                                          .driverLeaderboard![index];
+                                      final color = RaceUtils.getF1TeamColor(
+                                        driver.constructors[0].name,
+                                      );
+                                      return StandingCard(
+                                        position: int.parse(driver.position),
+                                        driverName:
+                                            "${driver.driver.givenName} ${driver.driver.familyName}",
+                                        points: int.parse(driver.points),
+                                        highlightColor: color,
+                                        index: index,
+                                      );
+                                    },
+                                    itemCount: context
+                                        .read<StandingsCubit>()
+                                        .state
+                                        .driverLeaderboard
+                                        ?.length,
                                   ),
                                 ),
                               ],

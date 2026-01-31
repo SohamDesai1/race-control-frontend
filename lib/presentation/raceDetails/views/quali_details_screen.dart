@@ -7,7 +7,7 @@ import 'package:frontend/utils/race_utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
-import 'package:frontend/core/widgets/f1_loading_indicator.dart';
+import 'package:frontend/widgets/f1_loading_indicator.dart';
 
 class QualiDetailsScreen extends StatefulWidget {
   final String sessionName;

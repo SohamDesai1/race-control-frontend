@@ -6,7 +6,7 @@ import 'package:frontend/presentation/raceDetails/views/race_pace_widget.dart';
 import 'package:frontend/utils/race_utils.dart';
 import 'package:sizer/sizer.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
-import 'package:frontend/core/widgets/f1_loading_indicator.dart';
+import 'package:frontend/widgets/f1_loading_indicator.dart';
 
 class TelemetryScreen extends StatefulWidget {
   final String sessionKey;

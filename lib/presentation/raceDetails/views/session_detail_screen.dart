@@ -7,7 +7,7 @@ import '../../standings/views/widgets/standing_card.dart';
 import '../../../utils/race_utils.dart';
 import '../../../core/constants/route_names.dart';
 import '../../../core/theme/f1_theme.dart';
-import '../../../core/widgets/f1_loading_indicator.dart';
+import '../../../widgets/f1_loading_indicator.dart';
 
 class SessionDetailScreen extends StatefulWidget {
   final String sessionName;
