@@ -8,6 +8,7 @@ import 'package:frontend/presentation/home/views/widgets/carousel.dart';
 import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
 import 'package:frontend/utils/race_utils.dart';
+import 'package:frontend/widgets/f1_loading_indicator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
@@ -41,7 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: F1LoadingIndicator());
             }
 
             if (state.error != null) {
