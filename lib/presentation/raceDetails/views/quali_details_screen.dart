@@ -101,27 +101,6 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
           style: F1Theme.themeData.textTheme.displaySmall,
         ),
         centerTitle: true,
-        bottom: TabBar(
-          indicatorColor: F1Theme.f1Red,
-          labelColor: F1Theme.f1White,
-          controller: _tabController,
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorWeight: 3,
-          labelStyle: TextStyle(
-            fontSize: 5.w,
-            fontFamily: 'Formula1Bold',
-            fontWeight: FontWeight.w700,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontSize: 4.5.w,
-            fontFamily: 'Formula1Regular',
-          ),
-          tabs: [
-            Tab(text: 'Q1'),
-            Tab(text: 'Q2'),
-            Tab(text: 'Q3'),
-          ],
-        ),
       ),
       body: BlocBuilder<RaceDetailsCubit, RaceDetailsState>(
         builder: (context, state) {
@@ -147,205 +126,255 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
           if (details == null) {
             return const Center(child: Text("No session details available."));
           }
-          return TabBarView(
-            controller: _tabController,
+          return Column(
             children: [
               Container(
-                padding: EdgeInsets.all(F1Theme.mediumSpacing),
+                margin: EdgeInsets.symmetric(horizontal: F1Theme.mediumSpacing),
+                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  gradient: F1Theme.cardGradient,
-                  borderRadius: F1Theme.mediumBorderRadius,
-                  boxShadow: F1Theme.cardShadow,
+                  gradient: LinearGradient(
+                    colors: [
+                      F1Theme.f1Black.withOpacity(0.5),
+                      F1Theme.f1Black.withOpacity(0.3),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(35),
+                  border: Border.all(
+                    color: F1Theme.f1Red.withOpacity(0.2),
+                    width: 1.5,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    // Q1 Header
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: F1Theme.smallSpacing,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: F1Theme.redGradient,
-                        borderRadius: F1Theme.smallBorderRadius,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildQualiHeaderCell('Pos', Icons.flag),
-                          _buildQualiHeaderCell('Driver', Icons.person),
-                          _buildQualiHeaderCell('Pts', Icons.star),
-                        ],
-                      ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [F1Theme.f1Red, F1Theme.f1Red.withOpacity(0.8)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    SizedBox(height: F1Theme.mediumSpacing),
-                    // Q1 Results
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: F1Theme.f1DarkGray,
-                          borderRadius: F1Theme.mediumBorderRadius,
-                          boxShadow: [
-                            BoxShadow(
-                              color: F1Theme.f1Black.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) {
-                            final driver = details.q1![index];
-                            final name =
-                                RaceUtils.mapDriverNameFromDriverNumber(
-                                  int.parse(driver.driverNumber!),
-                                  int.parse(widget.season),
-                                );
-                            final color = RaceUtils.getF1TeamColor(name);
-                            return StandingCard(
-                              position: index + 1,
-                              driverName: name,
-                              highlightColor: color,
-                              index: index,
-                            );
-                          },
-                          itemCount: details.q1!.length,
-                        ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: F1Theme.f1Red.withOpacity(0.5),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                        offset: Offset(0, 3),
                       ),
-                    ),
+                    ],
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  labelColor: F1Theme.f1White,
+                  unselectedLabelColor: F1Theme.f1White.withOpacity(0.5),
+                  labelStyle: F1Theme.themeData.textTheme.headlineSmall
+                      ?.copyWith(
+                        fontFamily: 'Formula1Bold',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        letterSpacing: 0.5,
+                      ),
+                  unselectedLabelStyle: F1Theme
+                      .themeData
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(
+                        fontFamily: 'Formula1Regular',
+                        fontSize: 14,
+                        letterSpacing: 0.3,
+                      ),
+                  splashFactory: NoSplash.splashFactory,
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  tabs: const [
+                    Tab(text: 'Q1'),
+                    Tab(text: 'Q2'),
+                    Tab(text: 'Q3'),
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(F1Theme.mediumSpacing),
-                decoration: BoxDecoration(
-                  gradient: F1Theme.cardGradient,
-                  borderRadius: F1Theme.mediumBorderRadius,
-                  boxShadow: F1Theme.cardShadow,
-                ),
-                child: Column(
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
                   children: [
-                    // Q2 Header
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: F1Theme.smallSpacing,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: F1Theme.redGradient,
-                        borderRadius: F1Theme.smallBorderRadius,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+
+                      child: Column(
                         children: [
-                          _buildQualiHeaderCell('Pos', Icons.flag),
-                          _buildQualiHeaderCell('Driver', Icons.person),
-                          _buildQualiHeaderCell('Pts', Icons.star),
+                          // Q1 Header
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: F1Theme.smallSpacing,
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 4.w),
+                                _buildQualiHeaderCell('Pos', Icons.flag),
+                                SizedBox(width: 9.w),
+                                _buildQualiHeaderCell('Racer', Icons.person),
+                                SizedBox(width: 32.w),
+                                _buildQualiHeaderCell('Pts', Icons.star),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: F1Theme.mediumSpacing),
+                          // Q1 Results
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: F1Theme.mediumBorderRadius,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: F1Theme.f1Black.withOpacity(0.3),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                controller: _scrollController,
+                                itemBuilder: (context, index) {
+                                  final driver = details.q1![index];
+                                  final name =
+                                      RaceUtils.mapDriverNameFromDriverNumber(
+                                        int.parse(driver.driverNumber!),
+                                        int.parse(widget.season),
+                                      );
+                                  final color = RaceUtils.getF1TeamColor(name);
+                                  return StandingCard(
+                                    position: index + 1,
+                                    driverName: name,
+                                    highlightColor: color,
+                                    index: index,
+                                  );
+                                },
+                                itemCount: details.q1!.length,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: F1Theme.mediumSpacing),
-                    // Q2 Results
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: F1Theme.f1DarkGray,
-                          borderRadius: F1Theme.mediumBorderRadius,
-                          boxShadow: [
-                            BoxShadow(
-                              color: F1Theme.f1Black.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) {
-                            final driver = details.q2![index];
-                            final name =
-                                RaceUtils.mapDriverNameFromDriverNumber(
-                                  int.parse(driver.driverNumber!),
-                                  int.parse(widget.season),
-                                );
-                            final color = RaceUtils.getF1TeamColor(name);
-                            return StandingCard(
-                              position: index + 1,
-                              driverName: name,
-                              highlightColor: color,
-                              index: index,
-                            );
-                          },
-                          itemCount: details.q2!.length,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(F1Theme.mediumSpacing),
-                decoration: BoxDecoration(
-                  gradient: F1Theme.cardGradient,
-                  borderRadius: F1Theme.mediumBorderRadius,
-                  boxShadow: F1Theme.cardShadow,
-                ),
-                child: Column(
-                  children: [
-                    // Q3 Header
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: F1Theme.smallSpacing,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: F1Theme.redGradient,
-                        borderRadius: F1Theme.smallBorderRadius,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+
+                      child: Column(
                         children: [
-                          _buildQualiHeaderCell('Pos', Icons.flag),
-                          _buildQualiHeaderCell('Driver', Icons.person),
-                          _buildQualiHeaderCell('Pts', Icons.star),
+                          // Q2 Header
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: F1Theme.smallSpacing,
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 4.w),
+                                _buildQualiHeaderCell('Pos', Icons.flag),
+                                SizedBox(width: 9.w),
+                                _buildQualiHeaderCell('Racer', Icons.person),
+                                SizedBox(width: 32.w),
+                                _buildQualiHeaderCell('Pts', Icons.star),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: F1Theme.mediumSpacing),
+                          // Q2 Results
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: F1Theme.mediumBorderRadius,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: F1Theme.f1Black.withOpacity(0.3),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                controller: _scrollController,
+                                itemBuilder: (context, index) {
+                                  final driver = details.q2![index];
+                                  final name =
+                                      RaceUtils.mapDriverNameFromDriverNumber(
+                                        int.parse(driver.driverNumber!),
+                                        int.parse(widget.season),
+                                      );
+                                  final color = RaceUtils.getF1TeamColor(name);
+                                  return StandingCard(
+                                    position: index + 1,
+                                    driverName: name,
+                                    highlightColor: color,
+                                    index: index,
+                                  );
+                                },
+                                itemCount: details.q2!.length,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: F1Theme.mediumSpacing),
-                    // Q3 Results
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: F1Theme.f1DarkGray,
-                          borderRadius: F1Theme.mediumBorderRadius,
-                          boxShadow: [
-                            BoxShadow(
-                              color: F1Theme.f1Black.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
+                    Container(
+                      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+
+                      child: Column(
+                        children: [
+                          // Q3 Header
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: F1Theme.smallSpacing,
                             ),
-                          ],
-                        ),
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) {
-                            final driver = details.q3![index];
-                            final name =
-                                RaceUtils.mapDriverNameFromDriverNumber(
-                                  int.parse(driver.driverNumber!),
-                                  int.parse(widget.season),
-                                );
-                            final color = RaceUtils.getF1TeamColor(name);
-                            return StandingCard(
-                              position: index + 1,
-                              driverName: name,
-                              highlightColor: color,
-                              index: index,
-                            );
-                          },
-                          itemCount: details.q3!.length,
-                        ),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 4.w),
+                                _buildQualiHeaderCell('Pos', Icons.flag),
+                                SizedBox(width: 9.w),
+                                _buildQualiHeaderCell('Racer', Icons.person),
+                                SizedBox(width: 32.w),
+                                _buildQualiHeaderCell('Pts', Icons.star),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: F1Theme.mediumSpacing),
+                          // Q3 Results
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: F1Theme.mediumBorderRadius,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: F1Theme.f1Black.withOpacity(0.3),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                controller: _scrollController,
+                                itemBuilder: (context, index) {
+                                  final driver = details.q3![index];
+                                  final name =
+                                      RaceUtils.mapDriverNameFromDriverNumber(
+                                        int.parse(driver.driverNumber!),
+                                        int.parse(widget.season),
+                                      );
+                                  final color = RaceUtils.getF1TeamColor(name);
+                                  return StandingCard(
+                                    position: index + 1,
+                                    driverName: name,
+                                    highlightColor: color,
+                                    index: index,
+                                  );
+                                },
+                                itemCount: details.q3!.length,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

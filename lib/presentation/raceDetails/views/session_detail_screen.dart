@@ -53,7 +53,6 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
 
   Widget _buildHeaderCell(String text, IconData icon) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: F1Theme.f1White, size: 4.w),
         SizedBox(width: F1Theme.smallSpacing),
@@ -72,6 +71,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: F1Theme.f1Black,
         backgroundColor: F1Theme.f1Black,
         title: Text(
           "${widget.sessionName} Details",
@@ -105,7 +105,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(F1Theme.mediumSpacing),
             decoration: BoxDecoration(
-              gradient: F1Theme.cardGradient,
+              // gradient: F1Theme.cardGradient,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(F1Theme.xLargeSpacing),
                 topRight: Radius.circular(F1Theme.xLargeSpacing),
@@ -116,17 +116,14 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               children: [
                 // Header with session info
                 Container(
-                  padding: EdgeInsets.all(F1Theme.mediumSpacing),
-                  decoration: BoxDecoration(
-                    gradient: F1Theme.redGradient,
-                    borderRadius: F1Theme.mediumBorderRadius,
-                    boxShadow: F1Theme.buttonShadow,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: F1Theme.smallSpacing),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      SizedBox(width: 4.w),
                       _buildHeaderCell('Pos', Icons.flag),
-                      _buildHeaderCell('Driver', Icons.person),
+                      SizedBox(width: 9.w),
+                      _buildHeaderCell('Racer', Icons.person),
+                      SizedBox(width: 32.w),
                       _buildHeaderCell('Pts', Icons.star),
                     ],
                   ),
@@ -136,7 +133,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: F1Theme.f1DarkGray,
+                      // color: F1Theme.f1DarkGray,
                       borderRadius: F1Theme.mediumBorderRadius,
                       boxShadow: [
                         BoxShadow(

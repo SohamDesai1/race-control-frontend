@@ -80,12 +80,15 @@ class StandingCard extends StatelessWidget {
             ),
 
             // Points
-            Text(
-              points?.toInt().toString() ?? "NA",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 16.sp,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Text(
+                points?.toInt().toString() ?? "NA",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.sp,
+                ),
               ),
             ),
           ],
