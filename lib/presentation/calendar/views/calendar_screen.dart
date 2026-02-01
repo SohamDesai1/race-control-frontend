@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/route_names.dart';
+import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/presentation/calendar/views/cubit/calendar_cubit.dart';
 import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
@@ -34,6 +35,51 @@ class _CalendarScreenState extends State<CalendarScreen> {
           style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: F1Theme.smallSpacing),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: F1Theme.smallSpacing),
+              decoration: BoxDecoration(
+                gradient: F1Theme.cardGradient,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: DropdownButton<String>(
+                value: selectedYear,
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: F1Theme.f1White,
+                  size: 4.w,
+                ),
+                underline: const SizedBox(),
+                dropdownColor: F1Theme.f1DarkGray,
+                style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: F1Theme.f1White,
+                ),
+                items: ['2025', '2026'].map((String year) {
+                  return DropdownMenuItem<String>(
+                    value: year,
+                    child: Text(
+                      year,
+                      style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                        color: F1Theme.f1White,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newYear) {
+                  if (newYear != null && newYear != selectedYear) {
+                    setState(() {
+                      selectedYear = newYear;
+                    });
+                    context.read<CalendarCubit>().loadCalendarData(newYear);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -60,49 +106,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 3.w),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 3.w),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 35, 35, 35),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: DropdownButton<String>(
-                      value: selectedYear,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.white,
-                      ),
-                      underline: const SizedBox(),
-                      dropdownColor: const Color.fromARGB(255, 35, 35, 35),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      items: ['2025', '2026'].map((String year) {
-                        return DropdownMenuItem<String>(
-                          value: year,
-                          child: Text(year),
-                        );
-                      }).toList(),
-                      onChanged: (String? newYear) {
-                        if (newYear != null && newYear != selectedYear) {
-                          setState(() {
-                            selectedYear = newYear;
-                          });
-                          context.read<CalendarCubit>().loadCalendarData(
-                            newYear,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 1.h),
+                SizedBox(height: 2.h),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.77,
                   child: ListView.separated(
                     itemCount: calendar.length,
                     separatorBuilder: (_, __) => SizedBox(height: 2.h),
