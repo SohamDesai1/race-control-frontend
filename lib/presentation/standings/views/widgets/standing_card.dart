@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class StandingCard extends StatelessWidget {
@@ -20,65 +21,75 @@ class StandingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.9.h),
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 1.3.h, horizontal: 4.w),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(5),
+      child: Container(
+        decoration: BoxDecoration(
+          color: F1Theme.f1DarkGray,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            // Highlight color on left side (as a vertical strip)
+            Container(
+              width: 1.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: highlightColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(2),
+                  bottomLeft: Radius.circular(2),
+                ),
+              ),
             ),
-            child: Row(
-              children: [
-                // Position
-                Text(
+
+            SizedBox(width: 1.w),
+
+            // Position in white container
+            Container(
+              width: 10.w,
+              height: 10.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
                   position.toString(),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16.sp,
+                    fontSize: 14.sp,
                   ),
                 ),
-
-                SizedBox(width: index < 9 ? 17.w : 14.w),
-
-                // Driver name (START aligned)
-                Expanded(
-                  child: Text(
-                    driverName,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-
-                // Points
-                Text(
-                  points?.toInt().toString() ?? "NA",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
 
-          Container(
-            height: 5,
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: highlightColor,
-              borderRadius: BorderRadius.circular(20),
+            SizedBox(width: 4.w),
+
+            // Driver name (START aligned)
+            Expanded(
+              child: Text(
+                driverName,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.sp,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-        ],
+
+            // Points
+            Text(
+              points?.toInt().toString() ?? "NA",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

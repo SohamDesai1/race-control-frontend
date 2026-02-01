@@ -59,6 +59,53 @@ class _StandingScreenState extends State<StandingScreen>
           style: F1Theme.themeData.textTheme.displaySmall,
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: F1Theme.smallSpacing),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: F1Theme.smallSpacing),
+              decoration: BoxDecoration(
+                gradient: F1Theme.cardGradient,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: DropdownButton<String>(
+                value: selectedYear,
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: F1Theme.f1White,
+                  size: 4.w,
+                ),
+                underline: const SizedBox(),
+                dropdownColor: F1Theme.f1DarkGray,
+                style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: F1Theme.f1White,
+                ),
+                items: ['2025', '2026'].map((String year) {
+                  return DropdownMenuItem<String>(
+                    value: year,
+                    child: Text(
+                      year,
+                      style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+                        color: F1Theme.f1White,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newYear) {
+                  if (newYear != null && newYear != selectedYear) {
+                    setState(() {
+                      selectedYear = newYear;
+                    });
+                    context.read<StandingsCubit>().loadStandingsData(
+                      int.parse(selectedYear),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
       backgroundColor: F1Theme.f1Black,
       body: BlocBuilder<StandingsCubit, StandingsState>(
@@ -86,84 +133,87 @@ class _StandingScreenState extends State<StandingScreen>
           }
           return Column(
             children: [
-              // Enhanced Year Selector
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: F1Theme.mediumSpacing,
-                  vertical: F1Theme.smallSpacing,
-                ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: F1Theme.mediumSpacing,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: F1Theme.cardGradient,
-                    borderRadius: F1Theme.largeBorderRadius,
-                    boxShadow: F1Theme.cardShadow,
-                  ),
-                  child: DropdownButton<String>(
-                    value: selectedYear,
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: F1Theme.f1White,
-                      size: 6.w,
-                    ),
-                    underline: const SizedBox(),
-                    dropdownColor: F1Theme.f1DarkGray,
-                    style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    items: ['2025', '2026'].map((String year) {
-                      return DropdownMenuItem<String>(
-                        value: year,
-                        child: Text(
-                          year,
-                          style: F1Theme.themeData.textTheme.bodyLarge
-                              ?.copyWith(color: F1Theme.f1White),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newYear) {
-                      if (newYear != null && newYear != selectedYear) {
-                        setState(() {
-                          selectedYear = newYear;
-                        });
-                        context.read<StandingsCubit>().loadStandingsData(
-                          int.parse(selectedYear),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
+              SizedBox(height: 2.h),
               // Enhanced Tab Bar
               Container(
                 margin: EdgeInsets.symmetric(horizontal: F1Theme.mediumSpacing),
+                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: F1Theme.f1Red,
-                  borderRadius: F1Theme.mediumBorderRadius,
-                  boxShadow: F1Theme.buttonShadow,
+                  gradient: LinearGradient(
+                    colors: [
+                      F1Theme.f1Black.withOpacity(0.5),
+                      F1Theme.f1Black.withOpacity(0.3),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(35),
+                  border: Border.all(
+                    color: F1Theme.f1Red.withOpacity(0.2),
+                    width: 1.5,
+                  ),
                 ),
                 child: TabBar(
-                  indicatorColor: F1Theme.f1White,
-                  labelColor: F1Theme.f1White,
-                  unselectedLabelColor: F1Theme.f1White.withOpacity(0.7),
                   controller: _tabController,
+                  indicator: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [F1Theme.f1Red, F1Theme.f1Red.withOpacity(0.8)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: F1Theme.f1Red.withOpacity(0.5),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
                   indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorWeight: 3,
+                  dividerColor: Colors.transparent,
+                  labelColor: F1Theme.f1White,
+                  unselectedLabelColor: F1Theme.f1White.withOpacity(0.5),
                   labelStyle: F1Theme.themeData.textTheme.headlineSmall
                       ?.copyWith(
                         fontFamily: 'Formula1Bold',
                         fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        letterSpacing: 0.5,
                       ),
                   unselectedLabelStyle: F1Theme
                       .themeData
                       .textTheme
                       .headlineSmall
-                      ?.copyWith(fontFamily: 'Formula1Regular'),
+                      ?.copyWith(
+                        fontFamily: 'Formula1Regular',
+                        fontSize: 14,
+                        letterSpacing: 0.3,
+                      ),
+                  splashFactory: NoSplash.splashFactory,
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
                   tabs: const [
-                    Tab(text: 'Drivers'),
-                    Tab(text: 'Constructors'),
+                    Tab(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.person, size: 18),
+                          SizedBox(width: 8),
+                          Text('Drivers'),
+                        ],
+                      ),
+                    ),
+                    Tab(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.directions_car, size: 18),
+                          SizedBox(width: 8),
+                          Text('Constructors'),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -193,19 +243,19 @@ class _StandingScreenState extends State<StandingScreen>
                                   padding: EdgeInsets.symmetric(
                                     vertical: F1Theme.smallSpacing,
                                   ),
-
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
                                     children: [
+                                      SizedBox(width: 4.w),
                                       _buildStandingsHeaderCell(
                                         'Pos',
                                         Icons.flag,
                                       ),
+                                      SizedBox(width: 9.w),
                                       _buildStandingsHeaderCell(
-                                        'Driver',
+                                        'Racer',
                                         Icons.person,
                                       ),
+                                      SizedBox(width: 34.w),
                                       _buildStandingsHeaderCell(
                                         'Pts',
                                         Icons.star,
@@ -213,7 +263,7 @@ class _StandingScreenState extends State<StandingScreen>
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: F1Theme.mediumSpacing),
+                                SizedBox(height: F1Theme.smallSpacing),
                                 // Drivers List
                                 Expanded(
                                   child: ListView.builder(
@@ -259,11 +309,7 @@ class _StandingScreenState extends State<StandingScreen>
                           )
                         : Container(
                             padding: EdgeInsets.all(F1Theme.mediumSpacing),
-                            decoration: BoxDecoration(
-                              gradient: F1Theme.cardGradient,
-                              borderRadius: F1Theme.mediumBorderRadius,
-                              boxShadow: F1Theme.cardShadow,
-                            ),
+
                             child: Column(
                               children: [
                                 // Constructors Header
@@ -271,22 +317,19 @@ class _StandingScreenState extends State<StandingScreen>
                                   padding: EdgeInsets.symmetric(
                                     vertical: F1Theme.smallSpacing,
                                   ),
-                                  decoration: BoxDecoration(
-                                    gradient: F1Theme.redGradient,
-                                    borderRadius: F1Theme.smallBorderRadius,
-                                  ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
                                     children: [
+                                      SizedBox(width: 4.w),
                                       _buildStandingsHeaderCell(
                                         'Pos',
                                         Icons.flag,
                                       ),
+                                      SizedBox(width: 9.w),
                                       _buildStandingsHeaderCell(
                                         'Team',
                                         Icons.business,
                                       ),
+                                      SizedBox(width: 34.w),
                                       _buildStandingsHeaderCell(
                                         'Pts',
                                         Icons.star,
@@ -294,50 +337,35 @@ class _StandingScreenState extends State<StandingScreen>
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: F1Theme.mediumSpacing),
+                                SizedBox(height: F1Theme.smallSpacing),
                                 // Constructors List
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: F1Theme.f1DarkGray,
-                                      borderRadius: F1Theme.mediumBorderRadius,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: F1Theme.f1Black.withOpacity(
-                                            0.3,
-                                          ),
-                                          blurRadius: 4,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemBuilder: (context, index) {
-                                        final constructor = context
-                                            .read<StandingsCubit>()
-                                            .state
-                                            .constructorLeaderboard![index];
-                                        final color = RaceUtils.getF1TeamColor(
-                                          constructor.constructor.name,
-                                        );
-                                        return StandingCard(
-                                          position: int.parse(
-                                            constructor.position,
-                                          ),
-                                          driverName:
-                                              constructor.constructor.name,
-                                          points: int.parse(constructor.points),
-                                          highlightColor: color,
-                                          index: index,
-                                        );
-                                      },
-                                      itemCount: context
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context, index) {
+                                      final constructor = context
                                           .read<StandingsCubit>()
                                           .state
-                                          .constructorLeaderboard
-                                          ?.length,
-                                    ),
+                                          .constructorLeaderboard![index];
+                                      final color = RaceUtils.getF1TeamColor(
+                                        constructor.constructor.name,
+                                      );
+                                      return StandingCard(
+                                        position: int.parse(
+                                          constructor.position,
+                                        ),
+                                        driverName:
+                                            constructor.constructor.name,
+                                        points: int.parse(constructor.points),
+                                        highlightColor: color,
+                                        index: index,
+                                      );
+                                    },
+                                    itemCount: context
+                                        .read<StandingsCubit>()
+                                        .state
+                                        .constructorLeaderboard
+                                        ?.length,
                                   ),
                                 ),
                               ],
