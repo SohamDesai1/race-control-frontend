@@ -57,7 +57,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
             Container(
               padding: EdgeInsets.all(F1Theme.mediumSpacing),
               decoration: BoxDecoration(
-                gradient: F1Theme.redGradient,
+                color: F1Theme.f1MediumGray,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(F1Theme.xLargeSpacing),
                   bottomRight: Radius.circular(F1Theme.xLargeSpacing),
@@ -201,11 +201,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                   width: .5.w,
                                   height: 5.h,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [F1Theme.f1Red, F1Theme.f1White],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
+                                    color: F1Theme.f1White,
                                     borderRadius: BorderRadius.circular(1),
                                   ),
                                   margin: EdgeInsets.symmetric(horizontal: 2.w),
@@ -372,7 +368,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                       vertical: 0.8.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: F1Theme.redGradient,
+                                      color: F1Theme.f1Red  ,
                                       borderRadius: F1Theme.smallBorderRadius,
                                       boxShadow: F1Theme.buttonShadow,
                                     ),
