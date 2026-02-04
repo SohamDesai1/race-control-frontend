@@ -7,7 +7,7 @@ import 'package:frontend/presentation/home/cubit/dashboard/dashboard_cubit.dart'
 import 'package:frontend/presentation/raceDetails/cubit/race_details_cubit.dart';
 import 'package:frontend/presentation/standings/views/cubit/standings_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/core/router/app_router.dart';
 import 'package:frontend/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:frontend/utils/device_checker.dart';
@@ -16,8 +16,8 @@ import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const isProd = !kDebugMode;
-  await dotenv.load(fileName: isProd ? ".env.prod" : ".env.dev");
+  // const isProd = !kDebugMode;
+  // await dotenv.load(fileName: isProd ? ".env.prod" : ".env.dev");
   configureDependencies();
   runApp(
     MultiBlocProvider(

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/core/constants/api_routes.dart';
 import 'dart:developer';
@@ -33,7 +33,10 @@ final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
 class ApiService {
   late final Dio _dio;
-  final String _baseUrl = dotenv.env['API_BASE_URL']!;
+  static const String _baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:3000',
+  );
 
   ApiService() {
     _dio = Dio(
@@ -72,8 +75,7 @@ class ApiService {
           final response = error.response;
 
           if (response?.statusCode == 401 &&
-              response?.data["message"] ==
-                  "Invalid token: ExpiredSignature") {
+              response?.data["message"] == "Invalid token: ExpiredSignature") {
             _debugLog("🔄 Token expired → refreshing token...");
 
             final refreshed = await _refreshToken();

@@ -58,3 +58,7 @@ app.*.map.json
 /supabase
 *.freezed.dart
 *.g.dart
+*.config.dart
+*.lock
+*.env.*
+.firebase
