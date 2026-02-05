@@ -19,16 +19,6 @@ class DriverSpeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formatToMmSsMs(num seconds) {
-      final int minutes = seconds ~/ 60;
-      final int secs = seconds.toInt() % 60;
-      final int millis = ((seconds - seconds.floor()) * 1000).round();
-
-      String twoDigits(int n) => n.toString().padLeft(2, '0');
-      String threeDigits(int n) => n.toString().padLeft(3, '0');
-
-      return '${twoDigits(minutes)}:${twoDigits(secs)}:${threeDigits(millis)}';
-    }
 
     if (state.isLoadingDriverTelemetry) {
       return Center(
@@ -364,72 +354,6 @@ class DriverSpeedWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: F1Theme.mediumSpacing),
-          Text(
-            "Fastest Lap Times",
-            style: F1Theme.themeData.textTheme.displaySmall?.copyWith(
-              color: F1Theme.f1Red,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: F1Theme.mediumSpacing),
-          driverNames.isNotEmpty && state.sectorTimings!.isNotEmpty
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: driverNames.length,
-                  itemBuilder: (context, index) {
-                    if (index >= state.sectorTimings!.length)
-                      return SizedBox.shrink();
-                    final totalLapTime =
-                        state.sectorTimings![index].sector1! +
-                        state.sectorTimings![index].sector2! +
-                        state.sectorTimings![index].sector3!;
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: F1Theme.smallSpacing / 2,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: colors[index],
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colors[index].withOpacity(0.5),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: F1Theme.smallSpacing),
-                          Expanded(
-                            child: Text(
-                              driverNames[index],
-                              style: F1Theme.themeData.textTheme.bodyLarge
-                                  ?.copyWith(
-                                    color: colors[index],
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ),
-                          Text(
-                            formatToMmSsMs(totalLapTime),
-                            style: F1Theme.themeData.textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: F1Theme.f1White,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                )
-              : SizedBox.shrink(),
         ],
       ),
     );

@@ -84,6 +84,17 @@ class SectorTimingsWidget extends StatelessWidget {
     });
   }
 
+  String formatToMmSsMs(num seconds) {
+    final int minutes = seconds ~/ 60;
+    final int secs = seconds.toInt() % 60;
+    final int millis = ((seconds - seconds.floor()) * 1000).round();
+
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String threeDigits(int n) => n.toString().padLeft(3, '0');
+
+    return '${twoDigits(minutes)}:${twoDigits(secs)}:${threeDigits(millis)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (state.isLoadingSectorTimings) {
@@ -103,6 +114,20 @@ class SectorTimingsWidget extends StatelessWidget {
         ),
       );
     }
+    final List<String> driverNames = [];
+    final List<Color> colors = [];
+    final Set<Color> usedColors = {};
+
+    drivers.forEach((key, value) {
+      Color baseColor = RaceUtils.getF1TeamColor(value).withAlpha(200);
+      if (usedColors.contains(baseColor)) {
+        baseColor = Colors.grey;
+      }
+
+      usedColors.add(baseColor);
+      colors.add(baseColor);
+    });
+    driverNames.addAll(drivers.values);
 
     final barChartdata =
         state.sectorTimings
@@ -131,114 +156,190 @@ class SectorTimingsWidget extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      child: Container(
-        height: 300,
-        padding: EdgeInsets.all(F1Theme.mediumSpacing),
-        margin: EdgeInsets.symmetric(vertical: F1Theme.smallSpacing),
-        decoration: BoxDecoration(
-          gradient: F1Theme.cardGradient,
-          borderRadius: F1Theme.mediumBorderRadius,
-          boxShadow: F1Theme.cardShadow,
-        ),
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceAround,
-            maxY: _getMaxSectorTime(barChartdata) * 1.15,
-            minY: 0,
-            barTouchData: BarTouchData(
-              enabled: true,
-              touchTooltipData: BarTouchTooltipData(
-                tooltipRoundedRadius: 8,
-                getTooltipColor: (group) => F1Theme.f1DarkGray,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                  final driver = barChartdata[rodIndex];
-                  final sectors = ['Sector 1', 'Sector 2', 'Sector 3'];
-                  return BarTooltipItem(
-                    'Driver no ${driver['driver_number']}\n',
-                    F1Theme.themeData.textTheme.bodyLarge!.copyWith(
-                      color: F1Theme.f1White,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text:
-                            '${sectors[groupIndex]}: ${rod.toY.toStringAsFixed(3)}s',
-                        style: F1Theme.themeData.textTheme.bodySmall!.copyWith(
-                          color: F1Theme.f1White,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+      child: Column(
+        children: [
+          Container(
+            height: 300,
+            padding: EdgeInsets.all(F1Theme.mediumSpacing),
+            margin: EdgeInsets.symmetric(vertical: F1Theme.smallSpacing),
+            decoration: BoxDecoration(
+              gradient: F1Theme.cardGradient,
+              borderRadius: F1Theme.mediumBorderRadius,
+              boxShadow: F1Theme.cardShadow,
             ),
-            titlesData: FlTitlesData(
-              show: true,
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (value, meta) {
-                    final sectors = ['Sector 1', 'Sector 2', 'Sector 3'];
-                    if (value.toInt() >= 0 && value.toInt() < sectors.length) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: F1Theme.smallSpacing),
-                        child: Text(
-                          sectors[value.toInt()],
-                          style: F1Theme.themeData.textTheme.bodyMedium
-                              ?.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: F1Theme.f1White,
-                              ),
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: _getMaxSectorTime(barChartdata) * 1.15,
+                minY: 0,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipRoundedRadius: 8,
+                    getTooltipColor: (group) => F1Theme.f1DarkGray,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      final driver = barChartdata[rodIndex];
+                      final sectors = ['Sector 1', 'Sector 2', 'Sector 3'];
+                      return BarTooltipItem(
+                        'Driver no ${driver['driver_number']}\n',
+                        F1Theme.themeData.textTheme.bodyLarge!.copyWith(
+                          color: F1Theme.f1White,
+                          fontWeight: FontWeight.bold,
                         ),
+                        children: [
+                          TextSpan(
+                            text:
+                                '${sectors[groupIndex]}: ${rod.toY.toStringAsFixed(3)}s',
+                            style: F1Theme.themeData.textTheme.bodySmall!
+                                .copyWith(
+                                  color: F1Theme.f1White,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                          ),
+                        ],
                       );
-                    }
-                    return const Text('');
-                  },
+                    },
+                  ),
                 ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 40,
-                  getTitlesWidget: (value, meta) {
-                    return Text(
-                      '${value.toStringAsFixed(0)}s',
-                      style: F1Theme.themeData.textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: F1Theme.f1TextGray,
-                      ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        final sectors = ['Sector 1', 'Sector 2', 'Sector 3'];
+                        if (value.toInt() >= 0 &&
+                            value.toInt() < sectors.length) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: F1Theme.smallSpacing),
+                            child: Text(
+                              sectors[value.toInt()],
+                              style: F1Theme.themeData.textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: F1Theme.f1White,
+                                  ),
+                            ),
+                          );
+                        }
+                        return const Text('');
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          '${value.toStringAsFixed(0)}s',
+                          style: F1Theme.themeData.textTheme.bodySmall
+                              ?.copyWith(
+                                fontSize: 10,
+                                color: F1Theme.f1TextGray,
+                              ),
+                        );
+                      },
+                    ),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: 5,
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: F1Theme.f1LightGray.withOpacity(0.2),
+                      strokeWidth: 1,
                     );
                   },
                 ),
-              ),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-            ),
-            gridData: FlGridData(
-              show: true,
-              drawVerticalLine: false,
-              horizontalInterval: 5,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: F1Theme.f1LightGray.withOpacity(0.2),
-                  strokeWidth: 1,
-                );
-              },
-            ),
-            borderData: FlBorderData(
-              show: true,
-              border: Border(
-                bottom: BorderSide(color: F1Theme.f1LightGray),
-                left: BorderSide(color: F1Theme.f1LightGray),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    bottom: BorderSide(color: F1Theme.f1LightGray),
+                    left: BorderSide(color: F1Theme.f1LightGray),
+                  ),
+                ),
+                barGroups: _buildBarGroups(barChartdata),
               ),
             ),
-            barGroups: _buildBarGroups(barChartdata),
           ),
-        ),
+          SizedBox(height: F1Theme.mediumSpacing),
+          Text(
+            "Fastest Lap Times",
+            style: F1Theme.themeData.textTheme.displaySmall?.copyWith(
+              color: F1Theme.f1Red,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: F1Theme.mediumSpacing),
+          driverNames.isNotEmpty && state.sectorTimings!.isNotEmpty
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: driverNames.length,
+                  itemBuilder: (context, index) {
+                    if (index >= state.sectorTimings!.length)
+                      return SizedBox.shrink();
+                    final totalLapTime =
+                        state.sectorTimings![index].sector1! +
+                        state.sectorTimings![index].sector2! +
+                        state.sectorTimings![index].sector3!;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: F1Theme.smallSpacing / 2,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: colors[index],
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: colors[index].withOpacity(0.5),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: F1Theme.smallSpacing),
+                          Expanded(
+                            child: Text(
+                              driverNames[index],
+                              style: F1Theme.themeData.textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: colors[index],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
+                          Text(
+                            formatToMmSsMs(totalLapTime),
+                            style: F1Theme.themeData.textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: F1Theme.f1White,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : SizedBox.shrink(),
+        ],
       ),
     );
   }
