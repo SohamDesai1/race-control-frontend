@@ -97,8 +97,8 @@ class _TelemetryScreenState extends State<TelemetryScreen>
           return Column(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: F1Theme.mediumSpacing),
-                padding: EdgeInsets.all(6),
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -140,7 +140,7 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                       ?.copyWith(
                         fontFamily: 'Formula1Bold',
                         fontWeight: FontWeight.w700,
-                        fontSize: 15,
+                        fontSize: 12,
                         letterSpacing: 0.5,
                       ),
                   unselectedLabelStyle: F1Theme
@@ -149,15 +149,15 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                       .headlineSmall
                       ?.copyWith(
                         fontFamily: 'Formula1Regular',
-                        fontSize: 14,
+                        fontSize: 12,
                         letterSpacing: 0.3,
                       ),
                   splashFactory: NoSplash.splashFactory,
                   overlayColor: WidgetStateProperty.all(Colors.transparent),
                   tabs: [
-                    Tab(text: 'Driver \nSpeed', height: 5.h),
-                    Tab(text: 'Sector \nTiming', height: 5.h),
-                    Tab(text: 'Race \nPace', height: 5.h),
+                    Tab(text: 'Driver Speed', height: 4.h),
+                    Tab(text: 'Sector Timing', height: 4.h),
+                    Tab(text: 'Race Pace', height: 4.h),
                   ],
                 ),
               ),
