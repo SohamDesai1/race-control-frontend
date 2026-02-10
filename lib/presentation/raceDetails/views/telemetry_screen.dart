@@ -30,10 +30,13 @@ class _TelemetryScreenState extends State<TelemetryScreen>
   late TabController _tabController;
   final Set<int> _loadedTabs = {};
 
+  bool get _showRacePaceTab => widget.sessionType == "Race";
+  int get _tabCount => _showRacePaceTab ? 3 : 2;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: _tabCount, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         _loadTabData(_tabController.index);
@@ -70,7 +73,7 @@ class _TelemetryScreenState extends State<TelemetryScreen>
         );
         break;
       case 2:
-        if (widget.drivers.length >= 2) {
+        if (_showRacePaceTab && widget.drivers.length >= 2) {
           context.read<RaceDetailsCubit>().loadRacePaceComparisonData(
             widget.sessionKey,
             widget.drivers.keys.elementAt(0),
@@ -157,7 +160,8 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                   tabs: [
                     Tab(text: 'Driver Speed', height: 4.h),
                     Tab(text: 'Sector Timing', height: 4.h),
-                    Tab(text: 'Race Pace', height: 4.h),
+                    if (_showRacePaceTab)
+                      Tab(text: 'Race Pace', height: 4.h),
                   ],
                 ),
               ),
@@ -189,19 +193,20 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                               size: 60,
                             ),
                           ),
-                    _loadedTabs.contains(2)
-                        ? RacePaceWidgett(
-                            state: state,
-                            drivers: widget.drivers,
-                            season: widget.season,
-                            sessionType: widget.sessionType,
-                          )
-                        : Center(
-                            child: F1LoadingIndicator(
-                              message: 'Loading lap times...',
-                              size: 60,
+                    if (_showRacePaceTab)
+                      _loadedTabs.contains(2)
+                          ? RacePaceWidgett(
+                              state: state,
+                              drivers: widget.drivers,
+                              season: widget.season,
+                              sessionType: widget.sessionType,
+                            )
+                          : Center(
+                              child: F1LoadingIndicator(
+                                message: 'Loading lap times...',
+                                size: 60,
+                              ),
                             ),
-                          ),
                   ],
                 ),
               ),
