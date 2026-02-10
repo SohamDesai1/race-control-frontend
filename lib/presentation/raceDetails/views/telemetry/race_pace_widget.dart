@@ -92,6 +92,10 @@ class RacePaceWidgett extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _TelemetryDescription(
+              description:
+                  'Analyze race pace throughout the entire race distance. Track lap time consistency, identify tire degradation, and compare strategic approaches. Green zones indicate faster laps.',
+            ),
             sessionType == "Race"
                 ? Column(
                     children: [
@@ -105,7 +109,7 @@ class RacePaceWidgett extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                       ),
-                      SizedBox(height: F1Theme.smallSpacing),
+                      SizedBox(height: F1Theme.mediumSpacing),
                       SizedBox(
                         height: 50.h,
                         child: RacePaceScreen(
@@ -125,6 +129,48 @@ class RacePaceWidgett extends StatelessWidget {
                 : SizedBox.shrink(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TelemetryDescription extends StatelessWidget {
+  final String description;
+
+  const _TelemetryDescription({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+      margin: EdgeInsets.only(bottom: F1Theme.mediumSpacing),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            F1Theme.f1Red.withOpacity(0.15),
+            F1Theme.f1Red.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: F1Theme.mediumBorderRadius,
+        border: Border.all(color: F1Theme.f1Red.withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, color: F1Theme.f1Red, size: 20),
+          SizedBox(width: F1Theme.smallSpacing),
+          Expanded(
+            child: Text(
+              description,
+              style: F1Theme.themeData.textTheme.bodyMedium?.copyWith(
+                color: F1Theme.f1White.withOpacity(0.9),
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -154,10 +154,30 @@ class SectorTimingsWidget extends StatelessWidget {
         ),
       );
     }
-
     return SingleChildScrollView(
       child: Column(
         children: [
+          _TelemetryDescription(
+            description:
+                'Compare sector performance across the circuit. Each track is divided into three sectors, allowing you to identify strengths and weaknesses in different parts of the lap.',
+          ),
+          SizedBox(height: F1Theme.smallSpacing),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: F1Theme.mediumSpacing),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sector Times Comparison',
+                  style: F1Theme.themeData.textTheme.headlineSmall?.copyWith(
+                    color: F1Theme.f1White,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
+            ),
+          ),
           Container(
             height: 300,
             padding: EdgeInsets.all(F1Theme.mediumSpacing),
@@ -339,6 +359,48 @@ class SectorTimingsWidget extends StatelessWidget {
                   },
                 )
               : SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+}
+
+class _TelemetryDescription extends StatelessWidget {
+  final String description;
+
+  const _TelemetryDescription({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+      margin: EdgeInsets.all(F1Theme.smallSpacing),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            F1Theme.f1Red.withOpacity(0.15),
+            F1Theme.f1Red.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: F1Theme.mediumBorderRadius,
+        border: Border.all(color: F1Theme.f1Red.withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, color: F1Theme.f1Red, size: 20),
+          SizedBox(width: F1Theme.smallSpacing),
+          Expanded(
+            child: Text(
+              description,
+              style: F1Theme.themeData.textTheme.bodyMedium?.copyWith(
+                color: F1Theme.f1White.withOpacity(0.9),
+                height: 1.4,
+              ),
+            ),
+          ),
         ],
       ),
     );
