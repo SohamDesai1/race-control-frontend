@@ -53,6 +53,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/tracks/
+    - assets/drivers/
   fonts:
     - family: Formula1Bold
       fonts:
