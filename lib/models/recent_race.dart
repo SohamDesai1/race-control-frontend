@@ -5,7 +5,16 @@ part 'recent_race.g.dart';
 
 @freezed
 abstract class RecentResultModel with _$RecentResultModel {
-  const factory RecentResultModel({
+  const factory RecentResultModel({required Race race, required int id}) =
+      _RecentResultModel;
+
+  factory RecentResultModel.fromJson(Map<String, dynamic> json) =>
+      _$RecentResultModelFromJson(json);
+}
+
+@freezed
+abstract class Race with _$Race {
+  const factory Race({
     @JsonKey(name: "Circuit") required Circuit circuit,
     @JsonKey(name: "Results") required List<Result> results,
     required DateTime date,
@@ -14,10 +23,10 @@ abstract class RecentResultModel with _$RecentResultModel {
     required String season,
     required String time,
     required String url,
-  }) = _RecentResultModel;
+  }) = _Race;
 
-  factory RecentResultModel.fromJson(Map<String, dynamic> json) =>
-      _$RecentResultModelFromJson(json);
+    factory Race.fromJson(Map<String, dynamic> json) =>
+      _$RaceFromJson(json);
 }
 
 @freezed

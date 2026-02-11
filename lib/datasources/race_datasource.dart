@@ -24,8 +24,8 @@ class RaceDatasource {
     var res = await api.get(ApiRoutes.recentResults);
 
     if (res.isSuccess) {
-      final data = res.body['data'] as List;
-      final recentResults = RecentResultModel.fromJson(data[0]);
+      final data = res.body as Map<String, dynamic>? ?? {};
+      final recentResults = RecentResultModel.fromJson(data);
 
       return recentResults;
     }
