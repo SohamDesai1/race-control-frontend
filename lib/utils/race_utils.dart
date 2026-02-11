@@ -292,4 +292,35 @@ class RaceUtils {
 
     return 'Unknown Driver';
   }
+
+  static String? getDriverImage(String? driverName) {
+    if (driverName == null) return null;
+
+    final Map<String, String> driverImageMap = {
+      'Max Verstappen': 'assets/drivers/max.png',
+      'Lando Norris': 'assets/drivers/lando.png',
+      'Charles Leclerc': 'assets/drivers/leclerc.png',
+      'Lewis Hamilton': 'assets/drivers/lewis.png',
+      'George Russell': 'assets/drivers/russel.png',
+      'Oscar Piastri': 'assets/drivers/oscar.png',
+      'Fernando Alonso': 'assets/drivers/alonso.png',
+      'Lance Stroll': 'assets/drivers/stroll.png',
+      'Pierre Gasly': 'assets/drivers/gasly.png',
+      'Franco Colapinto': 'assets/drivers/colapinto.png',
+      'Alexander Albon': 'assets/drivers/albon.png',
+      'Carlos Sainz': 'assets/drivers/carlos.png',
+      'Liam Lawson': 'assets/drivers/lawson.png',
+      'Arvid Lindblad': 'assets/drivers/arvid.png',
+      'Nico Hülkenberg': 'assets/drivers/nico.png',
+      'Gabriel Bortoleto': 'assets/drivers/gabreil.png',
+      'Oliver Bearman': 'assets/drivers/bearman.png',
+      'Esteban Ocon': 'assets/drivers/ocon.png',
+      'Sergio Perez': 'assets/drivers/perez.png',
+      'Valtteri Bottas': 'assets/drivers/bottas.png',
+      'Andrea Kimi Antonelli': 'assets/drivers/kimi.png',
+      'Isack Hadjar': 'assets/drivers/hadjar.png',
+    };
+
+    return driverImageMap[driverName];
+  }
 }
