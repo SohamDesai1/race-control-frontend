@@ -102,6 +102,11 @@ class F1Theme {
         fontSize: 12,
         color: f1TextGray,
       ),
+      bodySmall: TextStyle(
+        fontFamily: 'Formula1Regular',
+        fontSize: 10,
+        color: f1TextGray,
+      ),
       labelLarge: TextStyle(
         fontFamily: 'Formula1Bold',
         fontSize: 14,

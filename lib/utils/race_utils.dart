@@ -1,58 +1,101 @@
 import 'package:flutter/material.dart';
 
 class RaceUtils {
-  static final Map<String, String> driverTeamMap = {
+  static final Map<int, Map<String, String>> driverTeamByYear = {
     // Red Bull
-    'Max Verstappen': 'Red Bull',
-    'Isack Hadjar': 'Red Bull',
+    2025: {
+      'Max Verstappen': 'Red Bull',
+      'Liam Lawson': 'Red Bull',
 
-    // Ferrari
-    'Charles Leclerc': 'Ferrari',
-    'Lewis Hamilton': 'Ferrari',
+      // Ferrari
+      'Charles Leclerc': 'Ferrari',
+      'Lewis Hamilton': 'Ferrari',
 
-    // Mercedes
-    'George Russell': 'Mercedes',
-    'Andrea Kimi Antonelli': 'Mercedes',
+      // Mercedes
+      'George Russell': 'Mercedes',
+      'Andrea Kimi Antonelli': 'Mercedes',
 
-    // McLaren
-    'Lando Norris': 'McLaren',
-    'Oscar Piastri': 'McLaren',
+      // McLaren
+      'Lando Norris': 'McLaren',
+      'Oscar Piastri': 'McLaren',
 
-    // Aston Martin
-    'Fernando Alonso': 'Aston Martin',
-    'Lance Stroll': 'Aston Martin',
+      // Aston Martin
+      'Fernando Alonso': 'Aston Martin',
+      'Lance Stroll': 'Aston Martin',
 
-    // Alpine
-    'Pierre Gasly': 'Alpine F1 Team',
-    'Franco Colapinto': 'Alpine F1 Team',
+      // Alpine
+      'Pierre Gasly': 'Alpine F1 Team',
+      'Franco Colapinto': 'Alpine F1 Team',
 
-    // Williams
-    'Alex Albon': 'Williams',
-    'Carlos Sainz': 'Williams',
+      // Williams
+      'Alex Albon': 'Williams',
+      'Carlos Sainz': 'Williams',
 
-    // RB F1 Team
-    'Liam Lawson': 'RB F1 Team',
-    'Arvid Lindblad': 'RB F1 Team',
+      // RB F1 Team
+      'Isack Hadjar': 'RB F1 Team',
+      'Yuki Tsunoda': 'RB F1 Team',
 
-    // Sauber
-    'Nico Hulkenberg': 'Sauber',
-    'Gabriel Bortoleto': 'Sauber',
+      // Sauber
+      'Nico Hulkenberg': 'Sauber',
+      'Gabriel Bortoleto': 'Sauber',
 
-    // Haas
-    'Oliver Bearman': 'Haas F1 Team',
-    'Esteban Ocon': 'Haas F1 Team',
+      // Haas
+      'Oliver Bearman': 'Haas F1 Team',
+      'Esteban Ocon': 'Haas F1 Team',
+    },
 
-    // Cadillac
-    'Sergio Perez': 'Cadillac',
-    'Valtteri Bottas': 'Cadillac',
+    2026: {
+      // Cadillac
+      'Sergio Perez': 'Cadillac',
+      'Valtteri Bottas': 'Cadillac',
 
-    // Legacy drivers
-    'Logan Sargeant': 'Williams',
-    'Daniel Ricciardo': 'RB F1 Team',
-    'Kevin Magnussen': 'Haas F1 Team',
-    'Zhou Guanyu': 'Sauber',
-    'Jack Doohan': 'Williams',
+      // Red Bull
+      'Max Verstappen': 'Red Bull',
+      'Isack Hadjar': 'Red Bull',
+
+      // Ferrari
+      'Charles Leclerc': 'Ferrari',
+      'Lewis Hamilton': 'Ferrari',
+
+      // Mercedes
+      'George Russell': 'Mercedes',
+      'Andrea Kimi Antonelli': 'Mercedes',
+
+      // McLaren
+      'Lando Norris': 'McLaren',
+      'Oscar Piastri': 'McLaren',
+
+      // Aston Martin
+      'Fernando Alonso': 'Aston Martin',
+      'Lance Stroll': 'Aston Martin',
+
+      // Alpine
+      'Pierre Gasly': 'Alpine F1 Team',
+      'Franco Colapinto': 'Alpine F1 Team',
+
+      // Williams
+      'Alex Albon': 'Williams',
+      'Carlos Sainz': 'Williams',
+
+      // RB F1 Team
+      'Liam Lawson': 'RB F1 Team',
+      'Yuki Tsunoda': 'RB F1 Team',
+
+      // Sauber
+      'Nico Hulkenberg': 'Audi',
+      'Gabriel Bortoleto': 'Audi',
+
+      // Haas
+      'Oliver Bearman': 'Haas F1 Team',
+      'Esteban Ocon': 'Haas F1 Team',
+    },
   };
+  // // Legacy drivers
+  // 'Logan Sargeant': 'Williams',
+  // 'Daniel Ricciardo': 'RB F1 Team',
+  // 'Kevin Magnussen': 'Haas F1 Team',
+  // 'Zhou Guanyu': 'Sauber',
+  // 'Jack Doohan': 'Williams',
 
   static final Map<String, Color> teamColors = {
     'Red Bull': Color(0xFF1E41FF),
@@ -69,19 +112,30 @@ class RaceUtils {
     'Sauber': Color(0xFF900000),
     'Kick Sauber': Color(0xFF900000),
     'Haas F1 Team': Color(0xFFFFFFFF),
-    'Haas': Color(0xFFFFFFFF),
+    "Cadillac": Color(0xFF909090),
+    "Audi": Color(0xFFF50537),
   };
 
-  static Color getF1TeamColor(String name) {
+  static Color getF1TeamColor(String name, {int year = 2025}) {
     // Check if it's a team name first
     if (teamColors.containsKey(name)) {
       return teamColors[name]!;
     }
 
-    // Check if it's a driver name
-    if (driverTeamMap.containsKey(name)) {
-      final teamName = driverTeamMap[name]!;
-      return teamColors[teamName] ?? Colors.grey;
+    if (driverTeamByYear.containsKey(year)) {
+      final yearDrivers = driverTeamByYear[year];
+      if (yearDrivers != null && yearDrivers.containsKey(name)) {
+        return teamColors[yearDrivers[name]!] ?? Colors.grey;
+      }
+    }
+
+    // Fallback: try to find driver in any year (most recent first)
+    final sortedYears = driverTeamByYear.keys.toList()
+      ..sort((a, b) => b.compareTo(a));
+    for (final y in sortedYears) {
+      if (driverTeamByYear[y]!.containsKey(name)) {
+        return teamColors[driverTeamByYear[y]![name]!] ?? Colors.grey;
+      }
     }
 
     return Colors.grey;
