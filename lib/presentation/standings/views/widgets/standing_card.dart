@@ -99,7 +99,7 @@ class StandingCard extends StatelessWidget {
               ),
 
               // Arrow indicator
-              Icon(Icons.arrow_forward_ios, color: highlightColor, size: 14),
+              Icon(Icons.arrow_forward_ios, color: F1Theme.f1White, size: 14),
               SizedBox(width: 2.w),
             ],
           ),

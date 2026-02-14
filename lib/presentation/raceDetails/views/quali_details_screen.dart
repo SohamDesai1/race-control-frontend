@@ -251,6 +251,20 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                     driverName: name,
                                     highlightColor: color,
                                     index: index,
+                                    onTap: () {
+                                      context.push(
+                                        RouteNames.driverInfo,
+                                        extra: {
+                                          'driverName': name,
+                                          'constructorName':
+                                              RaceUtils.mapConstructorNameFromDriverNumber(
+                                                int.parse(driver.driverNumber!),
+                                                int.parse(widget.season),
+                                              ),
+                                          'season': widget.season,
+                                        },
+                                      );
+                                    },
                                   );
                                 },
                                 itemCount: details.q1!.length,
@@ -314,6 +328,20 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                     driverName: name,
                                     highlightColor: color,
                                     index: index,
+                                    onTap: () {
+                                      context.push(
+                                        RouteNames.driverInfo,
+                                        extra: {
+                                          'driverName': name,
+                                          'constructorName':
+                                              RaceUtils.mapConstructorNameFromDriverNumber(
+                                                int.parse(driver.driverNumber!),
+                                                int.parse(widget.season),
+                                              ),
+                                          'season': widget.season,
+                                        },
+                                      );
+                                    },
                                   );
                                 },
                                 itemCount: details.q2!.length,
@@ -377,6 +405,20 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                     driverName: name,
                                     highlightColor: color,
                                     index: index,
+                                    onTap: () {
+                                      context.push(
+                                        RouteNames.driverInfo,
+                                        extra: {
+                                          'driverName': name,
+                                          'constructorName':
+                                              RaceUtils.mapConstructorNameFromDriverNumber(
+                                                int.parse(driver.driverNumber!),
+                                                int.parse(widget.season),
+                                              ),
+                                          'season': widget.season,
+                                        },
+                                      );
+                                    },
                                   );
                                 },
                                 itemCount: details.q3!.length,

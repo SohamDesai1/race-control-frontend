@@ -433,4 +433,18 @@ class RaceUtils {
 
     return countryFlags[nationality ?? ''] ?? '🏳️';
   }
+
+  static String mapConstructorNameFromDriverNumber(int driverNumber, int year) {
+    final driverName = mapDriverNameFromDriverNumber(driverNumber, year);
+    final teamColor = getF1TeamColor(driverName, year: year);
+
+    // Reverse lookup to find constructor by color
+    for (final entry in teamColors.entries) {
+      if (entry.value == teamColor) {
+        return entry.key;
+      }
+    }
+
+    return 'Unknown Constructor';
+  }
 }

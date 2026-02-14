@@ -162,6 +162,19 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                           points: driver.points,
                           highlightColor: color,
                           index: index,
+                          onTap: () {
+                            context.push(
+                              RouteNames.driverInfo,
+                              extra: {
+                                'driverName': name,
+                                'constructorName': RaceUtils.mapConstructorNameFromDriverNumber(
+                                  driver.driverNumber!,
+                                  int.parse(widget.season),
+                                ),
+                                'season': widget.season,
+                              },
+                            );
+                          },
                         );
                       },
                       itemCount: sessionDetails.length,
