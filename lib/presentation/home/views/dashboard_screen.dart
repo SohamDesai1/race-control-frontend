@@ -177,6 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               teamName: r.constructor.name,
                               position: r.position,
                               raceResult: true,
+                              season: recent.race.season,
                             ),
                           );
                         },
@@ -212,6 +213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           "${d.driver.givenName} ${d.driver.familyName}",
                                       teamName: d.constructors.first.name,
                                       points: d.points,
+                                      season: recent!.race.season,
                                     ),
                                   );
                                 },

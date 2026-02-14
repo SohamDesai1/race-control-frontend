@@ -179,7 +179,7 @@ class _StandingScreenState extends State<StandingScreen>
                       ?.copyWith(
                         fontFamily: 'Formula1Bold',
                         fontWeight: FontWeight.w700,
-                        fontSize: 15,
+                        fontSize: 12,
                         letterSpacing: 0.5,
                       ),
                   unselectedLabelStyle: F1Theme
@@ -188,7 +188,7 @@ class _StandingScreenState extends State<StandingScreen>
                       .headlineSmall
                       ?.copyWith(
                         fontFamily: 'Formula1Regular',
-                        fontSize: 14,
+                        fontSize: 12,
                         letterSpacing: 0.3,
                       ),
                   splashFactory: NoSplash.splashFactory,
@@ -199,7 +199,7 @@ class _StandingScreenState extends State<StandingScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.person, size: 18),
-                          SizedBox(width: 8),
+                          SizedBox(width: 4),
                           Text('Drivers'),
                         ],
                       ),
@@ -209,7 +209,7 @@ class _StandingScreenState extends State<StandingScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.directions_car, size: 18),
-                          SizedBox(width: 8),
+                          SizedBox(width: 4),
                           Text('Constructors'),
                         ],
                       ),
@@ -255,7 +255,7 @@ class _StandingScreenState extends State<StandingScreen>
                                         'Racer',
                                         Icons.person,
                                       ),
-                                      SizedBox(width: 34.w),
+                                      SizedBox(width: 28.w),
                                       _buildStandingsHeaderCell(
                                         'Pts',
                                         Icons.star,
@@ -275,6 +275,7 @@ class _StandingScreenState extends State<StandingScreen>
                                           .driverLeaderboard![index];
                                       final color = RaceUtils.getF1TeamColor(
                                         driver.constructors[0].name,
+                                        year: int.parse(selectedYear),
                                       );
                                       return StandingCard(
                                         position: int.parse(driver.position),
@@ -329,7 +330,7 @@ class _StandingScreenState extends State<StandingScreen>
                                         'Team',
                                         Icons.business,
                                       ),
-                                      SizedBox(width: 34.w),
+                                      SizedBox(width: 28.w),
                                       _buildStandingsHeaderCell(
                                         'Pts',
                                         Icons.star,
@@ -349,6 +350,7 @@ class _StandingScreenState extends State<StandingScreen>
                                           .constructorLeaderboard![index];
                                       final color = RaceUtils.getF1TeamColor(
                                         constructor.constructor.name,
+                                        year: int.parse(selectedYear),
                                       );
                                       return StandingCard(
                                         position: int.parse(

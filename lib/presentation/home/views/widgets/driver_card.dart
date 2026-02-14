@@ -8,6 +8,7 @@ class DriverCard extends StatelessWidget {
   final String? teamName;
   final String? position;
   final String? points;
+  final String? season;
   const DriverCard({
     super.key,
     this.raceResult = false,
@@ -15,6 +16,7 @@ class DriverCard extends StatelessWidget {
     this.teamName,
     this.position,
     this.points,
+    this.season,
   });
 
   Color _getPositionColor(String? pos) {
@@ -30,7 +32,10 @@ class DriverCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final teamColor = RaceUtils.getF1TeamColor(teamName ?? '');
+    final teamColor = RaceUtils.getF1TeamColor(
+      teamName ?? '',
+      year: int.parse(season ?? '2026'),
+    );
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
