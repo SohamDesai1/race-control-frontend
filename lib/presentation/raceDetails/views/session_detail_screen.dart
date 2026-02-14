@@ -123,7 +123,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       _buildHeaderCell('Pos', Icons.flag),
                       SizedBox(width: 9.w),
                       _buildHeaderCell('Racer', Icons.person),
-                      SizedBox(width: 32.w),
+                      SizedBox(width: 24.w),
                       _buildHeaderCell('Pts', Icons.star),
                     ],
                   ),
@@ -152,7 +152,10 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                           driver.driverNumber!,
                           int.parse(widget.season),
                         );
-                        final color = RaceUtils.getF1TeamColor(name);
+                        final color = RaceUtils.getF1TeamColor(
+                          name,
+                          year: int.parse(widget.season),
+                        );
                         return StandingCard(
                           position: index + 1,
                           driverName: name,

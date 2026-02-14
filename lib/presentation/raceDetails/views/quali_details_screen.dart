@@ -213,7 +213,7 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                 _buildQualiHeaderCell('Pos', Icons.flag),
                                 SizedBox(width: 9.w),
                                 _buildQualiHeaderCell('Racer', Icons.person),
-                                SizedBox(width: 32.w),
+                                SizedBox(width: 28.w),
                                 _buildQualiHeaderCell('Pts', Icons.star),
                               ],
                             ),
@@ -242,7 +242,10 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                         int.parse(driver.driverNumber!),
                                         int.parse(widget.season),
                                       );
-                                  final color = RaceUtils.getF1TeamColor(name);
+                                  final color = RaceUtils.getF1TeamColor(
+                                    name,
+                                    year: int.parse(widget.season),
+                                  );
                                   return StandingCard(
                                     position: index + 1,
                                     driverName: name,
@@ -273,7 +276,7 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                 _buildQualiHeaderCell('Pos', Icons.flag),
                                 SizedBox(width: 9.w),
                                 _buildQualiHeaderCell('Racer', Icons.person),
-                                SizedBox(width: 32.w),
+                                SizedBox(width: 28.w),
                                 _buildQualiHeaderCell('Pts', Icons.star),
                               ],
                             ),
@@ -302,7 +305,10 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                         int.parse(driver.driverNumber!),
                                         int.parse(widget.season),
                                       );
-                                  final color = RaceUtils.getF1TeamColor(name);
+                                  final color = RaceUtils.getF1TeamColor(
+                                    name,
+                                    year: int.parse(widget.season),
+                                  );
                                   return StandingCard(
                                     position: index + 1,
                                     driverName: name,
@@ -333,7 +339,7 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                 _buildQualiHeaderCell('Pos', Icons.flag),
                                 SizedBox(width: 9.w),
                                 _buildQualiHeaderCell('Racer', Icons.person),
-                                SizedBox(width: 32.w),
+                                SizedBox(width: 28.w),
                                 _buildQualiHeaderCell('Pts', Icons.star),
                               ],
                             ),
@@ -362,7 +368,10 @@ class _QualiDetailsScreenState extends State<QualiDetailsScreen>
                                         int.parse(driver.driverNumber!),
                                         int.parse(widget.season),
                                       );
-                                  final color = RaceUtils.getF1TeamColor(name);
+                                  final color = RaceUtils.getF1TeamColor(
+                                    name,
+                                    year: int.parse(widget.season),
+                                  );
                                   return StandingCard(
                                     position: index + 1,
                                     driverName: name,

@@ -237,7 +237,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                             style: F1Theme
                                                 .themeData
                                                 .textTheme
-                                                .bodyMedium
+                                                .bodySmall
                                                 ?.copyWith(
                                                   color: F1Theme.f1TextGray,
                                                 ),
@@ -271,7 +271,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                       style: F1Theme
                                           .themeData
                                           .textTheme
-                                          .bodyMedium
+                                          .bodySmall
                                           ?.copyWith(
                                             color: RaceUtils.calcColor(
                                               dateTime.toLocal(),
@@ -368,7 +368,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                                       vertical: 0.8.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: F1Theme.f1Red  ,
+                                      color: F1Theme.f1Red,
                                       borderRadius: F1Theme.smallBorderRadius,
                                       boxShadow: F1Theme.buttonShadow,
                                     ),
