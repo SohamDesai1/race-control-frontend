@@ -143,8 +143,7 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                       ?.copyWith(
                         fontFamily: 'Formula1Bold',
                         fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                        letterSpacing: 0.5,
+                        fontSize: 3.w,
                       ),
                   unselectedLabelStyle: F1Theme
                       .themeData
@@ -152,16 +151,14 @@ class _TelemetryScreenState extends State<TelemetryScreen>
                       .headlineSmall
                       ?.copyWith(
                         fontFamily: 'Formula1Regular',
-                        fontSize: 12,
-                        letterSpacing: 0.3,
+                        fontSize: 2.8.w,
                       ),
                   splashFactory: NoSplash.splashFactory,
                   overlayColor: WidgetStateProperty.all(Colors.transparent),
                   tabs: [
                     Tab(text: 'Driver Speed', height: 4.h),
                     Tab(text: 'Sector Timing', height: 4.h),
-                    if (_showRacePaceTab)
-                      Tab(text: 'Race Pace', height: 4.h),
+                    if (_showRacePaceTab) Tab(text: 'Race Pace', height: 4.h),
                   ],
                 ),
               ),

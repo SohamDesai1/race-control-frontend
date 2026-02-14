@@ -29,6 +29,7 @@ class SectorTimingsWidget extends StatelessWidget {
           driverNumber,
           int.parse(season),
         ),
+        year: int.parse(season),
       ).withOpacity(0.85);
     });
 
@@ -119,7 +120,10 @@ class SectorTimingsWidget extends StatelessWidget {
     final Set<Color> usedColors = {};
 
     drivers.forEach((key, value) {
-      Color baseColor = RaceUtils.getF1TeamColor(value).withAlpha(200);
+      Color baseColor = RaceUtils.getF1TeamColor(
+        value,
+        year: int.parse(season),
+      ).withAlpha(200);
       if (usedColors.contains(baseColor)) {
         baseColor = Colors.grey;
       }
@@ -159,7 +163,7 @@ class SectorTimingsWidget extends StatelessWidget {
         children: [
           _TelemetryDescription(
             description:
-                'Compare sector performance across the circuit. Each track is divided into three sectors, allowing you to identify strengths and weaknesses in different parts of the lap.',
+                'Compare sector performance across the circuit. Each track is divided into three sectors.',
           ),
           SizedBox(height: F1Theme.smallSpacing),
           Padding(
@@ -317,26 +321,12 @@ class SectorTimingsWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         vertical: F1Theme.smallSpacing / 2,
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: colors[index],
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colors[index].withOpacity(0.5),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: F1Theme.smallSpacing),
-                          Expanded(
-                            child: Text(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
                               driverNames[index],
                               style: F1Theme.themeData.textTheme.bodyLarge
                                   ?.copyWith(
@@ -344,16 +334,17 @@ class SectorTimingsWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),
-                          ),
-                          Text(
-                            formatToMmSsMs(totalLapTime),
-                            style: F1Theme.themeData.textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: F1Theme.f1White,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ],
+
+                            Text(
+                              formatToMmSsMs(totalLapTime),
+                              style: F1Theme.themeData.textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: F1Theme.f1White,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

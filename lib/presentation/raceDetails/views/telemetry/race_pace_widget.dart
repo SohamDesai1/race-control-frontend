@@ -24,7 +24,7 @@ class RacePaceWidgett extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.isLoadingRacePaceComparison) {
       return Center(
-        child: F1LoadingIndicator(message: 'Loading lap times...', size: 60),
+        child: F1LoadingIndicator(message: 'Loading Race Pace...', size: 60),
       );
     }
 
@@ -59,7 +59,10 @@ class RacePaceWidgett extends StatelessWidget {
     final Set<Color> usedColors = {};
 
     drivers.forEach((key, value) {
-      Color baseColor = RaceUtils.getF1TeamColor(value).withAlpha(200);
+      Color baseColor = RaceUtils.getF1TeamColor(
+        value,
+        year: int.parse(season),
+      ).withAlpha(200);
       if (usedColors.contains(baseColor)) {
         baseColor = Colors.grey;
       }
@@ -94,7 +97,7 @@ class RacePaceWidgett extends StatelessWidget {
           children: [
             _TelemetryDescription(
               description:
-                  'Analyze race pace throughout the entire race distance. Track lap time consistency, identify tire degradation, and compare strategic approaches. Green zones indicate faster laps.',
+                  'Analyze race pace of the top two drivers to compare their performance throughout the race.',
             ),
             sessionType == "Race"
                 ? Column(

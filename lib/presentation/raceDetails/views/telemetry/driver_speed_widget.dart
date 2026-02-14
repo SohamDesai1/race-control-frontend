@@ -67,7 +67,7 @@ class DriverSpeedWidget extends StatelessWidget {
         children: [
           _TelemetryDescription(
             description:
-                'Analyze driver performance across the lap with detailed telemetry data. Compare speed, throttle application, and gear selection to understand driving techniques and identify performance differences.',
+                'Analyze driver performance with detailed telemetry data. Compare speed, throttle application, and gear selection ',
           ),
           _DriverLegend(
             driverNames: telemetryData.driverNames,
@@ -100,7 +100,7 @@ class DriverSpeedWidget extends StatelessWidget {
     final Set<Color> usedColors = {};
 
     drivers.forEach((key, value) {
-      Color baseColor = RaceUtils.getF1TeamColor(value).withAlpha(200);
+      Color baseColor = RaceUtils.getF1TeamColor(value, year: int.parse(season)).withAlpha(200);
       if (usedColors.contains(baseColor)) {
         baseColor = Colors.grey;
       }
