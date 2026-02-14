@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'cubit/standings_cubit.dart';
 import '../../../utils/race_utils.dart';
 import 'widgets/standing_card.dart';
 import '../../../core/theme/f1_theme.dart';
+import '../../../core/constants/route_names.dart';
 import '../../../widgets/f1_loading_indicator.dart';
 
 class StandingScreen extends StatefulWidget {
@@ -281,9 +283,23 @@ class _StandingScreenState extends State<StandingScreen>
                                         position: int.parse(driver.position),
                                         driverName:
                                             "${driver.driver.givenName} ${driver.driver.familyName}",
+                                        constructorName:
+                                            driver.constructors[0].name,
                                         points: int.parse(driver.points),
                                         highlightColor: color,
                                         index: index,
+                                        onTap: () {
+                                          context.push(
+                                            RouteNames.driverInfo,
+                                            extra: {
+                                              'driverName':
+                                                  "${driver.driver.givenName} ${driver.driver.familyName}",
+                                              'constructorName':
+                                                  driver.constructors[0].name,
+                                              'season': selectedYear,
+                                            },
+                                          );
+                                        },
                                       );
                                     },
                                     itemCount: context
@@ -358,9 +374,21 @@ class _StandingScreenState extends State<StandingScreen>
                                         ),
                                         driverName:
                                             constructor.constructor.name,
+                                        constructorName:
+                                            constructor.constructor.name,
                                         points: int.parse(constructor.points),
                                         highlightColor: color,
                                         index: index,
+                                        onTap: () {
+                                          context.push(
+                                            RouteNames.constructorInfo,
+                                            extra: {
+                                              'constructorName':
+                                                  constructor.constructor.name,
+                                              'season': selectedYear,
+                                            },
+                                          );
+                                        },
                                       );
                                     },
                                     itemCount: context

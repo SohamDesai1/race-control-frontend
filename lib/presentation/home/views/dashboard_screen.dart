@@ -178,6 +178,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               position: r.position,
                               raceResult: true,
                               season: recent.race.season,
+                              onTap: () {
+                                context.push(
+                                  RouteNames.driverInfo,
+                                  extra: {
+                                    'driverName':
+                                        "${r.driver.givenName} ${r.driver.familyName}",
+                                    'constructorName': r.constructor.name,
+                                    'season': recent.race.season,
+                                  },
+                                );
+                              },
                             ),
                           );
                         },
