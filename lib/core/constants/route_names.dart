@@ -9,4 +9,6 @@ class RouteNames {
   static const String sessionDetails = '/session-details';
   static const String qualiDetails = '/quali-details';
   static const String telemetryDetails = '/telemetry-details';
+  static const String driverInfo = '/driver-info';
+  static const String constructorInfo = '/constructor-info';
 }

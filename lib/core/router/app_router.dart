@@ -3,6 +3,8 @@ import 'package:frontend/presentation/raceDetails/views/quali_details_screen.dar
 import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/session_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/telemetry_screen.dart';
+import 'package:frontend/presentation/standings/views/driver_info_screen.dart';
+import 'package:frontend/presentation/standings/views/constructor_info_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
@@ -145,6 +147,37 @@ class Routing {
               drivers: session?['drivers'],
               season: session?['season'],
               sessionType: session?['sessionType'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.driverInfo,
+        path: RouteNames.driverInfo,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>?;
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: DriverInfoScreen(
+              driverName: data?['driverName'] ?? '',
+              constructorName: data?['constructorName'] ?? '',
+              season: data?['season'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.constructorInfo,
+        path: RouteNames.constructorInfo,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>?;
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: ConstructorInfoScreen(
+              constructorName: data?['constructorName'] ?? '',
+              season: data?['season'],
             ),
           );
         },
