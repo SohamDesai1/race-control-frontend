@@ -362,10 +362,12 @@ class RaceUtils {
       'Pierre Gasly': 'assets/drivers/gasly.png',
       'Franco Colapinto': 'assets/drivers/colapinto.png',
       'Alexander Albon': 'assets/drivers/albon.png',
+      'Alex Albon': 'assets/drivers/albon.png',
       'Carlos Sainz': 'assets/drivers/carlos.png',
       'Liam Lawson': 'assets/drivers/lawson.png',
       'Arvid Lindblad': 'assets/drivers/arvid.png',
       'Nico Hülkenberg': 'assets/drivers/nico.png',
+      'Nico Hulkenberg': 'assets/drivers/nico.png',
       'Gabriel Bortoleto': 'assets/drivers/gabreil.png',
       'Oliver Bearman': 'assets/drivers/bearman.png',
       'Esteban Ocon': 'assets/drivers/ocon.png',
@@ -373,8 +375,62 @@ class RaceUtils {
       'Valtteri Bottas': 'assets/drivers/bottas.png',
       'Andrea Kimi Antonelli': 'assets/drivers/kimi.png',
       'Isack Hadjar': 'assets/drivers/hadjar.png',
+      'Yuki Tsunoda': 'assets/drivers/tsunoda.png',
+      'Jack Doohan': 'assets/drivers/jack.png',
     };
 
     return driverImageMap[driverName];
+  }
+
+  static String getConstructorLogo(String constructorName) {
+    final Map<String, String> constructorLogoMap = {
+      'Red Bull': 'assets/constructors/red_bull.png',
+      'Ferrari': 'assets/constructors/ferrari.png',
+      'Mercedes': 'assets/constructors/mercedes.png',
+      'McLaren': 'assets/constructors/mclaren.png',
+      'Aston Martin': 'assets/constructors/aston_martin.png',
+      'Alpine F1 Team': 'assets/constructors/alpine.png',
+      'Alpine': 'assets/constructors/alpine.png',
+      'Williams': 'assets/constructors/williams.png',
+      'RB F1 Team': 'assets/constructors/rb.png',
+      'Racing Bulls': 'assets/constructors/rb.png',
+      'AlphaTauri': 'assets/constructors/rb.png',
+      'Sauber': 'assets/constructors/sauber.png',
+      'Kick Sauber': 'assets/constructors/sauber.png',
+      'Audi': 'assets/constructors/audi.png',
+      'Haas F1 Team': 'assets/constructors/haas.png',
+      'Haas': 'assets/constructors/haas.png',
+      'Cadillac': 'assets/constructors/cadillac.png',
+    };
+
+    return constructorLogoMap[constructorName] ??
+        'assets/constructors/placeholder.png';
+  }
+
+  static String getCountryFlag(String? nationality) {
+    final Map<String, String> countryFlags = {
+      'Dutch': '🇳🇱',
+      'British': '🇬🇧',
+      'Monégasque': '🇲🇨',
+      'German': '🇩🇪',
+      'Australian': '🇦🇺',
+      'Spanish': '🇪🇸',
+      'French': '🇫🇷',
+      'Thai': '🇹🇭',
+      'Japanese': '🇯🇵',
+      'Mexican': '🇲🇽',
+      'Chinese': '🇨🇳',
+      'Finnish': '🇫🇮',
+      'Italian': '🇮🇹',
+      'Canadian': '🇨🇦',
+      'Brazilian': '🇧🇷',
+      'American': '🇺🇸',
+      'Danish': '🇩🇰',
+      'New Zealander': '🇳🇿',
+      'Argentinian': '🇦🇷',
+      'Colombian': '🇨🇴',
+    };
+
+    return countryFlags[nationality ?? ''] ?? '🏳️';
   }
 }
