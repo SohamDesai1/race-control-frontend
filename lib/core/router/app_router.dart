@@ -13,7 +13,10 @@ import '../../presentation/home/views/race_results_screen.dart';
 import '../constants/route_names.dart';
 
 class Routing {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
   static final router = GoRouter(
+    navigatorKey: navigatorKey,
     initialLocation: RouteNames.login,
     redirect: (context, state) async {
       final String loggedIn = await ApiService.getToken();

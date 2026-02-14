@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/core/constants/api_routes.dart';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:frontend/core/services/dialog_service.dart';
+import 'package:frontend/utils/injection.dart';
 
 class ApiResponse {
   final Map<String, dynamic> body;
@@ -72,8 +74,7 @@ class ApiService {
           final response = error.response;
 
           if (response?.statusCode == 401 &&
-              response?.data["message"] ==
-                  "Invalid token: ExpiredSignature") {
+              response?.data["message"] == "Invalid token: ExpiredSignature") {
             _debugLog("🔄 Token expired → refreshing token...");
 
             final refreshed = await _refreshToken();
@@ -244,6 +245,12 @@ class ApiService {
       default:
         message = error.message ?? 'Unknown error occurred';
         break;
+    }
+
+    try {
+      getIt<DialogService>().showErrorDialog(title: 'Error', message: message);
+    } catch (e) {
+      _debugLog("Failed to show error dialog: $e");
     }
 
     return ApiException(statusCode: statusCode, message: message);
