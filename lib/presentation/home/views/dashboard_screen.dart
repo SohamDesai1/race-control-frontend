@@ -128,7 +128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          recent.raceName,
+                          recent.race.raceName,
                           style: TextStyle(
                             fontSize: 4.w,
                             fontWeight: FontWeight.w500,
@@ -137,10 +137,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         GestureDetector(
                           onTap: () {
                             context.pushNamed(
-                              RouteNames.raceResults,
+                              RouteNames.raceDetails,
                               extra: {
-                                'raceName': recent.raceName,
-                                'raceResults': recent.results,
+                                'season': recent.race.season,
+                                'raceId': recent.id.toString(),
+                                'round': recent.race.round,
+                                'gpName': recent.race.raceName,
+                                'trackimage': RaceUtils.mapTrackImage(
+                                  recent.race.circuit.circuitId,
+                                ),
                               },
                             );
                           },
@@ -158,12 +163,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 2.h),
 
                     SizedBox(
-                      height: 20.h,
+                      height: 35.h,
                       child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 3,
                         itemBuilder: (_, index) {
-                          final r = recent.results[index];
+                          final r = recent.race.results[index];
                           return Padding(
                             padding: EdgeInsets.only(bottom: 2.h),
                             child: DriverCard(
