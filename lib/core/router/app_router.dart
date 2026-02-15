@@ -3,6 +3,10 @@ import 'package:frontend/presentation/raceDetails/views/quali_details_screen.dar
 import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/session_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/telemetry_screen.dart';
+import 'package:frontend/presentation/settings/views/faq_screen.dart';
+import 'package:frontend/presentation/settings/views/privacy_policy_screen.dart';
+import 'package:frontend/presentation/settings/views/send_feedback_screen.dart';
+import 'package:frontend/presentation/settings/views/terms_of_service_screen.dart';
 import 'package:frontend/presentation/standings/views/driver_info_screen.dart';
 import 'package:frontend/presentation/standings/views/constructor_info_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -179,6 +183,50 @@ class Routing {
               constructorName: data?['constructorName'] ?? '',
               season: data?['season'],
             ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.privacyPolicy,
+        path: RouteNames.privacyPolicy,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: PrivacyPolicyScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.termsOfService,
+        path: RouteNames.termsOfService,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: TermsOfServiceScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.faq,
+        path: RouteNames.faq,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: FaqScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.sendFeedback,
+        path: RouteNames.sendFeedback,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: SendFeedbackScreen(),
           );
         },
       ),
