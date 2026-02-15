@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/calendar/views/calendar_screen.dart';
 import 'package:frontend/presentation/home/cubit/bottom_bar_cubit.dart';
 import 'package:frontend/presentation/home/views/dashboard_screen.dart';
+import 'package:frontend/presentation/settings/views/settings_screen.dart';
 import 'package:frontend/presentation/standings/views/standing_screen.dart';
 import 'package:frontend/widgets/bottom_bar.dart';
 
@@ -34,7 +35,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
       const DashboardScreen(),
       const StandingScreen(),
       const CalendarScreen(),
-      const Center(child: Text('Settings Screen')),
+      const SettingsScreen(),
     ];
     return BlocBuilder<NavigationCubit, int>(
       builder: (context, index) {
