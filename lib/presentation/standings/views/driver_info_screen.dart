@@ -100,8 +100,8 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
                     child: Column(
                       children: [
                         Container(
-                          width: 25.w,
-                          height: 25.w,
+                          width: 40.w,
+                          height: 40.w,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(color: teamColor, width: 3),
@@ -130,19 +130,6 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
                           children: [
                             Text(
                               widget.driverName,
-                              style: F1Theme.themeData.textTheme.displayMedium
-                                  ?.copyWith(
-                                    color: F1Theme.f1White,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            VerticalDivider(
-                              color: F1Theme.f1LightGray,
-                              width: 2.w,
-                            ),
-                            Text(
-                              driverData?.driver.permanentNumber.toString() ??
-                                  '',
                               style: F1Theme.themeData.textTheme.displayMedium
                                   ?.copyWith(
                                     color: F1Theme.f1White,
@@ -400,7 +387,7 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
           Expanded(
             child: Text(
               label,
-              style: F1Theme.themeData.textTheme.bodyMedium?.copyWith(
+              style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
                 color: F1Theme.f1TextGray,
               ),
             ),
