@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
@@ -35,7 +36,10 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
     _loadDriverData();
   }
 
-  void _loadDriverData() {
+  void _loadDriverData() async {
+    await context.read<StandingsCubit>().loadStandingsData(
+      int.parse(selectedYear),
+    );
     final standingsState = context.read<StandingsCubit>().state;
     if (standingsState.driverLeaderboard != null) {
       final foundDriver = standingsState.driverLeaderboard!.where(
