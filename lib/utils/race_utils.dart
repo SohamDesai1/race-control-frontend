@@ -28,7 +28,7 @@ class RaceUtils {
       'Franco Colapinto': 'Alpine F1 Team',
 
       // Williams
-      'Alex Albon': 'Williams',
+      'Alexander Albon': 'Williams',
       'Carlos Sainz': 'Williams',
 
       // RB F1 Team
@@ -36,7 +36,7 @@ class RaceUtils {
       'Yuki Tsunoda': 'RB F1 Team',
 
       // Sauber
-      'Nico Hulkenberg': 'Sauber',
+      'Nico Hülkenberg': 'Sauber',
       'Gabriel Bortoleto': 'Sauber',
 
       // Haas
@@ -74,7 +74,7 @@ class RaceUtils {
       'Franco Colapinto': 'Alpine F1 Team',
 
       // Williams
-      'Alex Albon': 'Williams',
+      'Alexander Albon': 'Williams',
       'Carlos Sainz': 'Williams',
 
       // RB F1 Team
@@ -82,7 +82,7 @@ class RaceUtils {
       'Yuki Tsunoda': 'RB F1 Team',
 
       // Sauber
-      'Nico Hulkenberg': 'Audi',
+      'Nico Hülkenberg': 'Audi',
       'Gabriel Bortoleto': 'Audi',
 
       // Haas
@@ -285,9 +285,9 @@ class RaceUtils {
         18: 'Lance Stroll',
         20: 'Kevin Magnussen',
         22: 'Yuki Tsunoda',
-        23: 'Alex Albon',
+        23: 'Alexander Albon',
         24: 'Zhou Guanyu',
-        27: 'Nico Hulkenberg',
+        27: 'Nico Hülkenberg',
         30: 'Liam Lawson',
         31: 'Esteban Ocon',
         43: 'Franco Colapinto',
@@ -312,9 +312,9 @@ class RaceUtils {
         18: 'Lance Stroll',
         20: 'Kevin Magnussen',
         22: 'Yuki Tsunoda',
-        23: 'Alex Albon',
+        23: 'Alexander Albon',
         24: 'Zhou Guanyu',
-        27: 'Nico Hulkenberg',
+        27: 'Nico Hülkenberg',
         30: 'Liam Lawson',
         31: 'Esteban Ocon',
         41: 'Arvid Lindblad',
@@ -362,12 +362,12 @@ class RaceUtils {
       'Pierre Gasly': 'assets/drivers/gasly.png',
       'Franco Colapinto': 'assets/drivers/colapinto.png',
       'Alexander Albon': 'assets/drivers/albon.png',
-      'Alex Albon': 'assets/drivers/albon.png',
+      'Alexander Albon': 'assets/drivers/albon.png',
       'Carlos Sainz': 'assets/drivers/carlos.png',
       'Liam Lawson': 'assets/drivers/lawson.png',
       'Arvid Lindblad': 'assets/drivers/arvid.png',
       'Nico Hülkenberg': 'assets/drivers/nico.png',
-      'Nico Hulkenberg': 'assets/drivers/nico.png',
+      'Nico Hülkenberg': 'assets/drivers/nico.png',
       'Gabriel Bortoleto': 'assets/drivers/gabreil.png',
       'Oliver Bearman': 'assets/drivers/bearman.png',
       'Esteban Ocon': 'assets/drivers/ocon.png',
@@ -429,6 +429,9 @@ class RaceUtils {
       'New Zealander': '🇳🇿',
       'Argentinian': '🇦🇷',
       'Colombian': '🇨🇴',
+      'Monegasque': '🇲🇨',
+      'Argentine': '🇦🇷',
+      'Austrian': '🇦🇹',
     };
 
     return countryFlags[nationality ?? ''] ?? '🏳️';
