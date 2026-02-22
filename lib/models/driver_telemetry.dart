@@ -10,6 +10,7 @@ abstract class DriverTelemetryModel with _$DriverTelemetryModel {
     int? distance,
     int? throttle,
     @JsonKey(name: "n_gear") int? gear,
+    @JsonKey(name: "brake") int? brake,
   }) = _DriverTelemetryModel;
 
   factory DriverTelemetryModel.fromJson(Map<String, dynamic> json) =>
