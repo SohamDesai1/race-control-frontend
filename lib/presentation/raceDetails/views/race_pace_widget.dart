@@ -23,16 +23,8 @@ class TrackPainter extends CustomPainter {
   final List<PacePoint> points;
   final Color color1;
   final Color color2;
-  final String driver1;
-  final String driver2;
 
-  TrackPainter(
-    this.points,
-    this.color1,
-    this.color2,
-    this.driver1,
-    this.driver2,
-  );
+  TrackPainter(this.points, this.color1, this.color2);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -86,33 +78,6 @@ class TrackPainter extends CustomPainter {
       canvas.drawLine(p1, p2, glowPaint);
       canvas.drawLine(p1, p2, paint);
     }
-
-    // Draw legend
-    final legendStyle = TextStyle(
-      color: F1Theme.f1White,
-      fontSize: 12,
-      fontFamily: 'Formula1Regular',
-    );
-
-    final legendText1 = TextPainter(
-      text: TextSpan(
-        text: driver1,
-        style: legendStyle.copyWith(color: color1),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    legendText1.layout();
-    legendText1.paint(canvas, Offset(10, 10));
-
-    final legendText2 = TextPainter(
-      text: TextSpan(
-        text: driver2,
-        style: legendStyle.copyWith(color: color2),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    legendText2.layout();
-    legendText2.paint(canvas, Offset(10, 30));
   }
 
   @override
@@ -136,12 +101,45 @@ class PaceComparisonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: CustomPaint(
-        painter: TrackPainter(data, color1, color2, driver1, driver2),
-        child: Container(),
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegendItem(driver1, color1),
+            SizedBox(width: 24),
+            _buildLegendItem(driver2, color2),
+          ],
+        ),
+        SizedBox(height: 12),
+        AspectRatio(
+          aspectRatio: 1,
+          child: CustomPaint(painter: TrackPainter(data, color1, color2)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(String name, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        SizedBox(width: 6),
+        Text(
+          name,
+          style: TextStyle(
+            color: F1Theme.f1White,
+            fontSize: 12,
+            fontFamily: 'Formula1Regular',
+          ),
+        ),
+      ],
     );
   }
 }

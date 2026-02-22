@@ -82,6 +82,10 @@ class DriverSpeedWidget extends StatelessWidget {
             child: _ThrottleChart(telemetryData: telemetryData),
           ),
           _ChartSection(
+            title: 'Brake Application',
+            child: _BrakeChart(telemetryData: telemetryData),
+          ),
+          _ChartSection(
             title: 'Gear Selection',
             child: _GearChart(telemetryData: telemetryData),
           ),
@@ -94,13 +98,17 @@ class DriverSpeedWidget extends StatelessWidget {
   _TelemetryData _prepareTelemetryData() {
     final List<LineChartBarData> lineBarsSpeed = [];
     final List<LineChartBarData> lineBarsThrottle = [];
+    final List<LineChartBarData> lineBarsBrake = [];
     final List<LineChartBarData> lineBarsGear = [];
     final List<String> driverNames = [];
     final List<Color> colors = [];
     final Set<Color> usedColors = {};
 
     drivers.forEach((key, value) {
-      Color baseColor = RaceUtils.getF1TeamColor(value, year: int.parse(season)).withAlpha(200);
+      Color baseColor = RaceUtils.getF1TeamColor(
+        value,
+        year: int.parse(season),
+      ).withAlpha(200);
       if (usedColors.contains(baseColor)) {
         baseColor = Colors.grey;
       }
@@ -114,6 +122,7 @@ class DriverSpeedWidget extends StatelessWidget {
       colors,
       lineBarsSpeed,
       lineBarsThrottle,
+      lineBarsBrake,
       lineBarsGear,
       driverNames,
     );
@@ -124,6 +133,7 @@ class DriverSpeedWidget extends StatelessWidget {
       colors,
       lineBarsSpeed,
       lineBarsThrottle,
+      lineBarsBrake,
       lineBarsGear,
       driverNames,
     );
@@ -134,6 +144,7 @@ class DriverSpeedWidget extends StatelessWidget {
       colors,
       lineBarsSpeed,
       lineBarsThrottle,
+      lineBarsBrake,
       lineBarsGear,
       driverNames,
     );
@@ -141,6 +152,7 @@ class DriverSpeedWidget extends StatelessWidget {
     return _TelemetryData(
       lineBarsSpeed: lineBarsSpeed,
       lineBarsThrottle: lineBarsThrottle,
+      lineBarsBrake: lineBarsBrake,
       lineBarsGear: lineBarsGear,
       driverNames: driverNames,
       colors: colors,
@@ -153,6 +165,7 @@ class DriverSpeedWidget extends StatelessWidget {
     List<Color> colors,
     List<LineChartBarData> lineBarsSpeed,
     List<LineChartBarData> lineBarsThrottle,
+    List<LineChartBarData> lineBarsBrake,
     List<LineChartBarData> lineBarsGear,
     List<String> driverNames,
   ) {
@@ -174,7 +187,7 @@ class DriverSpeedWidget extends StatelessWidget {
     final spotsThrottle = telemetry
         .asMap()
         .entries
-        .where((e) => e.value.speed != null)
+        .where((e) => e.value.throttle != null)
         .map(
           (e) => FlSpot(
             e.value.distance?.toDouble() ?? e.key.toDouble(),
@@ -183,10 +196,22 @@ class DriverSpeedWidget extends StatelessWidget {
         )
         .toList();
 
+    final spotsBrake = telemetry
+        .asMap()
+        .entries
+        .where((e) => e.value.brake != null)
+        .map(
+          (e) => FlSpot(
+            e.value.distance?.toDouble() ?? e.key.toDouble(),
+            e.value.brake!.toDouble(),
+          ),
+        )
+        .toList();
+
     final spotsGear = telemetry
         .asMap()
         .entries
-        .where((e) => e.value.speed != null)
+        .where((e) => e.value.gear != null)
         .map(
           (e) => FlSpot(
             e.value.distance?.toDouble() ?? e.key.toDouble(),
@@ -201,6 +226,7 @@ class DriverSpeedWidget extends StatelessWidget {
 
     spotsSpeed.sort((a, b) => a.x.compareTo(b.x));
     spotsThrottle.sort((a, b) => a.x.compareTo(b.x));
+    spotsBrake.sort((a, b) => a.x.compareTo(b.x));
     spotsGear.sort((a, b) => a.x.compareTo(b.x));
 
     final lineBarConfig = LineChartBarData(
@@ -216,6 +242,9 @@ class DriverSpeedWidget extends StatelessWidget {
 
     lineBarsSpeed.add(lineBarConfig.copyWith(spots: spotsSpeed));
     lineBarsThrottle.add(lineBarConfig.copyWith(spots: spotsThrottle));
+    if (spotsBrake.isNotEmpty) {
+      lineBarsBrake.add(lineBarConfig.copyWith(spots: spotsBrake));
+    }
     lineBarsGear.add(lineBarConfig.copyWith(spots: spotsGear));
 
     driverNames.add(drivers.values.elementAt(driverIndex));
@@ -225,6 +254,7 @@ class DriverSpeedWidget extends StatelessWidget {
 class _TelemetryData {
   final List<LineChartBarData> lineBarsSpeed;
   final List<LineChartBarData> lineBarsThrottle;
+  final List<LineChartBarData> lineBarsBrake;
   final List<LineChartBarData> lineBarsGear;
   final List<String> driverNames;
   final List<Color> colors;
@@ -232,6 +262,7 @@ class _TelemetryData {
   _TelemetryData({
     required this.lineBarsSpeed,
     required this.lineBarsThrottle,
+    required this.lineBarsBrake,
     required this.lineBarsGear,
     required this.driverNames,
     required this.colors,
@@ -477,6 +508,79 @@ class _ThrottleChart extends StatelessWidget {
             telemetryData.driverNames,
             telemetryData.colors,
             (value) => 'Throttle: ${value.toStringAsFixed(1)} %',
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BrakeChart extends StatelessWidget {
+  final _TelemetryData telemetryData;
+
+  const _BrakeChart({required this.telemetryData});
+
+  @override
+  Widget build(BuildContext context) {
+    if (telemetryData.lineBarsBrake.isEmpty) {
+      return Container(
+        height: 200,
+        padding: EdgeInsets.all(F1Theme.mediumSpacing),
+        margin: EdgeInsets.symmetric(
+          horizontal: F1Theme.smallSpacing,
+          vertical: F1Theme.smallSpacing,
+        ),
+        decoration: BoxDecoration(
+          gradient: F1Theme.cardGradient,
+          borderRadius: F1Theme.mediumBorderRadius,
+          boxShadow: F1Theme.cardShadow,
+        ),
+        child: Center(
+          child: Text(
+            'No brake data available',
+            style: F1Theme.themeData.textTheme.bodyLarge?.copyWith(
+              color: F1Theme.f1TextGray,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final allSpots = telemetryData.lineBarsBrake
+        .expand((bar) => bar.spots)
+        .toList();
+    final minY = allSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b);
+    final maxY = allSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
+    final minX = allSpots.map((s) => s.x).reduce((a, b) => a < b ? a : b);
+    final maxX = allSpots.map((s) => s.x).reduce((a, b) => a > b ? a : b);
+
+    return Container(
+      height: 200,
+      padding: EdgeInsets.all(F1Theme.mediumSpacing),
+      margin: EdgeInsets.symmetric(
+        horizontal: F1Theme.smallSpacing,
+        vertical: F1Theme.smallSpacing,
+      ),
+      decoration: BoxDecoration(
+        gradient: F1Theme.cardGradient,
+        borderRadius: F1Theme.mediumBorderRadius,
+        boxShadow: F1Theme.cardShadow,
+      ),
+      child: LineChart(
+        LineChartData(
+          gridData: _buildGridData(),
+          titlesData: _buildTitlesData('Distance (m)', 'Brake'),
+          borderData: _buildBorderData(),
+          minX: minX,
+          maxX: maxX,
+          minY: minY - 0.1,
+          maxY: maxY + 0.1,
+          lineBarsData: telemetryData.lineBarsBrake,
+          lineTouchData: _buildTouchData(
+            telemetryData.lineBarsBrake,
+            telemetryData.driverNames,
+            telemetryData.colors,
+            (value) => 'Brake: ${value == 1 ? "On" : "Off"}',
           ),
         ),
       ),
