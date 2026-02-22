@@ -40,6 +40,7 @@ class Routing {
     routes: [
       GoRoute(
         path: RouteNames.home,
+        name: RouteNames.home,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,
@@ -48,6 +49,7 @@ class Routing {
       ),
       GoRoute(
         path: RouteNames.login,
+        name: RouteNames.login,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,

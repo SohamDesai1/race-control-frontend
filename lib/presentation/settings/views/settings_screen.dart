@@ -1,11 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
+import 'package:frontend/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: F1Theme.f1DarkGray,
+        title: const Text('Logout', style: TextStyle(color: F1Theme.f1White)),
+        content: const Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(color: F1Theme.f1TextGray),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: F1Theme.f1TextGray),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Logout', style: TextStyle(color: F1Theme.f1Red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      await context.read<LoginCubit>().logout();
+      if (context.mounted) {
+        context.goNamed(RouteNames.login);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +76,14 @@ class SettingsScreen extends StatelessWidget {
               onChanged: (value) {},
               activeColor: F1Theme.f1Red,
             ),
+          ),
+          SizedBox(height: 1.h),
+          _buildSettingsTile(
+            icon: Icons.logout,
+            title: 'Logout',
+            subtitle: 'Sign out of your account',
+            onTap: () => _handleLogout(context),
+            iconColor: F1Theme.f1Red,
           ),
           SizedBox(height: 3.h),
           _buildSectionHeader('Support'),
@@ -116,6 +160,7 @@ class SettingsScreen extends StatelessWidget {
     required String title,
     String? subtitle,
     Widget? trailing,
+    Color? iconColor,
     required VoidCallback onTap,
   }) {
     return Card(
@@ -130,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
             color: F1Theme.f1MediumGray,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: F1Theme.f1White, size: 20),
+          child: Icon(icon, color: iconColor ?? F1Theme.f1White, size: 20),
         ),
         title: Text(
           title,
