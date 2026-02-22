@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/usecases/auth/register.dart';
 import 'package:injectable/injectable.dart';
 part 'register_state.dart';
@@ -8,6 +9,8 @@ class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit({required this.registerUseCase}) : super(RegisterState());
 
   final RegisterUseCase registerUseCase;
+
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   void updateName(String name) {
     emit(state.copyWith(name: name));
@@ -37,39 +40,51 @@ class RegisterCubit extends Cubit<RegisterState> {
     try {
       emit(state.copyWith(status: RegisterStatus.loading));
 
-      final user = await registerUseCase.execute(RegisterInput(
-        state.email!,
-        state.password!,
-        state.name!,
-        state.dob!,
-        state.username!,
-      ));
+      final user = await registerUseCase.execute(
+        RegisterInput(
+          state.email!,
+          state.password!,
+          state.name!,
+          state.dob!,
+          state.username!,
+        ),
+      );
 
       user.fold(
         (failure) {
           print("Error occurred: ${failure.message}");
-          emit(state.copyWith(
-            status: RegisterStatus.failure,
-            error: failure.message,
-          ));
+          emit(
+            state.copyWith(
+              status: RegisterStatus.failure,
+              error: failure.message,
+            ),
+          );
         },
-        (userModel) => emit(
-          state.copyWith(
-            status: RegisterStatus.success,
-            email: userModel.email,
-            password: userModel.hashedPassword,
-            name: userModel.name,
-            username: userModel.username,
-            dob: userModel.dob,
-          ),
-        ),
+        (userModel) async {
+          await secureStorage.write(
+            key: 'access_token',
+            value: userModel.token,
+          );
+          await secureStorage.write(
+            key: 'refresh_token',
+            value: userModel.refreshToken,
+          );
+          await secureStorage.write(key: 'email', value: userModel.email);
+          emit(
+            state.copyWith(
+              status: RegisterStatus.success,
+              email: userModel.email,
+              password: userModel.hashedPassword,
+              name: userModel.name,
+              username: userModel.username,
+              dob: userModel.dob,
+            ),
+          );
+        },
       );
     } catch (e) {
       print("Error occurred: $e");
-      emit(state.copyWith(
-        status: RegisterStatus.failure,
-        error: e.toString(),
-      ));
+      emit(state.copyWith(status: RegisterStatus.failure, error: e.toString()));
     }
   }
 }
