@@ -18,7 +18,7 @@ import 'package:frontend/core/theme/f1_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const isProd = !kDebugMode;
+  const isProd = kReleaseMode;
   await dotenv.load(fileName: isProd ? ".env.prod" : ".env.dev");
   configureDependencies();
   await getIt<NotificationService>().initialize();
