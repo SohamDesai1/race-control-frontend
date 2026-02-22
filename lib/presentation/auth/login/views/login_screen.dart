@@ -100,27 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   cursorColor: Colors.white,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    labelStyle: TextStyle(color: Colors.white),
-                    errorStyle: TextStyle(color: Colors.redAccent),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                  ),
+                  decoration: _buildInputDecoration("Email"),
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -143,27 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.text,
                   obscureText: true,
                   cursorColor: Colors.white,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    labelStyle: TextStyle(color: Colors.white),
-                    errorStyle: TextStyle(color: Colors.redAccent),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                  ),
+                  decoration: _buildInputDecoration("Password"),
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -219,6 +179,31 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(color: Colors.white),
+      errorStyle: TextStyle(color: Colors.redAccent),
+      contentPadding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.red),
       ),
     );
   }
