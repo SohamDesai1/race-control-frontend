@@ -8,6 +8,7 @@ import 'package:frontend/presentation/home/views/widgets/carousel.dart';
 import 'package:frontend/presentation/home/views/widgets/driver_card.dart';
 import 'package:frontend/presentation/home/views/widgets/upcoming_card.dart';
 import 'package:frontend/utils/race_utils.dart';
+import 'package:frontend/widgets/f1_loading_indicator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
@@ -41,7 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: F1LoadingIndicator());
             }
 
             if (state.error != null) {
@@ -127,7 +128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          recent.raceName,
+                          recent.race.raceName,
                           style: TextStyle(
                             fontSize: 4.w,
                             fontWeight: FontWeight.w500,
@@ -136,10 +137,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         GestureDetector(
                           onTap: () {
                             context.pushNamed(
-                              RouteNames.raceResults,
+                              RouteNames.raceDetails,
                               extra: {
-                                'raceName': recent.raceName,
-                                'raceResults': recent.results,
+                                'season': recent.race.season,
+                                'raceId': recent.id.toString(),
+                                'round': recent.race.round,
+                                'gpName': recent.race.raceName,
+                                'trackimage': RaceUtils.mapTrackImage(
+                                  recent.race.circuit.circuitId,
+                                ),
                               },
                             );
                           },
@@ -157,12 +163,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 2.h),
 
                     SizedBox(
-                      height: 20.h,
+                      height: 35.h,
                       child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 3,
                         itemBuilder: (_, index) {
-                          final r = recent.results[index];
+                          final r = recent.race.results[index];
                           return Padding(
                             padding: EdgeInsets.only(bottom: 2.h),
                             child: DriverCard(
@@ -171,6 +177,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               teamName: r.constructor.name,
                               position: r.position,
                               raceResult: true,
+                              season: recent.race.season,
+                              onTap: () {
+                                context.push(
+                                  RouteNames.driverInfo,
+                                  extra: {
+                                    'driverName':
+                                        "${r.driver.givenName} ${r.driver.familyName}",
+                                    'constructorName': r.constructor.name,
+                                    'season': recent.race.season,
+                                  },
+                                );
+                              },
                             ),
                           );
                         },
@@ -206,6 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           "${d.driver.givenName} ${d.driver.familyName}",
                                       teamName: d.constructors.first.name,
                                       points: d.points,
+                                      season: recent!.race.season,
                                     ),
                                   );
                                 },

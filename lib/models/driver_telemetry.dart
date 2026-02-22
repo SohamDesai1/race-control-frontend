@@ -5,8 +5,13 @@ part 'driver_telemetry.g.dart';
 
 @freezed
 abstract class DriverTelemetryModel with _$DriverTelemetryModel {
-  const factory DriverTelemetryModel({int? speed, int? distance}) =
-      _DriverTelemetryModel;
+  const factory DriverTelemetryModel({
+    int? speed,
+    int? distance,
+    int? throttle,
+    @JsonKey(name: "n_gear") int? gear,
+    @JsonKey(name: "brake") int? brake,
+  }) = _DriverTelemetryModel;
 
   factory DriverTelemetryModel.fromJson(Map<String, dynamic> json) =>
       _$DriverTelemetryModelFromJson(json);

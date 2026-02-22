@@ -3,6 +3,12 @@ import 'package:frontend/presentation/raceDetails/views/quali_details_screen.dar
 import 'package:frontend/presentation/raceDetails/views/race_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/session_detail_screen.dart';
 import 'package:frontend/presentation/raceDetails/views/telemetry_screen.dart';
+import 'package:frontend/presentation/settings/views/faq_screen.dart';
+import 'package:frontend/presentation/settings/views/privacy_policy_screen.dart';
+import 'package:frontend/presentation/settings/views/send_feedback_screen.dart';
+import 'package:frontend/presentation/settings/views/terms_of_service_screen.dart';
+import 'package:frontend/presentation/standings/views/driver_info_screen.dart';
+import 'package:frontend/presentation/standings/views/constructor_info_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../../presentation/auth/login/views/login_screen.dart';
@@ -13,13 +19,17 @@ import '../../presentation/home/views/race_results_screen.dart';
 import '../constants/route_names.dart';
 
 class Routing {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
   static final router = GoRouter(
+    navigatorKey: navigatorKey,
     initialLocation: RouteNames.login,
     redirect: (context, state) async {
       final String loggedIn = await ApiService.getToken();
       final loggingIn =
           state.matchedLocation == RouteNames.login ||
-          state.matchedLocation == RouteNames.register;
+          state.matchedLocation == RouteNames.register ||
+          state.matchedLocation == RouteNames.setPassword;
 
       if (loggedIn.isEmpty) {
         return loggingIn ? null : RouteNames.login;
@@ -31,6 +41,7 @@ class Routing {
     routes: [
       GoRoute(
         path: RouteNames.home,
+        name: RouteNames.home,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,
@@ -39,6 +50,7 @@ class Routing {
       ),
       GoRoute(
         path: RouteNames.login,
+        name: RouteNames.login,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,
@@ -57,6 +69,7 @@ class Routing {
       ),
       GoRoute(
         path: RouteNames.setPassword,
+        name: RouteNames.setPassword,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,
@@ -143,6 +156,81 @@ class Routing {
               season: session?['season'],
               sessionType: session?['sessionType'],
             ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.driverInfo,
+        path: RouteNames.driverInfo,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>?;
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: DriverInfoScreen(
+              driverName: data?['driverName'] ?? '',
+              constructorName: data?['constructorName'] ?? '',
+              season: data?['season'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.constructorInfo,
+        path: RouteNames.constructorInfo,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>?;
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: ConstructorInfoScreen(
+              constructorName: data?['constructorName'] ?? '',
+              season: data?['season'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.privacyPolicy,
+        path: RouteNames.privacyPolicy,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: PrivacyPolicyScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.termsOfService,
+        path: RouteNames.termsOfService,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: TermsOfServiceScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.faq,
+        path: RouteNames.faq,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: FaqScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.sendFeedback,
+        path: RouteNames.sendFeedback,
+        pageBuilder: (context, state) {
+          return _buildF1Transition(
+            context: context,
+            state: state,
+            child: SendFeedbackScreen(),
           );
         },
       ),

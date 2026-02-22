@@ -56,4 +56,15 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(status: LoginStatus.failure, error: e.toString()));
     }
   }
+
+  Future<void> logout() async {
+    try {
+      await secureStorage.delete(key: 'access_token');
+      await secureStorage.delete(key: 'refresh_token');
+      await secureStorage.delete(key: 'email');
+      emit(LoginState());
+    } catch (e) {
+      print("Error during logout: $e");
+    }
+  }
 }

@@ -13,7 +13,12 @@ class RegisterUseCase implements BaseUseCase<RegisterInput, UserModel> {
   @override
   Future<Either<Failure, UserModel>> execute(RegisterInput input) async {
     return await authRepository.register(
-        input.email, input.password, input.dob, input.name, input.username);
+      input.email,
+      input.password,
+      input.name,
+      input.dob,
+      input.username,
+    );
   }
 }
 

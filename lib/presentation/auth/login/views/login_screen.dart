@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,121 +62,149 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginForm() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 20.h),
-          child: Center(
-            child: Text(
-              "Login",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.w,
-                fontFamily: 'Formula1Wide',
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 7.h),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Enter Email", style: TextStyle(color: Colors.white)),
-            SizedBox(height: 2.h),
-            SizedBox(
-              width: 70.w,
-              child: TextField(
-                controller: _emailController,
-                cursorColor: Colors.white,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 5.h),
-            Text("Enter Password", style: TextStyle(color: Colors.white)),
-            SizedBox(height: 2.h),
-            SizedBox(
-              width: 70.w,
-              child: TextField(
-                controller: _passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 6.h),
-        GestureDetector(
-          onTap: () => context.read<LoginCubit>().signIn(
-            _emailController.text,
-            _passwordController.text,
-          ),
-          child: Container(
-            height: 6.h,
-            width: 70.w,
-            decoration: BoxDecoration(
-              color: Color(0xFFF50304),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white),
-            ),
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 20.h),
             child: Center(
-              child: Text("Login", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-        ),
-        SizedBox(height: 5.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(width: 25.w, child: Divider()),
-            SizedBox(width: 3.w),
-            Text("OR", style: TextStyle(color: Colors.white)),
-            SizedBox(width: 3.w),
-            SizedBox(width: 25.w, child: Divider()),
-          ],
-        ),
-        SizedBox(height: 3.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('No Account Yet?', style: TextStyle(color: Colors.white)),
-            SizedBox(width: 2.w),
-            GestureDetector(
-              onTap: () => context.push(RouteNames.register),
               child: Text(
-                'Sign Up',
-                style: TextStyle(color: Color(0xFFF50304)),
+                "Login",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.w,
+                  fontFamily: 'Formula1Wide',
+                ),
               ),
             ),
-          ],
-        ),
-      ],
+          ),
+          SizedBox(height: 7.h),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Enter Email", style: TextStyle(color: Colors.white)),
+              SizedBox(height: 2.h),
+              SizedBox(
+                width: 70.w,
+                child: TextFormField(
+                  controller: _emailController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
+                  cursorColor: Colors.white,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: _buildInputDecoration("Email"),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Text("Enter Password", style: TextStyle(color: Colors.white)),
+              SizedBox(height: 2.h),
+              SizedBox(
+                width: 70.w,
+                child: TextFormField(
+                  controller: _passwordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                  cursorColor: Colors.white,
+                  decoration: _buildInputDecoration("Password"),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          GestureDetector(
+            onTap: () {
+              if (_formKey.currentState!.validate()) {
+                context.read<LoginCubit>().signIn(
+                  _emailController.text,
+                  _passwordController.text,
+                );
+              }
+            },
+            child: Container(
+              height: 6.h,
+              width: 70.w,
+              decoration: BoxDecoration(
+                color: Color(0xFFF50304),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white),
+              ),
+              child: Center(
+                child: Text("Login", style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 25.w, child: Divider()),
+              SizedBox(width: 3.w),
+              Text("OR", style: TextStyle(color: Colors.white)),
+              SizedBox(width: 3.w),
+              SizedBox(width: 25.w, child: Divider()),
+            ],
+          ),
+          SizedBox(height: 3.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('No Account Yet?', style: TextStyle(color: Colors.white)),
+              SizedBox(width: 2.w),
+              GestureDetector(
+                onTap: () => context.push(RouteNames.register),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(color: Color(0xFFF50304)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(color: Colors.white),
+      errorStyle: TextStyle(color: Colors.redAccent),
+      contentPadding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.red),
+      ),
     );
   }
 }
