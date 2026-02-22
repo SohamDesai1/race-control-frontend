@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/core/services/notification_service.dart';
 import 'package:frontend/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:frontend/presentation/calendar/views/cubit/calendar_cubit.dart';
 import 'package:frontend/presentation/home/cubit/bottom_bar_cubit.dart';
@@ -16,9 +17,11 @@ import 'package:sizer/sizer.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   const isProd = !kDebugMode;
   await dotenv.load(fileName: isProd ? ".env.prod" : ".env.dev");
   configureDependencies();
+  await getIt<NotificationService>().initialize();
   runApp(
     MultiBlocProvider(
       providers: [
