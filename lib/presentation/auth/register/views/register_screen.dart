@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'RaceCraft',
       'SlickTyres',
       'FastLap',
-      'Rocket'
+      'Rocket',
     ];
     final drivers = [
       'Max',
@@ -70,32 +70,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
   //Method for showing the date picker
   void _pickDateDialog() {
     showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            //which date will display when user open the picker
-            firstDate: DateTime(1950),
-            //what will be the previous supported year in picker
-            lastDate: DateTime
-                .now()) //what will be the up to supported date in picker
+          context: context,
+          initialDate: DateTime.now(),
+          //which date will display when user open the picker
+          firstDate: DateTime(1950),
+          //what will be the previous supported year in picker
+          lastDate: DateTime.now(),
+        ) //what will be the up to supported date in picker
         .then((pickedDate) {
-      //then usually do the future job
-      if (pickedDate == null) {
-        //if user tap cancel then this function will stop
-        return;
-      }
-      setState(() {
-        //for rebuilding the ui
-        _selectedDate = pickedDate;
-        context
-            .read<RegisterCubit>()
-            .updateDob(DateFormat.yMMMd().format(_selectedDate));
-      });
-    });
+          //then usually do the future job
+          if (pickedDate == null) {
+            //if user tap cancel then this function will stop
+            return;
+          }
+          setState(() {
+            //for rebuilding the ui
+            _selectedDate = pickedDate;
+            context.read<RegisterCubit>().updateDob(
+              DateFormat.yMMMd().format(_selectedDate),
+            );
+          });
+        });
   }
 
   static String demoUsername = generateF1Username();
-  final TextEditingController _usernameController =
-      TextEditingController(text: demoUsername);
+  final TextEditingController _usernameController = TextEditingController(
+    text: demoUsername,
+  );
 
   @override
   void initState() {
@@ -115,25 +116,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Text(
                   'Register',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.w,
-                      fontFamily: 'Formula1Wide'),
+                    color: Colors.white,
+                    fontSize: 10.w,
+                    fontFamily: 'Formula1Wide',
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 7.h,
-            ),
+            SizedBox(height: 7.h),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Enter Full Name",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
+                Text("Enter Full Name", style: TextStyle(color: Colors.white)),
+                SizedBox(height: 2.h),
                 SizedBox(
                   width: 70.w,
                   child: TextField(
@@ -158,16 +153,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  "Enter Email",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
+                SizedBox(height: 5.h),
+                Text("Enter Email", style: TextStyle(color: Colors.white)),
+                SizedBox(height: 2.h),
                 SizedBox(
                   width: 70.w,
                   child: TextField(
@@ -191,16 +179,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white, fontSize: 3.5.w),
                   ),
                 ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  "Enter Username",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
+                SizedBox(height: 5.h),
+                Text("Enter Username", style: TextStyle(color: Colors.white)),
+                SizedBox(height: 2.h),
                 SizedBox(
                   width: 70.w,
                   child: TextField(
@@ -212,8 +193,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
                       // input text size
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 2.h,
+                        horizontal: 3.w,
+                      ),
                       hintText: "Username",
                       hintStyle: TextStyle(color: Colors.white),
                       enabledBorder: OutlineInputBorder(
@@ -228,37 +211,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(
-                  height: 6.h,
-                ),
+                SizedBox(height: 6.h),
                 Text(
                   "Enter Date of Birth",
                   style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(
-                  height: 2.h,
-                ),
+                SizedBox(height: 2.h),
                 GestureDetector(
-                    onTap: () {
-                      _pickDateDialog();
-                    },
-                    child: Container(
-                        width: 70.w,
-                        height: 7.h,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF1E1E1E),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.white),
-                        ),
-                        child: Center(
-                          child: Text(
-                            DateFormat.yMMMd().format(_selectedDate),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ))),
-                SizedBox(
-                  height: 6.h,
+                  onTap: () {
+                    _pickDateDialog();
+                  },
+                  child: Container(
+                    width: 70.w,
+                    height: 7.h,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF1E1E1E),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Center(
+                      child: Text(
+                        DateFormat.yMMMd().format(_selectedDate),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
+                SizedBox(height: 6.h),
               ],
             ),
             GestureDetector(
@@ -273,16 +252,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   );
                   return;
+                } else {
+                  context.pushNamed(RouteNames.setPassword);
                 }
-                context.push(RouteNames.setPassword);
               },
               child: Container(
                 height: 6.h,
                 width: 70.w,
                 decoration: BoxDecoration(
-                    color: Color(0xFFF50304),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white)),
+                  color: Color(0xFFF50304),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white),
+                ),
                 child: Center(
                   child: Text(
                     "Continue",

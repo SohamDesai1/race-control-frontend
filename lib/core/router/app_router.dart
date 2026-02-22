@@ -28,7 +28,8 @@ class Routing {
       final String loggedIn = await ApiService.getToken();
       final loggingIn =
           state.matchedLocation == RouteNames.login ||
-          state.matchedLocation == RouteNames.register;
+          state.matchedLocation == RouteNames.register ||
+          state.matchedLocation == RouteNames.setPassword;
 
       if (loggedIn.isEmpty) {
         return loggingIn ? null : RouteNames.login;
@@ -68,6 +69,7 @@ class Routing {
       ),
       GoRoute(
         path: RouteNames.setPassword,
+        name: RouteNames.setPassword,
         pageBuilder: (context, state) => _buildF1Transition(
           context: context,
           state: state,
