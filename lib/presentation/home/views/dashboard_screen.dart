@@ -32,7 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: const Text(
-          'F1 Hub',
+          'Race Control',
           style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
         ),
         centerTitle: true,
