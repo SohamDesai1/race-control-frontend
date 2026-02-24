@@ -32,7 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: const Text(
-          'Race Control',
+          'F1 Hub',
           style: TextStyle(fontFamily: "Formula1Bold", color: Colors.white),
         ),
         centerTitle: true,
@@ -64,9 +64,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Carousel(),
+                  // Carousel(),
                   SizedBox(height: 2.h),
-
                   Text(
                     "Upcoming Races",
                     style: TextStyle(

@@ -59,13 +59,13 @@ class SettingsScreen extends StatelessWidget {
         children: [
           _buildSectionHeader('Account'),
           SizedBox(height: 1.h),
-          _buildSettingsTile(
-            icon: Icons.person_outline,
-            title: 'Profile',
-            subtitle: 'Manage your account details',
-            onTap: () {},
-          ),
-          SizedBox(height: 1.h),
+          // _buildSettingsTile(
+          //   icon: Icons.person_outline,
+          //   title: 'Profile',
+          //   subtitle: 'Manage your account details',
+          //   onTap: () {},
+          // ),
+          // SizedBox(height: 1.h),
           _buildSettingsTile(
             icon: Icons.notifications_outlined,
             title: 'Notifications',
