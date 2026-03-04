@@ -243,15 +243,18 @@ class RaceUtils {
     }
   }
 
-  static String calcStatus(DateTime date) {
+  static String calcStatus(DateTime raceDate) {
     final now = DateTime.now();
-    if (date.isAfter(now) && date.difference(now).inDays >= 3) {
+
+    if (now.isBefore(raceDate.subtract(const Duration(hours: 2)))) {
       return "Upcoming";
-    } else if (date.isAfter(now)) {
-      return "Live";
-    } else {
-      return "Completed";
     }
+
+    if (now.isBefore(raceDate.add(const Duration(hours: 3)))) {
+      return "Live";
+    }
+
+    return "Completed";
   }
 
   static Color calcColor(DateTime date) {
