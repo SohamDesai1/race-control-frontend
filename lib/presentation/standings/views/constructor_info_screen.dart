@@ -7,7 +7,6 @@ import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/models/constructor_leaderboard.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
-import 'package:frontend/models/constructor_championship_history.dart';
 import 'package:frontend/presentation/standings/views/cubit/standings_cubit.dart';
 import 'package:frontend/utils/race_utils.dart';
 
@@ -62,7 +61,7 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
 
     if (standingsState.driverLeaderboard != null) {
       teamDrivers = standingsState.driverLeaderboard!.where((d) {
-        return d.constructors.any((c) => c.name == widget.constructorName);
+        return d.constructors != null && d.constructors!.any((c) => c.name == widget.constructorName);
       }).toList();
     }
 

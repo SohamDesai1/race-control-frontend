@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
-import 'package:frontend/models/driver_championship_history.dart';
 import 'package:frontend/presentation/standings/views/cubit/standings_cubit.dart';
 import 'package:frontend/utils/race_utils.dart';
 
@@ -209,7 +207,7 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
             Expanded(
               child: _buildStatCard(
                 'Position',
-                driver.position,
+                driver.position!,
                 Icons.emoji_events,
                 F1Theme.f1Red,
               ),
@@ -218,14 +216,14 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
             Expanded(
               child: _buildStatCard(
                 'Points',
-                driver.points,
+                driver.points!,
                 Icons.star,
                 Colors.amber,
               ),
             ),
             SizedBox(width: 2.w),
             Expanded(
-              child: _buildStatCard('Wins', driver.wins, Icons.flag, teamColor),
+              child: _buildStatCard('Wins', driver.wins!, Icons.flag, teamColor),
             ),
           ],
         ),
@@ -452,7 +450,7 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
               _buildInfoRow(
                 'Date of Birth',
                 driverData?.driver.dateOfBirth != null
-                    ? '${driverData!.driver.dateOfBirth.day}/${driverData!.driver.dateOfBirth.month}/${driverData!.driver.dateOfBirth.year}'
+                    ? '${driverData!.driver.dateOfBirth!.day}/${driverData!.driver.dateOfBirth!.month}/${driverData!.driver.dateOfBirth!.year}'
                     : 'N/A',
                 Icons.cake,
               ),
