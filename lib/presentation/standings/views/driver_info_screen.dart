@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/models/driver_leaderboard.dart';
+import 'package:frontend/models/driver_championship_history.dart';
 import 'package:frontend/presentation/standings/views/cubit/standings_cubit.dart';
 import 'package:frontend/utils/race_utils.dart';
 
@@ -39,6 +41,16 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
   void _loadDriverData() async {
     await context.read<StandingsCubit>().loadStandingsData(
       int.parse(selectedYear),
+    );
+
+    final driverNumber = RaceUtils.mapDriverNumberFromDriverName(
+      widget.driverName,
+      int.parse(selectedYear),
+    ).toString();
+
+    await context.read<StandingsCubit>().loadDriverPointsHistory(
+      selectedYear,
+      driverNumber,
     );
     final standingsState = context.read<StandingsCubit>().state;
     if (standingsState.driverLeaderboard != null) {
@@ -155,11 +167,13 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildDriverInfoSection(teamColor),
+                  SizedBox(height: 2.h),
                   if (driverData != null) ...[
                     _buildStatsSection(driverData!, teamColor),
                     SizedBox(height: 2.h),
                   ],
-                  _buildDriverInfoSection(teamColor),
+                  _buildChampionshipHistorySection(teamColor),
                   SizedBox(height: 2.h),
                   _buildConstructorSection(teamColor),
                 ],
@@ -214,6 +228,152 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
               child: _buildStatCard('Wins', driver.wins, Icons.flag, teamColor),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChampionshipHistorySection(Color teamColor) {
+    final standingsState = context.read<StandingsCubit>().state;
+    final championshipHistory = standingsState.driverChampionshipHistory;
+
+    if (championshipHistory == null || championshipHistory.standings.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    final standings = championshipHistory.standings;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Points Progress',
+          style: F1Theme.themeData.textTheme.headlineMedium?.copyWith(
+            color: F1Theme.f1White,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        Container(
+          height: 30.h,
+          padding: EdgeInsets.all(F1Theme.mediumSpacing),
+          decoration: BoxDecoration(
+            gradient: F1Theme.cardGradient,
+            borderRadius: F1Theme.mediumBorderRadius,
+            border: Border.all(color: teamColor.withOpacity(0.3)),
+          ),
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: 25,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: F1Theme.f1LightGray.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
+              ),
+              titlesData: FlTitlesData(
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget: (value, meta) {
+                      final index = value.toInt();
+                      if (index >= 0 && index < standings.length) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            'R${standings[index].round}',
+                            style: TextStyle(
+                              color: F1Theme.f1TextGray,
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                    interval: 1,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: (value, meta) {
+                      return Text(
+                        value.toInt().toString(),
+                        style: TextStyle(
+                          color: F1Theme.f1TextGray,
+                          fontSize: 10,
+                        ),
+                      );
+                    },
+                    interval: 25,
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: standings.asMap().entries.map((entry) {
+                    return FlSpot(
+                      entry.key.toDouble(),
+                      entry.value.pointsCurrent,
+                    );
+                  }).toList(),
+                  isCurved: true,
+                  color: teamColor,
+                  barWidth: 3,
+                  isStrokeCapRound: true,
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (spot, percent, barData, index) {
+                      return FlDotCirclePainter(
+                        radius: 4,
+                        color: teamColor,
+                        strokeWidth: 2,
+                        strokeColor: F1Theme.f1White,
+                      );
+                    },
+                  ),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: teamColor.withOpacity(0.2),
+                  ),
+                ),
+              ],
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (touchedSpots) {
+                    return touchedSpots.map((spot) {
+                      final index = spot.x.toInt();
+                      final raceName = standings[index].raceName;
+                      final points = spot.y.toInt();
+                      final position = standings[index].position;
+                      return LineTooltipItem(
+                        '$raceName\nP$position - $points pts',
+                        TextStyle(
+                          color: F1Theme.f1White,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -325,7 +485,7 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
           onTap: () {
             context.push(
               RouteNames.constructorInfo,
-              extra: {'constructorName': widget.constructorName},
+              extra: {'season': widget.season, 'constructorName': widget.constructorName},
             );
           },
           child: Container(
