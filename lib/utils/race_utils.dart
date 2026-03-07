@@ -271,66 +271,66 @@ class RaceUtils {
     }
   }
 
+  static final Map<int, Map<int, String>> driverNumbersByYear = {
+    2025: {
+      1: 'Max Verstappen',
+      4: 'Lando Norris',
+      5: 'Gabriel Bortoleto',
+      6: 'Isack Hadjar',
+      7: 'Jack Doohan',
+      10: 'Pierre Gasly',
+      11: 'Sergio Perez',
+      12: 'Andrea Kimi Antonelli',
+      14: 'Fernando Alonso',
+      16: 'Charles Leclerc',
+      18: 'Lance Stroll',
+      20: 'Kevin Magnussen',
+      22: 'Yuki Tsunoda',
+      23: 'Alexander Albon',
+      24: 'Zhou Guanyu',
+      27: 'Nico Hülkenberg',
+      30: 'Liam Lawson',
+      31: 'Esteban Ocon',
+      43: 'Franco Colapinto',
+      44: 'Lewis Hamilton',
+      55: 'Carlos Sainz',
+      63: 'George Russell',
+      77: 'Valtteri Bottas',
+      81: 'Oscar Piastri',
+      87: 'Oliver Bearman',
+    },
+    2026: {
+      1: 'Lando Norris',
+      3: 'Max Verstappen',
+      5: 'Gabriel Bortoleto',
+      6: 'Isack Hadjar',
+      7: 'Jack Doohan',
+      10: 'Pierre Gasly',
+      11: 'Sergio Perez',
+      12: 'Andrea Kimi Antonelli',
+      14: 'Fernando Alonso',
+      16: 'Charles Leclerc',
+      18: 'Lance Stroll',
+      20: 'Kevin Magnussen',
+      22: 'Yuki Tsunoda',
+      23: 'Alexander Albon',
+      24: 'Zhou Guanyu',
+      27: 'Nico Hülkenberg',
+      30: 'Liam Lawson',
+      31: 'Esteban Ocon',
+      41: 'Arvid Lindblad',
+      43: 'Franco Colapinto',
+      44: 'Lewis Hamilton',
+      55: 'Carlos Sainz',
+      63: 'George Russell',
+      77: 'Valtteri Bottas',
+      81: 'Oscar Piastri',
+      87: 'Oliver Bearman',
+    },
+  };
+
   static String mapDriverNameFromDriverNumber(int driverNumber, int year) {
     // Driver number mappings by year
-    final Map<int, Map<int, String>> driverNumbersByYear = {
-      2025: {
-        1: 'Max Verstappen',
-        4: 'Lando Norris',
-        5: 'Gabriel Bortoleto',
-        6: 'Isack Hadjar',
-        7: 'Jack Doohan',
-        10: 'Pierre Gasly',
-        11: 'Sergio Perez',
-        12: 'Andrea Kimi Antonelli',
-        14: 'Fernando Alonso',
-        16: 'Charles Leclerc',
-        18: 'Lance Stroll',
-        20: 'Kevin Magnussen',
-        22: 'Yuki Tsunoda',
-        23: 'Alexander Albon',
-        24: 'Zhou Guanyu',
-        27: 'Nico Hülkenberg',
-        30: 'Liam Lawson',
-        31: 'Esteban Ocon',
-        43: 'Franco Colapinto',
-        44: 'Lewis Hamilton',
-        55: 'Carlos Sainz',
-        63: 'George Russell',
-        77: 'Valtteri Bottas',
-        81: 'Oscar Piastri',
-        87: 'Oliver Bearman',
-      },
-      2026: {
-        1: 'Lando Norris',
-        3: 'Max Verstappen',
-        5: 'Gabriel Bortoleto',
-        6: 'Isack Hadjar',
-        7: 'Jack Doohan',
-        10: 'Pierre Gasly',
-        11: 'Sergio Perez',
-        12: 'Andrea Kimi Antonelli',
-        14: 'Fernando Alonso',
-        16: 'Charles Leclerc',
-        18: 'Lance Stroll',
-        20: 'Kevin Magnussen',
-        22: 'Yuki Tsunoda',
-        23: 'Alexander Albon',
-        24: 'Zhou Guanyu',
-        27: 'Nico Hülkenberg',
-        30: 'Liam Lawson',
-        31: 'Esteban Ocon',
-        41: 'Arvid Lindblad',
-        43: 'Franco Colapinto',
-        44: 'Lewis Hamilton',
-        55: 'Carlos Sainz',
-        63: 'George Russell',
-        77: 'Valtteri Bottas',
-        81: 'Oscar Piastri',
-        87: 'Oliver Bearman',
-      },
-    };
-
     if (driverNumbersByYear.containsKey(year)) {
       final yearDrivers = driverNumbersByYear[year];
       if (yearDrivers != null && yearDrivers.containsKey(driverNumber)) {
@@ -348,6 +348,36 @@ class RaceUtils {
     }
 
     return 'Unknown Driver';
+  }
+
+  static int mapDriverNumberFromDriverName(String driverName, int year) {
+    // Driver name mappings by year
+    if (driverNumbersByYear.containsKey(year)) {
+      final yearDrivers = driverNumbersByYear[year];
+      if (yearDrivers != null) {
+        final entry = yearDrivers.entries
+            .firstWhere((e) => e.value == driverName, orElse: () => MapEntry(-1, ''));
+        if (entry.key != -1) {
+          return entry.key;
+        }
+      }
+    }
+
+    // Fallback: try to find driver in any year (most recent first)
+    final sortedYears = driverNumbersByYear.keys.toList()
+      ..sort((a, b) => b.compareTo(a));
+    for (final y in sortedYears) {
+      final yearDrivers = driverNumbersByYear[y];
+      if (yearDrivers != null) {
+        final entry = yearDrivers.entries
+            .firstWhere((e) => e.value == driverName, orElse: () => MapEntry(-1, ''));
+        if (entry.key != -1) {
+          return entry.key;
+        }
+      }
+    }
+
+    return -1; // Unknown driver
   }
 
   static String? getDriverImage(String? driverName) {
@@ -452,5 +482,23 @@ class RaceUtils {
     }
 
     return 'Unknown Constructor';
+  }
+
+  static String mapConstructorName(String constructorName) {
+    final Map<String, String> constructorMap = {
+      "McLaren": "McLaren",
+      "Mercedes": "Mercedes",
+      "Red Bull": "Red Bull Racing",
+      "Ferrari": "Ferrari",
+      "Aston Martin": "Aston Martin",
+      "Alpine F1 Team": "Alpine",
+      "Williams": "Williams",
+      "RB F1 Team": "Racing Bulls",
+      "Haas F1 Team": "Haas F1 Team",
+      "Sauber": "Kick Sauber",
+      "Cadillac": "Cadillac",
+      "Audi": "Audi",
+    };
+    return constructorMap[constructorName] ?? constructorName;
   }
 }
