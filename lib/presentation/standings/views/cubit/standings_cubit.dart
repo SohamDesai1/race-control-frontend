@@ -3,6 +3,8 @@ import 'package:injectable/injectable.dart';
 import '../../../../repositories/race_repository.dart';
 import '../../../../models/constructor_leaderboard.dart';
 import '../../../../models/driver_leaderboard.dart';
+import '../../../../models/driver_points_history.dart';
+import '../../../../models/constructor_points_history.dart';
 part 'standings_state.dart';
 
 @injectable
@@ -66,10 +68,58 @@ class StandingsCubit extends Cubit<StandingsState> {
             isLoading: false,
             constructorLeaderboard: data,
             cache2: constructorLeaderboardCache,
-            error: null
+            error: null,
           ),
         );
       },
+    );
+  }
+
+  Future<void> loadDriverPointsHistory(
+    String season,
+    String driverNumber,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await raceRepository.getDriverPointsHistory(
+      season,
+      driverNumber,
+    );
+
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(isLoading: false, error: failure.message)),
+      (data) => emit(
+        state.copyWith(
+          isLoading: false,
+          driverChampionshipHistory: data,
+          error: null,
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadConstructorPointsHistory(
+    String season,
+    String constructorId,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await raceRepository.getConstructorPointsHistory(
+      season,
+      constructorId,
+    );
+
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(isLoading: false, error: failure.message)),
+      (data) => emit(
+        state.copyWith(
+          isLoading: false,
+          constructorChampionshipHistory: data,
+          error: null,
+        ),
+      ),
     );
   }
 }
