@@ -68,7 +68,7 @@ abstract class Result with _$Result {
     required String points,
     required String position,
     required String positionText,
-    required Status status,
+    required String status,
   }) = _Result;
 
   factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);
@@ -130,18 +130,4 @@ abstract class ResultTime with _$ResultTime {
 
   factory ResultTime.fromJson(Map<String, dynamic> json) =>
       _$ResultTimeFromJson(json);
-}
-
-enum Status {
-  @JsonValue("Disqualified")
-  DISQUALIFIED,
-
-  @JsonValue("Finished")
-  FINISHED,
-
-  @JsonValue("Lapped")
-  LAPPED,
-
-  @JsonValue("Retired")
-  RETIRED,
 }
