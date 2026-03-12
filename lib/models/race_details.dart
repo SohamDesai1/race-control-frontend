@@ -38,6 +38,8 @@ abstract class RaceModel with _$RaceModel {
     DateTime? date,
     int? id,
     @JsonKey(name: "race_name") String? raceName,
+    String? locality,
+    String? country,
     String? round,
     String? season,
     String? time,
