@@ -200,7 +200,7 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
             Expanded(
               child: _buildStatCard(
                 'Position',
-                constructor.position,
+                constructor.position ?? "N/A",
                 Icons.emoji_events,
                 F1Theme.f1Red,
               ),

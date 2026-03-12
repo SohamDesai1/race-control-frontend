@@ -59,7 +59,7 @@ class StandingCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    position.toString(),
+                    position == 0 ? "N/A" : position.toString(),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

@@ -280,7 +280,9 @@ class _StandingScreenState extends State<StandingScreen>
                                         year: int.parse(selectedYear),
                                       );
                                       return StandingCard(
-                                        position: int.parse(driver.position),
+                                        position: int.parse(
+                                          driver.position ?? "0",
+                                        ),
                                         driverName:
                                             "${driver.driver.givenName} ${driver.driver.familyName}",
                                         constructorName:
@@ -370,7 +372,7 @@ class _StandingScreenState extends State<StandingScreen>
                                       );
                                       return StandingCard(
                                         position: int.parse(
-                                          constructor.position,
+                                          constructor.position ?? "0",
                                         ),
                                         driverName:
                                             constructor.constructor.name,

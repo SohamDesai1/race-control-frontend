@@ -114,14 +114,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     separatorBuilder: (_, __) => SizedBox(height: 2.h),
                     itemBuilder: (context, index) {
                       final race = calendar[index];
-                      final raceDeets = context
-                          .read<DashboardCubit>()
-                          .state
-                          .upcomingRaces![index];
                       return UpcomingCard(
                         date: race.date!,
                         raceName: race.raceName!,
-                        location: "${raceDeets.locality}, ${raceDeets.country}",
+                        location: "${race.locality}, ${race.country}",
                         onTap: () => context.pushNamed(
                           RouteNames.raceDetails,
                           extra: {
