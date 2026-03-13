@@ -64,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Carousel(),
+                  // Carousel(),
                   SizedBox(height: 2.h),
 
                   Text(

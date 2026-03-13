@@ -35,12 +35,14 @@ final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
 class ApiService {
   late final Dio _dio;
-  final String _baseUrl = dotenv.env['API_BASE_URL']!;
+  final String _baseUrl1 = dotenv.env['API_BASE_URL1']!;
+  final String _baseUrl2 = dotenv.env['API_BASE_URL2']!;
+  bool _usingFallback = false;
 
   ApiService() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: _baseUrl,
+        baseUrl: _baseUrl1,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {'Content-Type': 'application/json'},
@@ -72,7 +74,22 @@ class ApiService {
           _debugLog("❌ API Error: ${error.message}");
 
           final response = error.response;
+          if (error.type == DioExceptionType.connectionError &&
+              !_usingFallback) {
+            _debugLog(
+              "🔁 Connection error → switching to fallback URL: $_baseUrl2",
+            );
+            _usingFallback = true;
 
+            try {
+              error.requestOptions.baseUrl = _baseUrl2;
+              final retryResponse = await _dio.fetch(error.requestOptions);
+              return handler.resolve(retryResponse);
+            } catch (e) {
+              _debugLog("❌ Fallback also failed: $e");
+              return handler.next(error);
+            }
+          }
           if (response?.statusCode == 401 &&
               response?.data["message"] == "Invalid token: ExpiredSignature") {
             _debugLog("🔄 Token expired → refreshing token...");
