@@ -27,4 +27,8 @@ class ApiRoutes {
       '/session/get_sector_timings/$sessionId';
   static String racePaceComparison(String sessionId) =>
       '/session/compare_race_pace/$sessionId';
+  static String driverPointsHistory(String season, String driverNumber) =>
+      '/points/drivers/$season/$driverNumber';
+  static String constructorPointsHistory(String season, String constructorName) =>
+      '/points/constructors/$season/$constructorName';
 }

@@ -4,6 +4,8 @@ import '../models/constructor_leaderboard.dart';
 import '../models/driver_leaderboard.dart';
 import '../models/recent_race.dart';
 import '../models/upcoming_race.dart';
+import '../models/driver_points_history.dart';
+import '../models/constructor_points_history.dart';
 import '../core/constants/api_routes.dart';
 
 @injectable
@@ -37,22 +39,19 @@ class RaceDatasource {
     int year,
     Map<String, dynamic>? queryParams,
   ) async {
-    Map<String, dynamic> q = {};
-    if (queryParams != null) {
-      q = queryParams;
-    }
     var res = await api.get(
       ApiRoutes.driverLeaderboard(year),
-      queryParameters: q,
+      queryParameters: queryParams ?? {},
     );
 
     if (res.isSuccess) {
-      final List<dynamic> data = res.body['data'];
-      if (data.isEmpty) {
-        return [];
-      }
+      final List<dynamic> data = res.body['data'] ?? [];
+
       return data
-          .map((entry) => DriverLeaderBoardModel.fromJson(entry))
+          .map(
+            (entry) =>
+                DriverLeaderBoardModel.fromJson(entry as Map<String, dynamic>),
+          )
           .toList();
     }
 
@@ -83,5 +82,37 @@ class RaceDatasource {
     }
 
     return [];
+  }
+
+  Future<DriverPointsHistoryModel?> getDriverPointsHistory(
+    String season,
+    String driverNumber,
+  ) async {
+    var res = await api.get(
+      ApiRoutes.driverPointsHistory(season, driverNumber),
+    );
+
+    if (res.isSuccess) {
+      final data = res.body;
+      return DriverPointsHistoryModel.fromJson(data);
+    }
+
+    return null;
+  }
+
+  Future<ConstructorPointsHistoryModel?> getConstructorPointsHistory(
+    String season,
+    String constructorName,
+  ) async {
+    var res = await api.get(
+      ApiRoutes.constructorPointsHistory(season, constructorName),
+    );
+
+    if (res.isSuccess) {
+      final data = res.body;
+      return ConstructorPointsHistoryModel.fromJson(data);
+    }
+
+    return null;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/core/router/app_router.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,10 @@ class DialogService {
           ),
           actions: [
             TextButton(
-              onPressed: () => context.pop(),
+              onPressed: () {
+                context.pop();
+                context.pushReplacementNamed(RouteNames.home);
+              },
               child: Text(
                 'OK',
                 style: F1Theme.themeData.textTheme.labelLarge?.copyWith(

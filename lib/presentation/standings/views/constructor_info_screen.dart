@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/core/constants/route_names.dart';
 import 'package:frontend/models/constructor_leaderboard.dart';
@@ -35,13 +36,24 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
     _loadConstructorData();
   }
 
-  void _loadConstructorData() {
+  void _loadConstructorData() async {
+    await context.read<StandingsCubit>().loadStandingsData(
+      int.parse(selectedYear),
+    );
+    await context.read<StandingsCubit>().loadConstructorPointsHistory(
+      selectedYear,
+      RaceUtils.mapConstructorName(widget.constructorName),
+    );
     final standingsState = context.read<StandingsCubit>().state;
 
     if (standingsState.constructorLeaderboard != null) {
-      final foundConstructor = standingsState.constructorLeaderboard!.where(
-        (c) => c.constructor.name == widget.constructorName,
-      );
+      final foundConstructor = standingsState.constructorLeaderboard!.where((
+        c,
+      ) {
+        print(c.constructor.name);
+        print(widget.constructorName);
+        return c.constructor.name == widget.constructorName;
+      });
       if (foundConstructor.isNotEmpty) {
         constructorData = foundConstructor.first;
       }
@@ -49,7 +61,7 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
 
     if (standingsState.driverLeaderboard != null) {
       teamDrivers = standingsState.driverLeaderboard!.where((d) {
-        return d.constructors.any((c) => c.name == widget.constructorName);
+        return d.constructors != null && d.constructors!.any((c) => c.name == widget.constructorName);
       }).toList();
     }
 
@@ -152,12 +164,14 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildConstructorInfoSection(teamColor),
                   SizedBox(height: 2.h),
                   if (constructorData != null) ...[
                     _buildStatsSection(constructorData!, teamColor),
                     SizedBox(height: 2.h),
                   ],
-                  _buildConstructorInfoSection(teamColor),
+                  _buildChampionshipHistorySection(teamColor),
+                  SizedBox(height: 2.h),
                   SizedBox(height: 2.h),
                   _buildTeamDriversSection(teamColor),
                 ],
@@ -272,6 +286,152 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
     );
   }
 
+  Widget _buildChampionshipHistorySection(Color teamColor) {
+    final standingsState = context.read<StandingsCubit>().state;
+    final championshipHistory = standingsState.constructorChampionshipHistory;
+
+    if (championshipHistory == null || championshipHistory.standings.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    final standings = championshipHistory.standings;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Points Progress',
+          style: F1Theme.themeData.textTheme.headlineMedium?.copyWith(
+            color: F1Theme.f1White,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        Container(
+          height: 30.h,
+          padding: EdgeInsets.all(F1Theme.mediumSpacing),
+          decoration: BoxDecoration(
+            gradient: F1Theme.cardGradient,
+            borderRadius: F1Theme.mediumBorderRadius,
+            border: Border.all(color: teamColor.withOpacity(0.3)),
+          ),
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: 25,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: F1Theme.f1LightGray.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
+              ),
+              titlesData: FlTitlesData(
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget: (value, meta) {
+                      final index = value.toInt();
+                      if (index >= 0 && index < standings.length) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            'R${standings[index].round}',
+                            style: TextStyle(
+                              color: F1Theme.f1TextGray,
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                    interval: 1,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: (value, meta) {
+                      return Text(
+                        value.toInt().toString(),
+                        style: TextStyle(
+                          color: F1Theme.f1TextGray,
+                          fontSize: 10,
+                        ),
+                      );
+                    },
+                    interval: 25,
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: standings.asMap().entries.map((entry) {
+                    return FlSpot(
+                      entry.key.toDouble(),
+                      entry.value.pointsCurrent,
+                    );
+                  }).toList(),
+                  isCurved: true,
+                  color: teamColor,
+                  barWidth: 3,
+                  isStrokeCapRound: true,
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (spot, percent, barData, index) {
+                      return FlDotCirclePainter(
+                        radius: 4,
+                        color: teamColor,
+                        strokeWidth: 2,
+                        strokeColor: F1Theme.f1White,
+                      );
+                    },
+                  ),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: teamColor.withOpacity(0.2),
+                  ),
+                ),
+              ],
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (touchedSpots) {
+                    return touchedSpots.map((spot) {
+                      final index = spot.x.toInt();
+                      final raceName = standings[index].raceName;
+                      final points = spot.y.toInt();
+                      final position = standings[index].position;
+                      return LineTooltipItem(
+                        '$raceName\nP$position - $points pts',
+                        TextStyle(
+                          color: F1Theme.f1White,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildConstructorInfoSection(Color teamColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,8 +458,8 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
                 '${_getCountryFlag(constructorData?.constructor.nationality)} ${constructorData?.constructor.nationality ?? "N/A"}',
                 Icons.flag,
               ),
-              Divider(color: F1Theme.f1LightGray, height: 2.h),
-              _buildInfoRow('Championships', '0', Icons.emoji_events),
+              // Divider(color: F1Theme.f1LightGray, height: 2.h),
+              // _buildInfoRow('Championships', '0', Icons.emoji_events),
             ],
           ),
         ),
@@ -355,6 +515,7 @@ class _ConstructorInfoScreenState extends State<ConstructorInfoScreen> {
         context.push(
           RouteNames.driverInfo,
           extra: {
+            'driverNumber': driver.driver.permanentNumber,
             'driverName': driverName,
             'constructorName': widget.constructorName,
           },

@@ -211,7 +211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             SizedBox(height: 2.h),
 
                             SizedBox(
-                              height: 20.h,
+                              height: 35.h,
                               child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: 3,
