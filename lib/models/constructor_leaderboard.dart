@@ -7,7 +7,7 @@ abstract class ConstructorLeaderBoardModel with _$ConstructorLeaderBoardModel {
   const factory ConstructorLeaderBoardModel({
     @JsonKey(name: "Constructor") required Constructor constructor,
     @JsonKey(name: "points") required String points,
-    @JsonKey(name: "position") required String position,
+    @JsonKey(name: "position") String? position,
     @JsonKey(name: "positionText") required String positionText,
     @JsonKey(name: "wins") required String wins,
   }) = _ConstructorLeaderBoardModel;

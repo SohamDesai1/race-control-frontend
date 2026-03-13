@@ -207,7 +207,7 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
             Expanded(
               child: _buildStatCard(
                 'Position',
-                driver.position!,
+                driver.position ?? "N/A",
                 Icons.emoji_events,
                 F1Theme.f1Red,
               ),

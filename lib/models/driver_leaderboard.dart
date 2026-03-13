@@ -8,7 +8,7 @@ abstract class DriverLeaderBoardModel with _$DriverLeaderBoardModel {
     @JsonKey(name: "Constructors") required List<Constructor> constructors,
     @JsonKey(name: "Driver") required Driver driver,
     required String points,
-    required String position,
+    String? position,
     required String positionText,
     required String wins,
   }) = _DriverLeaderBoardModel;

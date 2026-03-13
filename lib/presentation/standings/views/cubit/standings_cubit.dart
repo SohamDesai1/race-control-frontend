@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'dart:developer' as developer;
 import '../../../../repositories/race_repository.dart';
 import '../../../../models/constructor_leaderboard.dart';
 import '../../../../models/driver_leaderboard.dart';
@@ -38,8 +39,18 @@ class StandingsCubit extends Cubit<StandingsState> {
     ]);
 
     results[0].fold(
-      (failure) =>
-          emit(state.copyWith(isLoading: false, error: failure.message)),
+      (failure) {
+        developer.log(
+          'Error loading driver leaderboard: ${failure.message}',
+          error: failure,
+        );
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: failure.message ?? 'Unknown error',
+          ),
+        );
+      },
       (data) {
         final driverLeaderboardCache =
             Map<String, List<DriverLeaderBoardModel>?>.from(state.cache1);
@@ -56,8 +67,13 @@ class StandingsCubit extends Cubit<StandingsState> {
       },
     );
     results[1].fold(
-      (failure) =>
-          emit(state.copyWith(isLoading: false, error: failure.message)),
+      (failure) {
+        developer.log(
+          'Error loading constructor leaderboard: ${failure.message}',
+          error: failure,
+        );
+        emit(state.copyWith(isLoading: false, error: failure.message));
+      },
       (data) {
         final constructorLeaderboardCache =
             Map<String, List<ConstructorLeaderBoardModel>?>.from(state.cache2);
