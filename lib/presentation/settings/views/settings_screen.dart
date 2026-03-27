@@ -1,13 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/route_names.dart';
+import 'package:frontend/core/services/shorebird_update_service.dart';
 import 'package:frontend/core/theme/f1_theme.dart';
 import 'package:frontend/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:sizer/sizer.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final ShorebirdUpdateService _shorebirdUpdateService =
+      ShorebirdUpdateService();
+  int? _currentPatchNumber;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentPatchNumber();
+  }
+
+  Future<void> _loadCurrentPatchNumber() async {
+    final patchNumber = await _shorebirdUpdateService.readCurrentPatchNumber();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _currentPatchNumber = patchNumber;
+    });
+  }
 
   Future<void> _handleLogout(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -43,6 +70,78 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _checkForUpdates(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final outcome = await _shorebirdUpdateService.checkForUpdatesAndInstall();
+
+    if (!context.mounted) {
+      return;
+    }
+
+    switch (outcome) {
+      case ShorebirdUpdateOutcome.updated:
+        await _showRestartDialog(context);
+        break;
+      case ShorebirdUpdateOutcome.noUpdateAvailable:
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('You are already on the latest version.'),
+          ),
+        );
+        break;
+      case ShorebirdUpdateOutcome.unsupportedPlatform:
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Code push updates are only available on mobile.'),
+          ),
+        );
+        break;
+      case ShorebirdUpdateOutcome.failed:
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Update failed. Please try again.')),
+        );
+        break;
+    }
+
+    await _loadCurrentPatchNumber();
+  }
+
+  Future<void> _showRestartDialog(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: F1Theme.f1DarkGray,
+        title: const Text(
+          'Update Ready',
+          style: TextStyle(color: F1Theme.f1White),
+        ),
+        content: const Text(
+          'A new patch has been downloaded. Restart now to apply it.',
+          style: TextStyle(color: F1Theme.f1TextGray),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Later',
+              style: TextStyle(color: F1Theme.f1TextGray),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Restart.restartApp();
+            },
+            child: const Text(
+              'Restart now',
+              style: TextStyle(color: F1Theme.f1Red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +173,17 @@ class SettingsScreen extends StatelessWidget {
             trailing: Switch(
               value: true,
               onChanged: (value) {},
-              activeColor: F1Theme.f1Red,
+              activeThumbColor: F1Theme.f1Red,
             ),
+          ),
+          SizedBox(height: 1.h),
+          _buildSettingsTile(
+            icon: Icons.system_update_alt,
+            title: 'Check for updates',
+            subtitle: _currentPatchNumber != null
+                ? 'Current patch: $_currentPatchNumber'
+                : 'Check and install Shorebird patches',
+            onTap: () => _checkForUpdates(context),
           ),
           SizedBox(height: 1.h),
           _buildSettingsTile(
