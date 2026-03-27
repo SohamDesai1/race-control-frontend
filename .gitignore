@@ -55,5 +55,4 @@ app.*.map.json
 *.freezed.dart
 *.g.dart
 *.config.dart
-*.lock
 *.env.*
